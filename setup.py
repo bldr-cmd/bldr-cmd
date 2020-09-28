@@ -11,7 +11,8 @@ setup(name='bldr',
       packages=find_packages(),
       include_package_data=True,
       install_requires=[
-          'Click',
+          'click',
+          'sh',
       ],
       entry_points = {
         'console_scripts': ['bldr=bldr.command_line:main'],

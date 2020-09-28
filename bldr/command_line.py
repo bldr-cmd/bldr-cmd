@@ -10,3 +10,8 @@ def main():
 @main.command('gen.up')
 def gen_up():
     click.echo('Syncing')
+
+
+@main.command('init')
+def init():
+    click.echo("init")

@@ -2,3 +2,5 @@
 build/**
 bldr.egg-info/**
 venv/**
+
+node_modules/**
