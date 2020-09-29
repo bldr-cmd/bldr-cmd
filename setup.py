@@ -13,6 +13,7 @@ setup(name='bldr',
       install_requires=[
           'click',
           'sh',
+          'jinja2'
       ],
       entry_points = {
         'console_scripts': ['bldr=bldr.command_line:main'],
