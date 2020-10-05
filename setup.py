@@ -16,6 +16,6 @@ setup(name='bldr',
           'jinja2'
       ],
       entry_points = {
-        'console_scripts': ['bldr=bldr.command_line:main'],
+        'console_scripts': ['bldr=bldr.cli:cli'],
       },
 )

@@ -35,7 +35,7 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
 
 def render(template_data: dict, source: str, destination: str):
     filename = os.path.basename(source)
-
+    print(f"render {source} -> {destination}")
     parts = filename.split(".")
     renderext = parts[-2]
 
@@ -58,14 +58,14 @@ class TemplateRender:
     def render(self, source: str, destination: str):
         return render(self.template_data, source, destination)
 
-    def walk(self, template_root_dir: str, source_root_dir: str):
+    def walk(self, template_root_dir: str, destination_root_dir: str):
         bldr.gen.walk_local(
-            template_root_dir,
-            source_root_dir,
+            os.path.abspath(template_root_dir),
+            os.path.abspath(destination_root_dir),
             self.render,
             self.filter_file,
             self.filter_dir)
 
-def walk(template_data: dict, template_root_dir: str, source_root_dir: str):
+def walk(template_data: dict, template_root_dir: str, destination_root_dir: str):
     rend = TemplateRender(template_data)
-    rend.walk(template_root_dir, source_root_dir)
+    rend.walk(template_root_dir, destination_root_dir)

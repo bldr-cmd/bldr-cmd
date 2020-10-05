@@ -1,11 +1,14 @@
 import os
 import logging
+import shutil
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
 from click.testing import CliRunner
 
-import bldr.command_line
+import bldr.cli
+
+import bldr.cmd.init
 
 original_cwd = os.path.abspath(os.path.curdir)
 dotbldr_folder = os.path.join(original_cwd, "test/test_dotbldr")
@@ -18,9 +21,15 @@ class TestDotBldr(unittest.TestCase):
     """
     def test_init(self):
         result = self.runner.invoke(
-            bldr.command_line.init, '')
+            bldr.cmd.init.cli, '')
         self.assertEqual(0, result.exit_code)
-        self.assertIn('init', result.output)
+        self.assertTrue(os.path.exists(".bldr"))
+        self.assertTrue(os.path.exists(".bldr/cmd"))
+        self.assertTrue(os.path.exists(".bldr/current"))
+        self.assertTrue(os.path.exists(".bldr/next"))
+        self.assertTrue(os.path.exists(".bldr/dependency.toml"))
+        self.assertTrue(os.path.exists(".bldr/dependency.current.toml"))
+        self.assertTrue(os.path.exists(".bldr/dependency.lock.toml"))
         
     def setUp(self):
         self.runner = CliRunner()
@@ -29,7 +38,7 @@ class TestDotBldr(unittest.TestCase):
     def setUpClass(cls):
         log.warning("Creating " + dotbldr_folder)
         if os.path.exists(dotbldr_folder):
-            os.removedirs(dotbldr_folder)
+            shutil.rmtree(dotbldr_folder)
         os.makedirs(dotbldr_folder)
         os.chdir(dotbldr_folder)
 
@@ -37,4 +46,4 @@ class TestDotBldr(unittest.TestCase):
     def tearDownClass(cls):
         log.warning("Removing " + dotbldr_folder)
         os.chdir(original_cwd)
-        os.removedirs(dotbldr_folder)
+        shutil.rmtree(dotbldr_folder)
