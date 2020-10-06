@@ -1,0 +1,13 @@
+sequenceDiagram
+	user ->> make: run
+	make ->> files: any files changed?
+	alt No Files Changed
+		make -x user: nothing to make
+	end
+	make ->> mermaid: build png
+	mermaid ->> make: return status
+	make ->> exiftool: add mermaid source to image
+	exiftool ->> make: return status
+	make ->> open: Open file
+	open ->> user: Check out this file
+	make ->> user: Build complete
