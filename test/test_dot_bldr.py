@@ -3,9 +3,9 @@ import logging
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-from .bldr_test_case import BldrTestCase
+from .helper import BldrTestCase
 
-class TestDotBldr(BldrTestCase):
+class TestDotBldr(BldrTestCase, unittest.TestCase):
     """
     Test the creation of the .bldr folder
     """
