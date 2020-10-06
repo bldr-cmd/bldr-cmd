@@ -13,6 +13,7 @@ setup(name='bldr',
       install_requires=[
           'click',
           'sh',
+          'diff-match-patch',
           'jinja2'
       ],
       entry_points = {
