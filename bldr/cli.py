@@ -1,5 +1,6 @@
 import os
 import sys
+import runpy
 
 import click
 
@@ -26,6 +27,15 @@ class Environment:
 pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))
 
+def cmd(cmd_name):
+    cmd_mod_path = os.path.join(cmd_folder, cmd_name + ".py")
+
+    if os.path.exists(cmd_mod_path):
+        local_env = runpy.run_path(cmd_mod_path, globals())
+        return local_env["cli"]
+    else:
+        return None
+
 class BldrCLI(click.MultiCommand):
     def list_commands(self, ctx):
         rv = []
@@ -36,23 +46,8 @@ class BldrCLI(click.MultiCommand):
         return rv
 
     def get_command(self, ctx, cmd_name):
-        cmd_mod_path = os.path.join(cmd_folder, cmd_name + ".py")
-        # local_env = {}
-
-        # if os.path.exists(cmd_mod_path):
-        #     with open(cmd_mod_path, 'r') as source_module: 
-        #         exec(source_module.read().decode('utf-8'), globals(), local_env)
-        #         return local_env["cli"]
+        return cmd(cmd_name)
         
-        if os.path.exists(cmd_mod_path):
-            try:
-                mod = __import__(f"bldr.cmd.{cmd_name}", None, None, ["cli"])
-            except ImportError:
-                return None
-            return mod.cli
-
-        return None
-
 @click.command(cls=BldrCLI, context_settings=CONTEXT_SETTINGS)
 @click.option(
     "--cwd",

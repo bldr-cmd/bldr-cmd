@@ -8,8 +8,6 @@ from click.testing import CliRunner
 
 import bldr.cli
 
-import bldr.cmd.init
-
 original_cwd = os.path.abspath(os.path.curdir)
 dotbldr_folder = os.path.join(original_cwd, "test/test_dotbldr")
 
@@ -21,7 +19,7 @@ class TestDotBldr(unittest.TestCase):
     """
     def test_init(self):
         result = self.runner.invoke(
-            bldr.cmd.init.cli, '')
+            bldr.cli.cmd('init'), '')
         self.assertEqual(0, result.exit_code)
         self.assertTrue(os.path.exists(".bldr"))
         self.assertTrue(os.path.exists(".bldr/cmd"))
