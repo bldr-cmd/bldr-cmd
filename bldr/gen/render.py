@@ -1,6 +1,6 @@
 import os
 import shutil
-import functools
+import runpy
 
 import jinja2
 
@@ -24,12 +24,14 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
     template = jinja2.Template(source_str)
 
     template_module = source_path.replace("bldr-j2", "bldr-py") 
+    context = {}
+    context.update(template_data)
 
     if os.path.exists(template_module):
-        with open(template_module, 'r') as source_module: 
-            exec(source_module.read(), globals(), template_data)
+        local_env = runpy.run_path(template_module, globals())
+        context.update(local_env)
 
-    outputText = template.render(template_data)
+    outputText = template.render(context)
 
     with open(destination_path, 'w') as dest_file:
         dest_file.write(outputText)

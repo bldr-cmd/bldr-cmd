@@ -33,16 +33,30 @@ def cli(ctx):
     # Render any templates to next
     next_path = join(dotbldr_path, "next")
     prev_path = join(dotbldr_path, "current")
+    old_prev_path = join(dotbldr_path, "current.old")
+    if not os.path.exists(next_path):
+        os.makedirs(next_path)
+
+    if not os.path.exists(prev_path):
+        os.makedirs(prev_path)
+
     bldr.gen.render.walk(ctx.env, proj_path, next_path, False)
 
     # TODO:  Render local and template directories to next
     
+    # Diff + Patch
     diff_patch_render = DiffPatchRender(ctx.env, next_path, prev_path, proj_path) 
     diff_patch_render.walk()
+
+    if os.path.exists(old_prev_path):
+        shutil.rmtree(old_prev_path)
+    os.rename(prev_path, old_prev_path)
+    os.rename(next_path, prev_path)
+    os.makedirs(next_path)
+
     
 
-    # Diff + Patch
-
+    
 
 class DiffPatchRender:
     def __init__(self, template_data: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
