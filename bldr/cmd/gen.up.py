@@ -36,12 +36,12 @@ def cli(ctx):
     old_prev_path = join(dotbldr_path, "current.old")
     local_path = join(dotbldr_path, "local")
 
-    ensure_dir(next_path)
-    ensure_dir(prev_path)
-    ensure_dir(local_path)
+    bldr.ensure_dir(next_path)
+    bldr.ensure_dir(prev_path)
+    bldr.ensure_dir(local_path)
 
-    bldr.gen.render.walk(ctx.env, proj_path, next_path, False)
-    bldr.gen.render.walk(ctx.env, local_path, next_path, False)
+    bldr.gen.render.walk(ctx, proj_path, next_path, False)
+    bldr.gen.render.walk(ctx, local_path, next_path, False)
 
     # TODO:  Render template directories to next
     
@@ -56,25 +56,11 @@ def cli(ctx):
     os.makedirs(next_path)
 
 
-def ensure_dir(path: str):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-class DiffPatchRender:
+class DiffPatchRender(bldr.gen.render.CommonTripleRender):
     def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
-        self.ctx = ctx
-        self.template_data = ctx.env
-        self.source_root_dir = os.path.abspath(source_root_dir)
-        self.previous_root_dir = os.path.abspath(previous_root_dir)
-        self.destination_root_dir = os.path.abspath(destination_root_dir)
+        bldr.gen.render.CommonTripleRender.__init__(self, ctx, source_root_dir, previous_root_dir, destination_root_dir)
         self.dmp = diff_match_patch()
    
-    def filter_file(self, _root: str, _file: str):
-        return True
-
-    def filter_dir(self, _root: str, _dir: str):
-        return True
-
     def render(self, source_path: str, previous_path: str, destination_path: str):
         # if the destination does not exist, just copy the file
         if not os.path.exists(destination_path):
@@ -107,8 +93,7 @@ class DiffPatchRender:
 
         with open(destination_path, 'w') as destination_file:
             destination_file.write(destination_text)
-        return True
-        
+        return True   
 
     def walk(self):
         bldr.gen.walk_triple(

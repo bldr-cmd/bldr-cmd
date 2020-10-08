@@ -36,24 +36,33 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
     with open(destination_path, 'w') as dest_file:
         dest_file.write(outputText)
 
-def render(template_data: dict, source: str, destination: str, default_copy: bool):
-    filename = os.path.basename(source)
+def lookup_fx_ext(path: str):
+    filename = os.path.basename(path)
     
     parts = filename.split(".")
     renderext = parts[-2]
-    destination = destination.replace("." + renderext, '')
-    # print(f"render {source} -> {destination}")
-
+    
     if renderext in renderers:
-        renderers[renderext](template_data, source, destination)
+        return (renderers[renderext], renderext)
+    else:
+        return None
+
+def render(template_data: dict, source: str, destination: str, default_copy: bool):
+    # print(f"render {source} -> {destination}")
+    fx_ext = lookup_fx_ext(source)
+    if fx_ext != None:
+        (render_fx, renderext) = fx_ext
+        destination = destination.replace("." + renderext, '')
+        render_fx(template_data, source, destination)
     else:
         # Default to copy the file over
         if default_copy:
             shutil.copy(source, destination)
 
-class TemplateRender:
-    def __init__(self, template_data: dict, default_copy: bool):
-        self.template_data = template_data
+class CommonRender:
+    def __init__(self, ctx: dict, default_copy: bool):
+        self.ctx = ctx
+        self.template_data = ctx.env
         self.default_copy = default_copy
    
     def filter_file(self, _root: str, _file: str):
@@ -63,7 +72,7 @@ class TemplateRender:
         return True
 
     def render(self, source: str, destination: str):
-        return render(self.template_data, source, destination, self.default_copy)
+        pass
 
     def walk(self, template_root_dir: str, destination_root_dir: str):
         bldr.gen.walk_local(
@@ -73,6 +82,36 @@ class TemplateRender:
             self.filter_file,
             self.filter_dir)
 
-def walk(template_data: dict, template_root_dir: str, destination_root_dir: str, default_copy: bool = True):
-    rend = TemplateRender(template_data, default_copy)
+class TemplateRender(CommonRender): 
+    def render(self, source: str, destination: str):
+        return render(self.template_data, source, destination, self.default_copy)
+
+class CommonTripleRender:
+    def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
+        self.ctx = ctx
+        self.template_data = ctx.env
+        self.source_root_dir = os.path.abspath(source_root_dir)
+        self.previous_root_dir = os.path.abspath(previous_root_dir)
+        self.destination_root_dir = os.path.abspath(destination_root_dir)
+
+    def filter_file(self, _root: str, _file: str):
+        return True
+
+    def filter_dir(self, _root: str, _dir: str):
+        return True
+
+    def render(self, source_path: str, previous_path: str, destination_path: str):
+        pass
+        
+    def walk(self):
+        bldr.gen.walk_triple(
+            self.source_root_dir,
+            self.previous_root_dir,
+            self.destination_root_dir,
+            self.render,
+            self.filter_file,
+            self.filter_dir)
+
+def walk(ctx: dict, template_root_dir: str, destination_root_dir: str, default_copy: bool = True):
+    rend = TemplateRender(ctx, default_copy)
     rend.walk(template_root_dir, destination_root_dir)

@@ -46,7 +46,6 @@ This is a test
 ## bldr Has a Default Local Template In .bldr/local
 
 ```
-mkdir -p .bldr/local
 cat <<EOF > .bldr/local/bye.bldr-j2.txt
 Lets say {{ say_bye() }}
 
@@ -61,4 +60,19 @@ bldr gen.up
 cat bye.txt
 ```
 
-## 
+## bldr Saves Inline Template to Local Template
+
+```
+ls hi.bldr-*
+
+bldr gen.movelocal
+
+ls hi.bldr-*
+ls .bldr/local/hi.bldr-*
+```
+
+## bldr gen Creates File Templates in Local
+
+```
+
+```
