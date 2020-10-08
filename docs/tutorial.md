@@ -1,6 +1,6 @@
 # bldr
 
-## bldr Main Purpose is Templates
+## bldr Main Purpose Is Templates
 
 ```
 bldr init
@@ -10,7 +10,7 @@ bldr gen.up
 cat hi.txt
 ```
 
-## bldr Templates are Jinja2 powered
+## bldr Templates Are Jinja2 Powered
 
 ```
 cat <<EOF > hi.bldr-j2.txt
@@ -27,7 +27,7 @@ bldr gen.up
 cat hi.txt
 ```
 
-## bldr Templates only apply changes
+## bldr Templates Only Apply Changes
 
 ```
 echo -e "NO" >> hi.txt
@@ -42,3 +42,23 @@ cat hi.txt
 ```
 
 This is a test
+
+## bldr Has a Default Local Template In .bldr/local
+
+```
+mkdir -p .bldr/local
+cat <<EOF > .bldr/local/bye.bldr-j2.txt
+Lets say {{ say_bye() }}
+
+EOF
+
+cat <<EOF > .bldr/local/bye.bldr-py.txt
+def say_bye():
+    return "good bye"
+EOF
+
+bldr gen.up
+cat bye.txt
+```
+
+## 

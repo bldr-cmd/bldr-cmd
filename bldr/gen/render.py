@@ -42,7 +42,7 @@ def render(template_data: dict, source: str, destination: str, default_copy: boo
     parts = filename.split(".")
     renderext = parts[-2]
     destination = destination.replace("." + renderext, '')
-    print(f"render {source} -> {destination}")
+    # print(f"render {source} -> {destination}")
 
     if renderext in renderers:
         renderers[renderext](template_data, source, destination)
