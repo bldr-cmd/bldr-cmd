@@ -35,15 +35,16 @@ def cli(ctx):
     prev_path = join(dotbldr_path, "current")
     old_prev_path = join(dotbldr_path, "current.old")
     local_path = join(dotbldr_path, "local")
+    template_path = join(dotbldr_path, "template")
 
     bldr.ensure_dir(next_path)
     bldr.ensure_dir(prev_path)
     bldr.ensure_dir(local_path)
+    bldr.ensure_dir(template_path)
 
-    bldr.gen.render.walk(ctx, proj_path, next_path, False)
+    bldr.gen.render.walk(ctx, template_path, next_path, False)
     bldr.gen.render.walk(ctx, local_path, next_path, False)
-
-    # TODO:  Render template directories to next
+    bldr.gen.render.walk(ctx, proj_path, next_path, False)
     
     # Diff + Patch
     diff_patch_render = DiffPatchRender(ctx, next_path, prev_path, proj_path) 
