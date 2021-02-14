@@ -32,6 +32,12 @@ https://click.palletsprojects.com/en/7.x/bashcomplete/
 More Info at
 https://click.palletsprojects.com/en/7.x/setuptools/
 
+## ShellSpec
+
+```
+curl -fsSL https://git.io/shellspec | sh
+```
+
 
 ## TODO
 
