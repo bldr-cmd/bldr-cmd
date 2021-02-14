@@ -62,7 +62,7 @@ def render(template_data: dict, source: str, destination: str, default_copy: boo
 class CommonRender:
     def __init__(self, ctx: dict, default_copy: bool):
         self.ctx = ctx
-        self.template_data = ctx.env
+        self.template_data = ctx
         self.default_copy = default_copy
    
     def filter_file(self, _root: str, _file: str):
@@ -89,7 +89,7 @@ class TemplateRender(CommonRender):
 class CommonTripleRender:
     def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
         self.ctx = ctx
-        self.template_data = ctx.env
+        self.template_data = ctx
         self.source_root_dir = os.path.abspath(source_root_dir)
         self.previous_root_dir = os.path.abspath(previous_root_dir)
         self.destination_root_dir = os.path.abspath(destination_root_dir)

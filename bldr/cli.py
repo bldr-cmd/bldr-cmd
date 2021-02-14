@@ -14,13 +14,13 @@ class Environment:
         self.env = {}
 
     def log(self, msg, *args):
-        """Logs a message to stderr."""
+        """Logs a message to stdout."""
         if args:
             msg %= args
-        click.echo(msg, file=sys.stderr)
+        click.echo(msg, file=sys.stdout)
 
     def vlog(self, msg, *args):
-        """Logs a message to stderr only if verbose is enabled."""
+        """Logs a message to stdout only if verbose is enabled."""
         if self.verbose:
             self.log(msg, *args)
 
