@@ -38,7 +38,7 @@ Describe 'bldr gen.up'
     cp $TEST_FILES/hi.bldr-j2.txt ./
     cp $TEST_FILES/hi.bldr-py.txt ./
 
-    bldr gen.up
+    bldr gen.up > /dev/null
     echo -e "NO" >> hi.txt
     sed -i 's/Lets/Lets NOT/g' hi.bldr-j2.txt
 
