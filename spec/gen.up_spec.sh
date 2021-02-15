@@ -50,4 +50,15 @@ Describe 'bldr gen.up'
     The path hi.txt contents should include "Lets NOT"                                                         
   End  
 
+  It 'Has a Default Local Template In .bldr/local'
+    mkdir -p ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
+
+    When call bldr gen.up
+    The output should match pattern '*Creating*hi.txt*'
+
+    The path hi.txt should be exist  
+    The path hi.txt contents should include "hellow"                                                          
+  End
 End   
