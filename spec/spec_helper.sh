@@ -5,7 +5,7 @@
 # so it is better to set them here.
 # set -eu
 
-export TEST_FILES=$SHELLSPEC_PROJECT_ROOT/spec/lib
+export TEST_FILES=$SHELLSPEC_PROJECT_ROOT/spec/files
 # This callback function will be invoked only once before loading specfiles.
 spec_helper_precheck() {
   # Available functions: info, warn, error, abort, setenv, unsetenv
