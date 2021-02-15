@@ -25,5 +25,5 @@ def cli(ctx, path):
     ctx.log(f"Initialized the repository in {click.format_filename(path)}")
     new_dir = os.path.join(os.path.curdir, ".bldr")
     ctx.log(f" {click.format_filename(dotbldr_path)} -> {new_dir}")
-    bldr.gen.render.walk(ctx.env, dotbldr_path, new_dir)
+    bldr.gen.render.walk(ctx, dotbldr_path, new_dir)
   

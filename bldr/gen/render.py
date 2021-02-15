@@ -5,6 +5,7 @@ import runpy
 import jinja2
 
 import bldr.gen
+from bldr.environment import Environment
 
 renderers = {}
 
@@ -60,9 +61,9 @@ def render(template_data: dict, source: str, destination: str, default_copy: boo
             shutil.copy(source, destination)
 
 class CommonRender:
-    def __init__(self, ctx: dict, default_copy: bool):
+    def __init__(self, ctx: Environment, default_copy: bool):
         self.ctx = ctx
-        self.template_data = ctx
+        self.template_data = ctx.env
         self.default_copy = default_copy
    
     def filter_file(self, _root: str, _file: str):
@@ -87,9 +88,9 @@ class TemplateRender(CommonRender):
         return render(self.template_data, source, destination, self.default_copy)
 
 class CommonTripleRender:
-    def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
+    def __init__(self, ctx: Environment, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):
         self.ctx = ctx
-        self.template_data = ctx
+        self.template_data = ctx.env
         self.source_root_dir = os.path.abspath(source_root_dir)
         self.previous_root_dir = os.path.abspath(previous_root_dir)
         self.destination_root_dir = os.path.abspath(destination_root_dir)
@@ -112,6 +113,6 @@ class CommonTripleRender:
             self.filter_file,
             self.filter_dir)
 
-def walk(ctx: dict, template_root_dir: str, destination_root_dir: str, default_copy: bool = True):
+def walk(ctx: Environment, template_root_dir: str, destination_root_dir: str, default_copy: bool = True):
     rend = TemplateRender(ctx, default_copy)
     rend.walk(template_root_dir, destination_root_dir)

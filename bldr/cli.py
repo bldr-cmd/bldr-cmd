@@ -3,26 +3,10 @@ import sys
 import runpy
 
 import click
+from .environment import Environment
 
 CONTEXT_SETTINGS = dict(auto_envvar_prefix="BLDR")
 VERSION = "0.1.0"
-
-class Environment:
-    def __init__(self):
-        self.verbose = False
-        self.cwd = os.getcwd()
-        self.env = {}
-
-    def log(self, msg, *args):
-        """Logs a message to stdout."""
-        if args:
-            msg %= args
-        click.echo(msg, file=sys.stdout)
-
-    def vlog(self, msg, *args):
-        """Logs a message to stdout only if verbose is enabled."""
-        if self.verbose:
-            self.log(msg, *args)
 
 pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))

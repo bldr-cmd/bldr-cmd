@@ -71,7 +71,7 @@ ls hi.bldr-*
 ls .bldr/local/hi.bldr-*
 ```
 
-## bldr gen Creates File Templates in Local
+## bldr Generators Creates File Templates in Local
 
 ```
 

@@ -13,8 +13,12 @@ Describe 'bldr gen.up'
   BeforeEach 'setup'
   AfterEach 'cleanup'
                                                                                        
-  # It ''                                                                                           
-  #   When call bldr                                                                              
-  #   The output should equal 'Hello shellspec!'                                                              
-  # End                                                                                                                                                                                                             
+  It 'Supports inline templates'
+    echo "hello World\n" > hi.bldr-j2.txt                                                                                           
+    When call bldr gen.up
+    The output should match pattern '*Creating*hi.txt*'
+
+    The path hi.txt should be exist  
+    The path hi.txt contents should include "hello World"                                                          
+  End                                                                                                                                                                                                             
 End   
