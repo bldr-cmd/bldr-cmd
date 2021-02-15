@@ -2,14 +2,11 @@
 Describe 'bldr gen.up'                                                                                           
   Include venv/bin/activate
   setup() {  
-    rm -Rf _test_temp
-    mkdir -p _test_temp
-    cd _test_temp
+    setup_dir
     bldr init > /dev/null
   }
   cleanup() {  
-    cd ..
-    rm -Rf _test_temp
+    cleanup_dir
   }
   BeforeEach 'setup'
   AfterEach 'cleanup'

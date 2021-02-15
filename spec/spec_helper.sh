@@ -23,3 +23,14 @@ spec_helper_configure() {
   # Available functions: import, before_each, after_each, before_all, after_all
   : import 'support/custom_matcher'
 }
+
+# Create/delete the scratch directory
+setup_dir() {  
+    rm -Rf _test_temp
+    mkdir -p _test_temp
+    cd _test_temp
+}
+cleanup_dir() {  
+    cd ..
+    rm -Rf _test_temp
+}
