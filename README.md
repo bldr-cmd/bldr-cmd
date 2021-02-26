@@ -34,10 +34,16 @@ https://click.palletsprojects.com/en/7.x/setuptools/
 
 ## ShellSpec
 
+Install
+
 ```
 curl -fsSL https://git.io/shellspec | sh
 ```
 
+Run Tests
+```
+shellspec
+```
 
 ## TODO
 

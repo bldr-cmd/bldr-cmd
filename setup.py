@@ -14,7 +14,8 @@ setup(name='bldr',
           'click',
           'sh',
           'diff-match-patch',
-          'jinja2'
+          'jinja2',
+          'toml',
       ],
       entry_points = {
         'console_scripts': ['bldr=bldr.cli:cli'],
