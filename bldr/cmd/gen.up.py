@@ -17,43 +17,53 @@ from bldr.cli import pass_environment
 
 import click
 
-# aliases
-join = os.path.join
 
 @click.command("gen.up", short_help="Update Code Gen")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
+@click.argument("regen", required=False, type=click.BOOL)
 @pass_environment
-def cli(ctx):
+def cli(ctx, regen):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
 
-    dotbldr_path = bldr.dotbldr_path()
-    proj_path = bldr.proj_path()
+    dotbldr_path = ctx.dotbldr_path
+    proj_path = ctx.proj_path
 
     # Render any templates to next
-    next_path = join(dotbldr_path, "next")
-    prev_path = join(dotbldr_path, "current")
-    old_prev_path = join(dotbldr_path, "current.old")
-    local_path = join(dotbldr_path, "local")
-    template_path = join(dotbldr_path, "template")
+    next_path = dotbldr_path / "next"
+    current_path = dotbldr_path / "current"
+    prev_path =  dotbldr_path / "previous"
+    local_path =  dotbldr_path / "local"
+    template_path =  dotbldr_path / "generator" / "current"
+    old_template_path =  dotbldr_path / "generator" / "previous"
 
-    bldr.ensure_dir(next_path)
-    bldr.ensure_dir(prev_path)
-    bldr.ensure_dir(local_path)
-    bldr.ensure_dir(template_path)
+    next_path.mkdir(parents=True, exist_ok=True)
+    current_path.mkdir(parents=True, exist_ok=True)
+    local_path.mkdir(parents=True, exist_ok=True)
+
+    if regen:
+        if os.path.exists(old_template_path):
+            shutil.rmtree(old_template_path)
+        
+        if os.path.exists(template_path):
+            os.rename(template_path, old_template_path)
+
+        # Generate to template_path
+    else:
+        bldr.ensure_dir(template_path)
 
     bldr.gen.render.walk(ctx, template_path, next_path, False)
     bldr.gen.render.walk(ctx, local_path, next_path, False)
     bldr.gen.render.walk(ctx, proj_path, next_path, False)
     
     # Diff + Patch
-    diff_patch_render = DiffPatchRender(ctx, next_path, prev_path, proj_path) 
+    diff_patch_render = DiffPatchRender(ctx, next_path, current_path, proj_path) 
     diff_patch_render.walk()
 
-    if os.path.exists(old_prev_path):
-        shutil.rmtree(old_prev_path)
-    os.rename(prev_path, old_prev_path)
-    os.rename(next_path, prev_path)
+    if os.path.exists(prev_path):
+        shutil.rmtree(prev_path)
+    os.rename(current_path, prev_path)
+    os.rename(next_path, current_path)
     os.makedirs(next_path)
 
 

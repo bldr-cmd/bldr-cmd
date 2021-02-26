@@ -11,6 +11,8 @@ import bldr
 import bldr.gen
 import bldr.gen.render
 
+from bldr.environment import Environment
+
 from diff_match_patch import diff_match_patch
 
 from bldr.cli import pass_environment
@@ -23,16 +25,15 @@ join = os.path.join
 @click.command("gen.mvlocal", short_help="Move Inline Templates to Local")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @pass_environment
-def cli(ctx):
+def cli(ctx: Environment):
     """Move Inline Templates to Localn"""
     ctx.log(f"Updating Code Generation")
 
-    dotbldr_path = bldr.dotbldr_path()
-    proj_path = bldr.proj_path()
-    local_path = join(dotbldr_path, "local")
+    dotbldr_path = ctx.dotbldr_path
+    proj_path = ctx.proj_path
+    local_path = dotbldr_path.joinpath("local")
 
-    bldr.ensure_dir(local_path)
-
+    local_path.mkdir(parents=True, exist_ok=True)
     # Move Templates
     move_render = MoveTemplatesRender(ctx, False) 
     move_render.walk(proj_path, local_path)
