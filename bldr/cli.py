@@ -47,8 +47,7 @@ def cmd(cmd_name):
 class BldrCLI(click.MultiCommand):
     def list_commands(self, ctx):
         rv = []
-        for basepath in cmd_paths():
-            files = glob.glob(f"{basepath}/*.py")
+        for files in ctx.cmd_path_globs(f"*.py"):
             for fpath in files:
                 (_dir, filename) = os.path.split(fpath)
                 filename = filename[:-3]

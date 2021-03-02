@@ -3,6 +3,9 @@ import sys
 from pathlib import Path
 import click
 
+from typing import List
+
+builtin_cmd_folder = Path(__file__).parents[0].joinpath('cmd').absolute()
 
 # This is based on https://gist.github.com/DGrady/32db5223b956fece094292775e5dfd1d
 def find_dotbldr_dir(here: Path = None) -> Path:
@@ -48,6 +51,39 @@ class Environment:
     @property
     def proj_path(self) -> Path:
         return self.dotbldr_path.parents[0]
+
+    @property
+    def generator_path(self) -> Path:
+        return self.dotbldr_path / "generator"
+
+    @property
+    def cmd_paths(self) -> List[Path]:
+        return [ self.dotbldr_path / "cmd", self.generator_path / "*/cmd", builtin_cmd_folder ]
+
+    def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
+        return [
+            self.dotbldr_path.joinpath("cmd").glob(fileglob),
+            self.generator_path.glob( "*/cmd/" + fileglob),
+            builtin_cmd_folder.glob(fileglob)
+        ]
+
+
+    def cmd_path(self, cmd_name):
+        """ 
+        Find the path to the given command name 
+
+        The order of search:
+        .bldr/cmd
+        .bldr/generator/*/cmd
+        bldr/cmd
+        """
+
+        for files in self.cmd_path_globs(f"{cmd_name}.py"):
+            if len(files) > 0:
+                files.sort()
+                return files[0]
+
+        return None
 
     def log(self, msg, *args):
         """Logs a message to stdout."""
