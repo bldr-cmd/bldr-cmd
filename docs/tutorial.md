@@ -76,3 +76,9 @@ ls .bldr/local/hi.bldr-*
 ```
 
 ```
+
+## bldr can import a non bldr project as a template
+```
+
+bldr gen.import a/path/to/somethign/existing
+```

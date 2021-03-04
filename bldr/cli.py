@@ -1,10 +1,8 @@
 import os
-import sys
 import runpy
-import glob
 
-import bldr
 import click
+
 from bldr.environment import Environment
 
 CONTEXT_SETTINGS = dict(auto_envvar_prefix="BLDR")
@@ -13,39 +11,17 @@ VERSION = "0.1.0"
 pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))
 
-def cmd_paths():
-    dotbldr_path = bldr.dotbldr_path()
-    return  [ f"{dotbldr_path}/cmd", f"{dotbldr_path}/generator/*/cmd", cmd_folder ]
-
-def cmd_path(cmd_name):
-    """ 
-    Find the path to the given command name 
-
-    The order of search:
-    .bldr/cmd
-    .bldr/generator/*/cmd
-    bldr/cmd
-    """
-
-    for basepath in cmd_paths():
-        files = glob.glob(f"{basepath}/{cmd_name}.py")
-        if len(files) > 0:
-            files.sort()
-            return files[0]
-
-    return None
-
-def cmd(cmd_name):
-    cmd_mod_path = cmd_path(cmd_name)
+def cmd(ctx: Environment, cmd_name: str):
+    cmd_mod_path = ctx.cmd_path(cmd_name)
 
     if cmd_mod_path != None:
-        local_env = runpy.run_path(cmd_mod_path, globals())
+        local_env = runpy.run_path(str(cmd_mod_path), globals())
         return local_env["cli"]
     else:
         return None
 
 class BldrCLI(click.MultiCommand):
-    def list_commands(self, ctx):
+    def list_commands(self, ctx: Environment):
         rv = []
         for files in ctx.cmd_path_globs(f"*.py"):
             for fpath in files:
@@ -57,8 +33,8 @@ class BldrCLI(click.MultiCommand):
         rv = sorted(set(rv))
         return rv
 
-    def get_command(self, ctx, cmd_name):
-        return cmd(cmd_name)
+    def get_command(self, ctx: click.Context, cmd_name: str):
+        return cmd(Environment(), cmd_name)
         
 @click.command(cls=BldrCLI, context_settings=CONTEXT_SETTINGS)
 @click.option(

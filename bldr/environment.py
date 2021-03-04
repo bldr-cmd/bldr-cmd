@@ -30,8 +30,6 @@ def find_dotbldr_dir(here: Path = None) -> Path:
         if dotbldr_path.exists():
             return dotbldr_path.resolve()
 
-    sys.exit("Unable to locate .bldr folder")
-    # This will never be reached
     return None
 
 class Environment:
@@ -58,7 +56,10 @@ class Environment:
 
     @property
     def cmd_paths(self) -> List[Path]:
-        return [ self.dotbldr_path / "cmd", self.generator_path / "*/cmd", builtin_cmd_folder ]
+        if self.dotbldr_path == None:
+            return [ builtin_cmd_folder ]    
+        else:
+            return [ self.dotbldr_path / "cmd", self.generator_path / "*/cmd", builtin_cmd_folder ]
 
     @property
     def next_path(self) -> Path:
@@ -94,11 +95,16 @@ class Environment:
         return self.generated_path / "current"
     
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
-        return [
-            self.dotbldr_path.joinpath("cmd").glob(fileglob),
-            self.generator_path.glob( "*/cmd/" + fileglob),
-            builtin_cmd_folder.glob(fileglob)
-        ]
+        if self.dotbldr_path == None:
+            return [
+                builtin_cmd_folder.glob(fileglob)
+            ]
+        else:
+            return [
+                self.dotbldr_path.joinpath("cmd").glob(fileglob),
+                self.generator_path.glob( "*/cmd/" + fileglob),
+                builtin_cmd_folder.glob(fileglob)
+            ]
 
 
     def cmd_path(self, cmd_name):
@@ -111,10 +117,9 @@ class Environment:
         bldr/cmd
         """
 
-        for files in self.cmd_path_globs(f"{cmd_name}.py"):
-            if len(files) > 0:
-                files.sort()
-                return files[0]
+        for glob_files in self.cmd_path_globs(f"{cmd_name}.py"):
+            for glob_file in glob_files:
+                return glob_file
 
         return None
 
