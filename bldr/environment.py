@@ -14,7 +14,7 @@ def find_dotbldr_dir(here: Path = None) -> Path:
     
     “Project directory” means the nearest parent directory of the 
     current directory that contains a `.bldr` directory. If there
-    is no such directory, returns this directory.
+    is no such directory, returns None.
     """
     if here is None:
         here = Path() # Current directory
@@ -23,12 +23,12 @@ def find_dotbldr_dir(here: Path = None) -> Path:
     dotbldr_path = here.joinpath('.bldr')
 
     if dotbldr_path.exists():
-        return dotbldr_path
+        return dotbldr_path.resolve()
 
     for parent in here.parents:
         dotbldr_path = parent.joinpath('.bldr')
         if dotbldr_path.exists():
-            return dotbldr_path
+            return dotbldr_path.resolve()
 
     sys.exit("Unable to locate .bldr folder")
     # This will never be reached
@@ -60,6 +60,38 @@ class Environment:
     def cmd_paths(self) -> List[Path]:
         return [ self.dotbldr_path / "cmd", self.generator_path / "*/cmd", builtin_cmd_folder ]
 
+    @property
+    def next_path(self) -> Path:
+        return self.dotbldr_path / "next"
+
+    @property
+    def current_path(self) -> Path:
+        return self.dotbldr_path / "current"
+
+    @property
+    def prev_path(self) -> Path:
+        return self.dotbldr_path / "previous"
+
+    @property
+    def local_path(self) -> Path:
+        return self.dotbldr_path / "local"
+
+    @property
+    def generated_folder(self) -> Path:
+        return self.dotbldr_path / "generated"
+
+    @property
+    def next_generated_path(self) -> Path:
+        return self.generated_folder / "next"
+
+    @property
+    def current_generated_path(self) -> Path:
+        return self.generated_folder / "current"
+
+    @property
+    def prev_generated_path(self) -> Path:
+        return self.generated_folder / "current"
+    
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
         return [
             self.dotbldr_path.joinpath("cmd").glob(fileglob),
