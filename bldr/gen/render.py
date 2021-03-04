@@ -113,6 +113,21 @@ class CommonTripleRender:
             self.filter_file,
             self.filter_dir)
 
+class CopyTemplatesRender(CommonRender):
+    def render(self, source_path: str, destination_path: str):
+        # if the destination does not exist, just copy the file
+        self.ctx.log(f"Creating {source_path}")
+        shutil.copy(source_path, destination_path)
+        return True
+
+class MoveTemplatesRender(CommonRender):
+    def render(self, source_path: str, destination_path: str):
+        # if the destination does not exist, just copy the file
+        if 'bldr-' in os.path.basename(source_path):
+            self.ctx.log(f"Moving {source_path}")
+            shutil.move(source_path, destination_path)
+            return True
+
 def walk(ctx: Environment, template_root_dir: str, destination_root_dir: str, default_copy: bool = True):
     rend = TemplateRender(ctx, default_copy)
     rend.walk(template_root_dir, destination_root_dir)
