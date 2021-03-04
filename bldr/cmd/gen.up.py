@@ -45,8 +45,8 @@ def cli(ctx, regen):
     else:
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
 
-    bldr.gen.render.walk(ctx, ctx.current_generated_path, ctx.next_path, False)
-    bldr.gen.render.walk(ctx, ctx.local_path, ctx.next_path, False)
+    bldr.gen.render.walk(ctx, ctx.current_generated_path, ctx.next_path, True)
+    bldr.gen.render.walk(ctx, ctx.local_path, ctx.next_path, True)
     bldr.gen.render.walk(ctx, ctx.proj_path, ctx.next_path, False)
     
     # Diff + Patch

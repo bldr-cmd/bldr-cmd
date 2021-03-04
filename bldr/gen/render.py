@@ -41,6 +41,9 @@ def lookup_fx_ext(path: str):
     filename = os.path.basename(path)
     
     parts = filename.split(".")
+    if len(parts) < 2:
+        return None
+
     renderext = parts[-2]
     
     if renderext in renderers:
