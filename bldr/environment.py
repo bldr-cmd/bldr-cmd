@@ -76,21 +76,22 @@ class Environment:
     def local_path(self) -> Path:
         return self.dotbldr_path / "local"
 
+
     @property
-    def generated_folder(self) -> Path:
+    def generated_path(self) -> Path:
         return self.dotbldr_path / "generated"
 
     @property
     def next_generated_path(self) -> Path:
-        return self.generated_folder / "next"
+        return self.generated_path / "next"
 
     @property
     def current_generated_path(self) -> Path:
-        return self.generated_folder / "current"
+        return self.generated_path / "current"
 
     @property
     def prev_generated_path(self) -> Path:
-        return self.generated_folder / "current"
+        return self.generated_path / "current"
     
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
         return [
@@ -117,6 +118,11 @@ class Environment:
 
         return None
 
+    def error(self, msg, *args):
+        if args:
+            msg %= args
+        click.echo(msg, file=sys.stderr)
+        
     def log(self, msg, *args):
         """Logs a message to stdout."""
         if args:
