@@ -11,7 +11,7 @@ Describe 'bldr gen.import'
   AfterEach 'cleanup'
                                                                                        
   It 'Copies all files to Local Template'
-    bldr gen.import $TEST_FILES/some_proj
+    bldr gen.import $TEST_FILES/some_proj > /dev/null
 
     When call bldr gen.up
     The output should match pattern '*Creating*somefile*'
@@ -19,5 +19,10 @@ Describe 'bldr gen.import'
     The path ./somefile should be exist 
     The path ./somedir/some_deep_dir/some_deep_file should be exist                                                                          
     
-  End                                                                                                                                                                                                             
+  End       
+
+  It 'Warns to run `bldr gen.up`'
+    When call bldr gen.import $TEST_FILES/some_proj
+    The output should match pattern '*Import Complete.  Run `bldr gen.up` to update files*'
+  End                                                                                                                                                                                                          
 End    

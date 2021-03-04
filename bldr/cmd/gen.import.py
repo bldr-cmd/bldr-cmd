@@ -28,4 +28,5 @@ def cli(ctx: Environment, path: str):
     copy_render = CopyTemplatesRender(ctx, True) 
     copy_render.walk(proj_path, local_path)
 
+    ctx.log(f"Import Complete.  Run `bldr gen.up` to update files")
 
