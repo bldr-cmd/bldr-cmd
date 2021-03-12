@@ -31,7 +31,7 @@ def cli(ctx: Environment, path: str):
     copy_render.walk(proj_path, local_path)
 
     # Save to the generator file
-    bldr.gen.add_generator(generator_name, ctx)
+    bldr.gen.add_generator([generator_name], ctx)
 
     bldr.gen.cmd(ctx, generator_name)
 

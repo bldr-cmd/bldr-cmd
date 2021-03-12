@@ -19,7 +19,7 @@ def save_config(generated_toml: dict, ctx: Environment = Environment()):
     with open(f"{ctx.dotbldr_path}/generated.toml", 'w') as toml_file:
         return toml.dump(generated_toml, toml_file)
 
-def add_generator(generator: str, ctx: Environment = Environment()):
+def add_generator(generator: list, ctx: Environment = Environment()):
     config_toml = config(ctx)
     if 'generators' not in config_toml:
         config_toml['generators'] = []
