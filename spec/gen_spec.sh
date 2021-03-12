@@ -3,7 +3,7 @@ Describe 'bldr gen'
   setup() {  
     setup_dir
     bldr init > /dev/null
-    cp -Rf $TEST_FILES/example_generator .bldr/generator/
+    cp -Rf $TEST_FILES/example_generator .bldr/module/
   }
   cleanup() {  
     cleanup_dir

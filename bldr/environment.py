@@ -51,15 +51,15 @@ class Environment:
         return self.dotbldr_path.parents[0]
 
     @property
-    def generator_path(self) -> Path:
-        return self.dotbldr_path / "generator"
+    def module_path(self) -> Path:
+        return self.dotbldr_path / "module"
 
     @property
     def cmd_paths(self) -> List[Path]:
         if self.dotbldr_path == None:
             return [ builtin_cmd_folder ]    
         else:
-            return [ self.dotbldr_path / "cmd", self.generator_path / "*/cmd", builtin_cmd_folder ]
+            return [ self.dotbldr_path / "cmd", self.module_path / "*/cmd", builtin_cmd_folder ]
 
     @property
     def next_path(self) -> Path:
@@ -102,7 +102,7 @@ class Environment:
         else:
             return [
                 self.dotbldr_path.joinpath("cmd").glob(fileglob),
-                self.generator_path.glob( "*/cmd/" + fileglob),
+                self.module_path.glob( "*/cmd/" + fileglob),
                 builtin_cmd_folder.glob(fileglob)
             ]
 
