@@ -24,5 +24,11 @@ Describe 'bldr gen.import'
   It 'Warns to run `bldr gen.up`'
     When call bldr gen.import $TEST_FILES/some_proj
     The output should match pattern '*Import Complete.  Run `bldr gen.up` to update files*'
-  End                                                                                                                                                                                                          
+  End 
+
+  It 'Imports to a module named `import.dirname`'
+    When call bldr gen.import $TEST_FILES/some_proj
+    The path ./.bldr/module/import.some_proj should be exist
+    The output should match pattern '*Copying local *import.some_proj/local*'
+  End                                                                                                                                                                                                            
 End    
