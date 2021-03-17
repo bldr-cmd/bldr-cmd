@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "[post-checkout hook: $1 $2 $3]"
+# post-checkout hook that update submodules
+
+prev_HEAD="$1"
+new_HEAD="$2"
+new_branch="$3"
+
+if [ "$new_branch" = 1 ]; then
+   bldr dep.sync
+fi
+
+exit 0
