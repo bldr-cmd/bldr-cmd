@@ -41,18 +41,20 @@ def lookup_fx_ext(path: str):
     filename = os.path.basename(path)
     
     parts = filename.split(".")
-    if len(parts) < 2:
+    num_parts = len(parts)
+    if num_parts < 2:
         return None
 
-    renderext = parts[-2]
-    
-    if renderext in renderers:
-        return (renderers[renderext], renderext)
-    else:
-        return None
+    parts.reverse()
+    for part in parts:
+        if part in renderers:
+            renderext = part
+            return (renderers[renderext], renderext)
+
+    return None
 
 def render(template_data: dict, source: str, destination: str, default_copy: bool):
-    # print(f"render {source} -> {destination}")
+    print(f"render {source} -> {destination}")
     fx_ext = lookup_fx_ext(source)
     if fx_ext != None:
         (render_fx, renderext) = fx_ext
