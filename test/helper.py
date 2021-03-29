@@ -33,7 +33,7 @@ class BldrTestCase():
     @classmethod
     def setUpClass(cls):
         test_folder = cls.temp_folder()
-        log.warning("Creating " + test_folder)
+        log.info("Creating " + test_folder)
         if os.path.exists(test_folder):
             shutil.rmtree(test_folder)
         os.makedirs(test_folder)
@@ -42,6 +42,6 @@ class BldrTestCase():
     @classmethod
     def tearDownClass(cls):
         test_folder = cls.temp_folder()
-        log.warning("Removing " + test_folder)
+        log.info("Removing " + test_folder)
         os.chdir(original_cwd)
         shutil.rmtree(test_folder)
