@@ -40,6 +40,11 @@ https://click.palletsprojects.com/en/7.x/setuptools/
 
 https://github.com/pester/Pester
 
+Install - This upgrades the current version on Windows 10
+```
+ Install-Module -Name Pester -Force -SkipPublisherCheck
+```
+
 ## ShellSpec - Linux
 
 Install

@@ -16,6 +16,7 @@ setup(name='bldr',
           'diff-match-patch',
           'jinja2',
           'toml',
+          'GitPython',
       ],
       entry_points = {
         'console_scripts': ['bldr=bldr.cli:cli'],

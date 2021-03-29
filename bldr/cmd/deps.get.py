@@ -12,7 +12,7 @@ import sh
 dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
 
 from bldr.cli import pass_environment
-
+from bldr.gen.render import render
 import click
 
 
@@ -22,3 +22,7 @@ import click
 def cli(ctx):
     """Get Dependencies"""
     ctx.log(f"Getting Dependencies")
+
+    # Render .gitmodules
+    render(ctx.env, ctx.local_path / '.gitmodules.bldr-j2', ctx.current_path / '.gitmodules', False)
+    render(ctx.env, ctx.local_path / '.gitmodules.bldr-j2', ctx.proj_path / '.gitmodules', False)
