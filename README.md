@@ -15,7 +15,7 @@ The `docs` directory contains the documentation for `bldr`. See [README.md](docs
 To test the script, you can make a new virtualenv and then install your package:
 
 ```
-virtualenv venv
+python3 -m venv ./venv
 . venv/bin/activate
 pip install --editable .
 ```
@@ -32,7 +32,15 @@ https://click.palletsprojects.com/en/7.x/bashcomplete/
 More Info at
 https://click.palletsprojects.com/en/7.x/setuptools/
 
-## ShellSpec
+
+# Testing 
+
+## Unit Tests
+## Pester - Windows
+
+https://github.com/pester/Pester
+
+## ShellSpec - Linux
 
 Install
 
@@ -45,6 +53,23 @@ Run Tests
 shellspec
 ```
 
-## TODO
+# Python Virtual Environment
 
-[ ] Dynamic commands https://stackoverflow.com/questions/53147525/is-it-possible-to-dynamically-generate-commands-in-python-click
+## Linux 
+
+```
+python3 -m venv ./venv
+```
+
+## Windows
+General form:
+```
+c:\Python35\python -m venv c:\path\to\myenv
+```
+
+Easy way:
+From Explorer, open a command prompt in the folder you want and run:
+```
+c:\Python35\python -m venv .\venv
+```
+Replease '35' with which ever python version you have installed

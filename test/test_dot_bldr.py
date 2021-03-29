@@ -17,5 +17,4 @@ class TestDotBldr(BldrTestCase, unittest.TestCase):
         self.assertTrue(os.path.exists(".bldr/current"))
         self.assertTrue(os.path.exists(".bldr/next"))
         self.assertTrue(os.path.exists(".bldr/dependency.toml"))
-        self.assertTrue(os.path.exists(".bldr/dependency.current.toml"))
         self.assertTrue(os.path.exists(".bldr/dependency.lock.toml"))

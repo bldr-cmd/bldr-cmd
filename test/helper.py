@@ -7,6 +7,7 @@ import unittest
 from click.testing import CliRunner
 
 import bldr.cli
+from bldr.environment import Environment
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -22,7 +23,7 @@ class BldrTestCase():
         self.log = log
 
     def bldr(self, cmd, args = None):
-        return self.runner.invoke(bldr.cli.cmd(cmd), args)
+        return self.runner.invoke(bldr.cli.cmd(Environment(), cmd), args)
 
     @classmethod
     def temp_folder(cls):
