@@ -3,12 +3,15 @@ import sys
 from pathlib import Path
 import click
 
-from typing import List
+from typing import Dict, List
 
 builtin_cmd_folder = Path(__file__).parents[0].joinpath('cmd').absolute()
 
-# This is based on https://gist.github.com/DGrady/32db5223b956fece094292775e5dfd1d
 def find_dotbldr_dir(here: Path = None) -> Path:
+    return find_parent_dir('.bldr', here)
+
+# This is based on https://gist.github.com/DGrady/32db5223b956fece094292775e5dfd1d
+def find_parent_dir(pdirname: str, here: Path = None) -> Path:
     """
     Get the path to the project directory
     
@@ -20,24 +23,47 @@ def find_dotbldr_dir(here: Path = None) -> Path:
         here = Path() # Current directory
     # Get the full path
     here = here.resolve(strict=True)
-    dotbldr_path = here.joinpath('.bldr')
+    dotbldr_path = here.joinpath(pdirname)
 
     if dotbldr_path.exists():
         return dotbldr_path.resolve()
 
     for parent in here.parents:
-        dotbldr_path = parent.joinpath('.bldr')
+        dotbldr_path = parent.joinpath(pdirname)
         if dotbldr_path.exists():
             return dotbldr_path.resolve()
 
     return None
 
+def default_env(dotbldr_path: str) -> Dict:
+    # Only Import once we are called to avoid circular dependencies
+    import bldr.dep.env
+    import bldr.gen.env
+    return {
+        'dep': bldr.dep.env.default(dotbldr_path),
+        'gen': bldr.gen.env.default(dotbldr_path),
+    }
+
 class Environment:
     def __init__(self):
         self.verbose = False
         self.cwd = os.getcwd()
-        self.env = {}
+        self._env = None
         self._dotbldr_path = None
+
+    @property
+    def env(self) -> Dict:
+        # Handle the case where we don't have a .bldr folder
+        if self.dotbldr_path == None:
+            return {}
+
+        if self._env == None:
+            self._env = default_env(self.dotbldr_path)
+        return self._env
+
+    @env.setter
+    def env(self, env):
+        self._env = env
 
     @property
     def dotbldr_path(self) -> Path:

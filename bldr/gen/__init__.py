@@ -2,6 +2,7 @@ import os
 import toml
 from typing import Callable
 
+import bldr.gen.env
 from bldr.environment import Environment
 from bldr.gen.render import CopyTemplatesRender
 
@@ -12,20 +13,13 @@ def cmd(ctx: Environment, subcommand: str, args = None):
         copy_render = CopyTemplatesRender(ctx, False)
         copy_render.walk(module_local_path, ctx.current_generated_path)
 
-def config(ctx: Environment = Environment()):
-    return toml.load(f"{ctx.dotbldr_path}/generated.toml")
-
-def save_config(generated_toml: dict, ctx: Environment = Environment()):
-    with open(f"{ctx.dotbldr_path}/generated.toml", 'w') as toml_file:
-        return toml.dump(generated_toml, toml_file)
-
 def add_generator(generator: list, ctx: Environment = Environment()):
-    config_toml = config(ctx)
-    if 'generators' not in config_toml:
-        config_toml['generators'] = []
+    config = ctx.env['gen']
+    if 'generators' not in config:
+        config['generators'] = []
 
-    config_toml['generators'].append(generator)
-    save_config(config_toml, ctx)
+    config['generators'].append(generator)
+    bldr.gen.env.save(config, ctx.dotbldr_path)
 
 
 def common_filter_file(root, file):
