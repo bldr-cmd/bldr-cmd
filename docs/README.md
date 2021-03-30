@@ -24,8 +24,9 @@ https://mermaid-js.github.io/mermaid/#/
 | Proposal   | Title                                                             |
 | ---------: | ----------------------------------------------------------------- |
 | 0001       | [Project Goals](ep-0001.md)                                       |
-| 0005       | [bldr Command](ep-0002.md)                                        |
-| 0006       | [bldr Command - Templates](ep-0003.md)                            |
+| 0002       | [bldr Command](ep-0002.md)                                        |
+| 0003       | [bldr Command - Templates](ep-0003.md)                            |
+| 0004       | [bldr Command - Dependencies](ep-0004.md)                         |
 
 # Appendix
 
