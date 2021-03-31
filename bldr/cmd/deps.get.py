@@ -62,6 +62,14 @@ def cli(ctx):
     ctx.log(output)
     #progress = DepsUpdateProgress(ctx)
     #repo.submodule_update(init=True, recursive=True, progress=progress)
-    # for submodule in repo.submodules:
-    #     ctx.log(submodule.name)
-    #     submodule.update(init=True, recursive=True)
+    for submodule in repo.submodules:
+        sha = submodule.hexsha
+        lock_info = submodules[submodule.name]
+        if 'branch' in lock_info:
+            branch = lock_info['branch']
+            sub_path = ctx.proj_path / lock_info['path']
+            subrepo = submodule.module()
+
+            ctx.log(f"Setting {submodule.name} {submodule.branch} {submodule.hexsha}")
+            subrepo.git.checkout(branch)
+            subrepo.git.reset('--hard', sha)
