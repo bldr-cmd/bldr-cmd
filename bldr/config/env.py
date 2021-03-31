@@ -18,7 +18,7 @@ def default(dotbldr_path: str) -> dict:
     bldr_env = os.getenv('BLDR_ENV')
     full_config = {}
 
-    deps_config_files = Path(dotbldr_path).glob( "/module/*/config/config.toml")
+    deps_config_files = Path(dotbldr_path).glob( "./module/*/config/config.toml")
     for dep_config_file in deps_config_files:
         dep_env = load_if_exists(dep_config_file)
         full_config.update(dep_env)
@@ -27,7 +27,7 @@ def default(dotbldr_path: str) -> dict:
     full_config.update(local_config)
 
     if bldr_env != None:
-        e_deps_config_files = Path(dotbldr_path).glob(f"/module/*/config/{bldr_env}.toml")
+        e_deps_config_files = Path(dotbldr_path).glob(f"./module/*/config/{bldr_env}.toml")
         for e_dep_config_file in e_deps_config_files:
             e_dep_env = load_if_exists(e_dep_config_file)
             full_config.update(e_dep_env)

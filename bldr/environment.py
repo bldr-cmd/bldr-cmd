@@ -37,9 +37,12 @@ def find_parent_dir(pdirname: str, here: Path = None) -> Path:
 
 def default_env(dotbldr_path: str) -> Dict:
     # Only Import once we are called to avoid circular dependencies
+    import bldr.config.env
     import bldr.dep.env
     import bldr.gen.env
+    
     return {
+        'config': bldr.config.env.default(dotbldr_path),
         'dep': bldr.dep.env.default(dotbldr_path),
         'gen': bldr.gen.env.default(dotbldr_path),
     }
