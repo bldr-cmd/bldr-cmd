@@ -1,0 +1,4 @@
+["somedir/dep1"]
+    type = "git"
+    path = "somedir/dep1"
+    url = "git@svn.daveengineering.com:bldr/bldr-test-dep1.git"

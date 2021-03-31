@@ -1,0 +1,5 @@
+{% for name, opts in dep.lock.items() %}
+[submodule "{{ name }}"]
+        path = {{ opts['path'] }}
+        url = {{ opts['url'] }}
+{% endfor %}

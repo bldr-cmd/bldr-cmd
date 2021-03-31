@@ -3,4 +3,9 @@
 import toml
 
 def default(dotbldr_path: str) -> dict:
-    return toml.load(f"{dotbldr_path}/dependency.toml")
+    dep = {
+        'config': toml.load(f"{dotbldr_path}/dependency.toml"),
+        'lock': toml.load(f"{dotbldr_path}/dependency.lock.toml")
+    }
+    
+    return dep
