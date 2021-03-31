@@ -21,8 +21,9 @@ def cmd(ctx: Environment, cmd_name: str):
         return None
 
 class BldrCLI(click.MultiCommand):
-    def list_commands(self, ctx: Environment):
+    def list_commands(self, click_ctx: click.Context):
         rv = []
+        ctx = Environment()
         for files in ctx.cmd_path_globs(f"*.py"):
             for fpath in files:
                 (_dir, filename) = os.path.split(fpath)
@@ -37,16 +38,8 @@ class BldrCLI(click.MultiCommand):
         return cmd(Environment(), cmd_name)
         
 @click.command(cls=BldrCLI, context_settings=CONTEXT_SETTINGS)
-@click.option(
-    "--cwd",
-    type=click.Path(exists=True, file_okay=False, resolve_path=True),
-    help="Changes the folder to operate on.",
-)
-
 @click.option("-v", "--verbose", is_flag=True, help="Enables verbose mode.")
 @pass_environment
-def cli(ctx, verbose, cwd):
+def cli(ctx, verbose):
     f"""bldr - {VERSION}"""
     ctx.verbose = verbose
-    if cwd is not None:
-        ctx.cwd = cwd
