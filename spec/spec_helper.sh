@@ -34,7 +34,8 @@ setup_w_bldr() {
   setup_dir
   bldr init > /dev/null
   if [ "$#" -eq 1 ]; then
-    cp -Rf $TEST_FILES/$1/* ./
+    cp -Rf $TEST_FILES/$1/* ./ 2>/dev/null || :
+    cp -Rf $TEST_FILES/$1/.* ./ 2>/dev/null || :
   fi
 }
 cleanup_dir() {  

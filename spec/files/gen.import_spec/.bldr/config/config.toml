@@ -1,0 +1,16 @@
+["gen.import"]
+# Top level config for gen.import command
+
+["gen.import".template_exts]
+# Add extensions here to have them turned into template_exts
+
+
+["gen.import".template_exts.".cs"]
+    SomeModule = "TheNewModule"
+    SomeModuleVerySimilar = "ANotSoSimilarModule"
+    "SomeOther.Nested.Place" = "ANew.Nested.OtherPlace"
+    APlugableModule = "{{ config['net_code']['module'] }}"
+
+# This is used to render to template
+["net_code"]
+    module = "MyNewPlugableModule"

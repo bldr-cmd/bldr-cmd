@@ -1,7 +1,7 @@
 Describe 'bldr gen.import'                                                                                           
   Include venv/bin/activate
   setup() {  
-    setup_w_bldr
+    setup_w_bldr gen.import_spec
   }
   cleanup() {  
     cleanup_dir
@@ -29,5 +29,25 @@ Describe 'bldr gen.import'
     When call bldr gen.import $TEST_FILES/some_proj
     The path ./.bldr/module/import.some_proj should be exist
     The output should match pattern '*Copying local *import.some_proj/local*'
-  End                                                                                                                                                                                                            
+  End
+
+  It 'Converts files to templates'
+    When call bldr gen.import $TEST_FILES/some_proj
+    The path ./.bldr/config/config.toml should be exist
+    The path ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs should be exist
+
+    The path ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs contents should include "TheNewModule"
+    The path ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs contents should include "ANotSoSimilarModule"
+    The path ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs contents should include "ANew.Nested.OtherPlace.Function()"
+    The output should match pattern '*Generating *import.some_proj/local/net_code.bldr-j2.cs*'
+    
+    #cat ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs
+    #echo "gen.up\n"
+    
+    bldr gen.up > /dev/null
+    The path ./net_code.cs contents should include "MyNewPlugableModule.CoolFunction(1,2,3)"
+    
+    #cat ./net_code.cs
+    #The output should match pattern '*Copying local *import.some_proj/local*'
+  End                                                                                                                                                                                                       
 End    
