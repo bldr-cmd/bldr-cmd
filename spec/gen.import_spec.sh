@@ -49,5 +49,13 @@ Describe 'bldr gen.import'
     
     #cat ./net_code.cs
     #The output should match pattern '*Copying local *import.some_proj/local*'
-  End                                                                                                                                                                                                       
+  End   
+  It 'Creates a top-level module with --top'
+    When call bldr gen.import --top $TEST_FILES/some_proj
+    
+    The path ./local/net_code.bldr-j2.cs should be exist
+
+    The output should match pattern '*Generating *local/net_code.bldr-j2.cs*'
+    
+  End                                                                                                                                                                                                      
 End    
