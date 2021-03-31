@@ -59,7 +59,7 @@ Describe 'bldr gen.import'
     
   End
 
-    It 'Ignores files marked in the exclude_globs'
+  It 'Ignores files marked in the exclude_globs'
     When call bldr gen.import --top $TEST_FILES/some_proj
     
     The path ./local/net_code.bldr-j2.cs should be exist
@@ -67,5 +67,12 @@ Describe 'bldr gen.import'
 
     The output should match pattern '*Skipping File *project.sln*'
     
-  End                                                                                                                                                                                                       
+  End
+
+  It 'Places the import at the destination path'
+    When call bldr gen.import --path different/nested/name $TEST_FILES/some_proj
+    The path .bldr/module/import.some_proj/local/different/nested/name/somefile should be exist
+
+    The output should match pattern '*different/nested/name*'
+  End                                                                                                                                                                                                  
 End    

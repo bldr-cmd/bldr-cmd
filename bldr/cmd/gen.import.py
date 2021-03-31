@@ -15,25 +15,29 @@ import os
 import re
 
 @click.command("gen.import", short_help="Import Non-bldr project as a template")
-@click.argument("path", required=True, type=click.Path(resolve_path=True))
+@click.argument("source", required=True, type=click.Path(resolve_path=True))
+@click.option("-p", "--path", type=click.Path(), help="Relative Destination Path")
 @click.option("-t", "--top", is_flag=True, help="Create Top Level Module")
 @pass_environment
-def cli(ctx: Environment, path: str, top: bool):
+def cli(ctx: Environment, source: str, path: str, top: bool):
     """Copy project to Local"""
-    ctx.log(f"Importing {path}")
+    ctx.log(f"Importing {source}")
 
-    generator_name = f"import.{Path(path).name}"
-    proj_path = Path(path)
+    generator_name = f"import.{Path(source).name}"
+    source_path = Path(source)
     if top:
         local_path = ctx.proj_path / "local"
     else:
         local_path = ctx.module_path / generator_name / "local"
+    
+    if path != None:
+        local_path = local_path / path
 
     local_path.mkdir(parents=True, exist_ok=True)
     
     # Copy Files
     copy_render = ImportTemplatesRender(ctx) 
-    copy_render.walk(proj_path, local_path)
+    copy_render.walk(source_path, local_path)
 
     # Save to the generator file
     bldr.gen.add_generator([generator_name], ctx)
