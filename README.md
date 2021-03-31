@@ -1,6 +1,18 @@
 # bldr-cmd
 
 
+## Installing
+
+```
+pip install git+ssh://git@svn.daveengineering.com/bldr/bldr_cmd.git
+```
+
+## Upgrading
+
+```
+pip install --upgrade git+ssh://git@svn.daveengineering.com/bldr/bldr_cmd.git
+```
+
 ## Building
 
 ```
@@ -70,6 +82,11 @@ python3 -m venv ./venv
 General form:
 ```
 c:\Python35\python -m venv c:\path\to\myenv
+```
+
+See what python you have installed:
+```
+dir c:\Python3*
 ```
 
 Easy way:
