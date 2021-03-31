@@ -132,7 +132,6 @@ class Environment:
                 builtin_cmd_folder.glob(fileglob)
             ]
 
-
     def cmd_path(self, cmd_name):
         """ 
         Find the path to the given command name 
