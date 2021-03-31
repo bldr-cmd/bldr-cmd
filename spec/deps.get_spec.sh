@@ -2,8 +2,7 @@
 Describe 'bldr deps.get'                                                                                           
   Include venv/bin/activate
   setup() {  
-    setup_dir
-    bldr init > /dev/null
+    setup_w_bldr
   }
   cleanup() {  
     cleanup_dir

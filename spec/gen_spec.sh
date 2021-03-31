@@ -1,8 +1,7 @@
 Describe 'bldr gen'                                                                                           
   Include venv/bin/activate
   setup() {  
-    setup_dir
-    bldr init > /dev/null
+    setup_w_bldr
     cp -Rf $TEST_FILES/example_generator .bldr/module/
   }
   cleanup() {  

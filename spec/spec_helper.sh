@@ -30,6 +30,13 @@ setup_dir() {
     mkdir -p _test_temp
     cd _test_temp
 }
+setup_w_bldr() {
+  setup_dir
+  bldr init > /dev/null
+  if [ "$#" -eq 1 ]; then
+    cp -Rf $TEST_FILES/$1/* ./
+  fi
+}
 cleanup_dir() {  
     cd ..
     rm -Rf _test_temp
