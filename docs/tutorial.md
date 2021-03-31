@@ -79,6 +79,26 @@ ls .bldr/local/hi.bldr-*
 
 ## bldr can import a non bldr project as a template
 ```
-
 bldr gen.import a/path/to/somethign/existing
+```
+
+To convert files to templates, use a .bldr/config/config.toml:
+```
+["gen.import"]
+# Top level config for gen.import command
+exclude_globs = ["*.sln"]
+
+["gen.import".template_exts]
+# Add extensions here to have them turned into template_exts
+
+
+["gen.import".template_exts.".cs"]
+    SomeModule = "TheNewModule"
+    SomeModuleVerySimilar = "ANotSoSimilarModule"
+    "SomeOther.Nested.Place" = "ANew.Nested.OtherPlace"
+    APlugableModule = "{{ config['net_code']['module'] }}"
+
+# This is used to render to template
+["net_code"]
+    module = "MyNewPlugableModule"
 ```

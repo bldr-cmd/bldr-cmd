@@ -57,5 +57,15 @@ Describe 'bldr gen.import'
 
     The output should match pattern '*Generating *local/net_code.bldr-j2.cs*'
     
-  End                                                                                                                                                                                                      
+  End
+
+    It 'Ignores files marked in the exclude_globs'
+    When call bldr gen.import --top $TEST_FILES/some_proj
+    
+    The path ./local/net_code.bldr-j2.cs should be exist
+    The path ./local/project.sln should not be exist
+
+    The output should match pattern '*Skipping File *project.sln*'
+    
+  End                                                                                                                                                                                                       
 End    

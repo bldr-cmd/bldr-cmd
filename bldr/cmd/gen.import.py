@@ -45,16 +45,36 @@ def cli(ctx: Environment, path: str, top: bool):
         ctx.log(f"Import Complete.  Run `bldr gen.up` to update files")
 
 
-
 class ImportTemplatesRender(CopyTemplatesRender):
+    def filter_file(self, root: str, file: str):
+        path = Path(root) / file
+        for glob in self.exclude_globs:
+            if path.match(glob):
+                self.ctx.log(f"Skipping File {path}")
+                return False
+        return True
+
+    def filter_dir(self, root: str, dir: str):
+        path = Path(root) / dir
+        for glob in self.exclude_globs:
+            if path.match(glob):
+                self.ctx.log(f"Skipping Dir {path}")
+                return False
+        return True
+
     def __init__(self, ctx: Environment):
         super().__init__(ctx, True)
         self.exts = []
         self.ext_repl = {}
+        self.exclude_globs = []
         if 'gen.import' in ctx.env['config']:
-            template_exts = ctx.env['config']['gen.import']['template_exts']
+            gen_import = ctx.env['config']['gen.import']
+            template_exts = gen_import['template_exts']
             self.exts = template_exts.keys()
             self.ext_repl = template_exts
+            if 'exclude_globs' in gen_import:
+                self.exclude_globs = gen_import['exclude_globs']
+
             
     def replace_vars(self,match):
         return self.replacements[match.group(0)]

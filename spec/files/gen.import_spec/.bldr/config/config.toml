@@ -1,5 +1,6 @@
 ["gen.import"]
 # Top level config for gen.import command
+exclude_globs = ["*.sln"]
 
 ["gen.import".template_exts]
 # Add extensions here to have them turned into template_exts
