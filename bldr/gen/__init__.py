@@ -29,7 +29,7 @@ def common_filter_dir(root, dir):
     # Skip any folder that contains a .git
     if os.path.exists(os.path.join(root,dir,".git")):
         return False
-    if dir == ".bldr":
+    if dir in ['.bldr', '.git']:
         return False
     return True
 
