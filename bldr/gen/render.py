@@ -58,7 +58,7 @@ def render(template_data: dict, source: str, destination: str, default_copy: boo
     source = str(source)
     destination = str(destination)
     
-    print(f"render {source} -> {destination}")
+    #print(f"render {source} -> {destination}")
     fx_ext = lookup_fx_ext(source)
     if fx_ext != None:
         (render_fx, renderext) = fx_ext
