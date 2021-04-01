@@ -53,3 +53,4 @@ Once setup, run the Activate.ps1 script to setup your PowerShell Prompt:
 # Changelog
 
 * 0.2 - Initial Testing
+* 0.3 - Fix verbosity
