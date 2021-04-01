@@ -43,3 +43,10 @@ cleanup_dir() {
     cd ..
     rm -Rf _test_temp
 }
+
+create_git() {
+    git init . > /dev/null
+    touch README.md
+    git add README.md
+    git commit -m "Initial Commit" > /dev/null
+}

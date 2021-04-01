@@ -35,10 +35,6 @@ def cli(ctx):
     """Get Dependencies"""
     ctx.log(f"Getting Dependencies")
 
-    # Render .gitmodules
-    render(ctx.env, ctx.local_path / '.gitmodules.bldr-j2', ctx.current_path / '.gitmodules', False)
-    render(ctx.env, ctx.local_path / '.gitmodules.bldr-j2', ctx.proj_path / '.gitmodules', False)
-
     git_path = ctx.proj_path / '.git'
     if not git_path.exists():
         ctx.log("No .git folder")
@@ -46,8 +42,8 @@ def cli(ctx):
     
     repo = Repo(git_path)
     
-    config = {name: dep for (name, dep) in ctx.env['dep']['config'].items() if dep['type'] == 'git'}
-    lockfile = {name: dep for (name, dep) in ctx.env['dep']['lock'].items() if dep['type'] == 'git'}
+    config = {name: dep for (name, dep) in ctx.env['dep']['config'].items()}
+    lockfile = {name: dep for (name, dep) in ctx.env['dep']['lock'].items()}
 
     # Remove deps not in the config file
     lockfile = {name: dep for (name, dep) in lockfile.items() if name in config}
@@ -55,8 +51,10 @@ def cli(ctx):
     # Add an new deps from config file
     lockfile.update(config)
 
+    gitlock = {name: dep for (name, dep) in lockfile.items() if dep['type'] == 'git'}
+
     ctx.log("Add missing git modules")
-    for (subname, lock_info) in lockfile.items():
+    for (subname, lock_info) in gitlock.items():
         module_path = git_path / "modules" / lock_info['path']
         if not module_path.exists():
             ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
@@ -72,9 +70,18 @@ def cli(ctx):
     for submodule in repo.submodules:
         sha = submodule.hexsha
         
-        lock_info['sha'] = sha
+        # Create a lock entry if the submodule was added another way
+        if submodule.name not in lockfile:
+            lock_info = {
+                'type': 'git',
+                'path': submodule.name,
+                'branch': submodule.branch,
+                #'url': submodule.url
+            }
+            lockfile[submodule.name] = lock_info
 
         lock_info = lockfile[submodule.name]
+        lock_info['sha'] = sha
 
         if 'branch' in lock_info:
             branch = lock_info['branch']
