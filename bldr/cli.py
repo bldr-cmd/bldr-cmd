@@ -38,7 +38,7 @@ class BldrCLI(click.MultiCommand):
         return cmd(Environment(), cmd_name)
         
 @click.command(cls=BldrCLI, context_settings=CONTEXT_SETTINGS)
-@click.option("-v", "--verbose", is_flag=True, help="Enables verbose mode.")
+@click.option("-v", "--verbose", envvar='BLDR_VERBOSE', is_flag=True, help="Enables verbose mode.")
 @pass_environment
 def cli(ctx, verbose):
     f"""bldr - {VERSION}"""

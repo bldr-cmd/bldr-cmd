@@ -65,7 +65,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
         path = Path(root) / file
         for glob in self.exclude_globs:
             if path.match(glob):
-                self.ctx.log(f"Skipping File {path}")
+                self.ctx.vlog(f"Skipping File {path}")
                 return False
         return True
 
@@ -73,7 +73,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
         path = Path(root) / dir
         for glob in self.exclude_globs:
             if path.match(glob):
-                self.ctx.log(f"Skipping Dir {path}")
+                self.ctx.vlog(f"Skipping Dir {path}")
                 return False
         return True
 

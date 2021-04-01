@@ -19,7 +19,7 @@ Describe 'bldr deps.get'
     git commit -m "Initial Commit" > /dev/null
 
     When call bldr deps.get
-    The output should match pattern '*render*gitmodules*'
+    The output should match pattern '*submodule create somedir/dep1*'
     
     The path .gitmodules should be exist  
     The path somedir/dep1 should be exist

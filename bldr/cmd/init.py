@@ -16,16 +16,16 @@ from bldr.cli import pass_environment
 import click
 
 
-@click.command("init", short_help="Initializes a repo.")
+@click.command("init", short_help="Initializes a project.")
 @click.argument("path", required=False, type=click.Path(resolve_path=True))
 @pass_environment
 def cli(ctx, path):
-    """Initializes a repository."""
+    """Initializes a project."""
     if path is None:
         path = ctx.cwd
-    ctx.log(f"Initialized the repository in {click.format_filename(path)}")
+    ctx.log(f"Initialized the project in {click.format_filename(path)}")
     new_dir = os.path.join(os.path.curdir, ".bldr")
-    ctx.log(f" {click.format_filename(dotbldr_path)} -> {new_dir}")
+    ctx.vlog(f" {click.format_filename(dotbldr_path)} -> {new_dir}")
     
     copy_render = CopyTemplatesRender(ctx, True) 
     copy_render.walk(dotbldr_path, new_dir)

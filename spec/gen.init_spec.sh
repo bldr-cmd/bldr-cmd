@@ -11,6 +11,6 @@ Describe 'bldr init'
                                                                                        
   It 'Creates a skeleton .bldr'                                                                                           
     When call bldr init                                                                            
-    The output should include 'Initialized the repository in'                                                              
+    The output should include 'Initialized the project in'                                                              
   End                                                                                                                                                                                                             
 End    

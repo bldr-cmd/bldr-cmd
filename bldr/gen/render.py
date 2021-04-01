@@ -125,7 +125,7 @@ class CommonTripleRender:
 class CopyTemplatesRender(CommonRender):
     def render(self, source_path: str, destination_path: str):
         # if the destination does not exist, just copy the file
-        self.ctx.log(f"Copying {source_path} -> {destination_path}")
+        self.ctx.vlog(f"Copying {source_path} -> {destination_path}")
         shutil.copy(source_path, destination_path)
         return True
 
@@ -133,7 +133,7 @@ class MoveTemplatesRender(CommonRender):
     def render(self, source_path: str, destination_path: str):
         # if the destination does not exist, just copy the file
         if 'bldr-' in os.path.basename(source_path):
-            self.ctx.log(f"Moving {source_path} -> {destination_path}")
+            self.ctx.vlog(f"Moving {source_path} -> {destination_path}")
             shutil.move(source_path, destination_path)
             return True
 

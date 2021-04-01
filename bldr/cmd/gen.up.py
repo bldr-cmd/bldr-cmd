@@ -68,7 +68,7 @@ class DiffPatchRender(bldr.gen.render.CommonTripleRender):
     def render(self, source_path: str, previous_path: str, destination_path: str):
         # if the destination does not exist, just copy the file
         if not os.path.exists(destination_path):
-            self.ctx.log(f"Creating {destination_path}")
+            self.ctx.vlog(f"Creating {destination_path}")
             shutil.copy(source_path, destination_path)
             return True
 
@@ -85,7 +85,7 @@ class DiffPatchRender(bldr.gen.render.CommonTripleRender):
         patches = self.dmp.patch_make(previous_text, source_text)
 
         if len(patches) == 0:
-            self.ctx.log(f"Current {destination_path}")
+            self.ctx.vlog(f"Current {destination_path}")
             return False
 
         self.ctx.log(f"Updating {destination_path}")
