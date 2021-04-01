@@ -81,7 +81,9 @@ class ImportTemplatesRender(CopyTemplatesRender):
     def __init__(self, ctx: Environment, top: bool):
         super().__init__(ctx, True)
         self.exts = []
+        self.to_template_exts = []
         self.ext_repl = {}
+        self.ext_regex = {}
         self.exclude_globs = []
         self.renames = {}
         self.rename_regex = None
@@ -91,11 +93,17 @@ class ImportTemplatesRender(CopyTemplatesRender):
             if 'renames' in gen_import:
                 self.renames = gen_import['renames']
                 self.rename_regex = rename_regex(self.renames)
+            if 'replace_exts' in gen_import:
+                replace_exts = gen_import['replace_exts']
+                self.exts = self.exts + [key2ext(key) for key in replace_exts.keys()]
+                self.ext_repl.update({ key2ext(key): value for (key,value) in replace_exts.items()})
+                self.ext_regex.update({ key2ext(key): ext_regex(value) for (key,value) in replace_exts.items()})
             if 'template_exts' in gen_import:
                 template_exts = gen_import['template_exts']
-                self.exts = [key2ext(key) for key in template_exts.keys()]
-                self.ext_repl = { key2ext(key): value for (key,value) in template_exts.items()}
-                self.ext_regex = { key2ext(key): ext_regex(value) for (key,value) in template_exts.items()}
+                self.to_template_exts = [key2ext(key) for key in template_exts.keys()]
+                self.exts = self.exts + (self.to_template_exts)
+                self.ext_repl.update({ key2ext(key): value for (key,value) in template_exts.items()})
+                self.ext_regex.update({ key2ext(key): ext_regex(value) for (key,value) in template_exts.items()})
             if 'exclude_globs' in gen_import:
                 self.exclude_globs = gen_import['exclude_globs']
         except KeyError:
@@ -119,10 +127,12 @@ class ImportTemplatesRender(CopyTemplatesRender):
             #text = text.replace(text_to_search, replacement_text)
             self.replacements = self.ext_repl[file_ext]
             text = re.sub(self.ext_regex[file_ext], self.replace_vars, text)
-            if self.top:
-                new_destination = f"{filename}.bldr-j2.bldr-pass{file_ext}"
-            else:
-                new_destination = f"{filename}.bldr-j2{file_ext}"
+            new_destination = destination_path
+            if file_ext in self.to_template_exts:
+                if self.top:
+                    new_destination = f"{filename}.bldr-j2.bldr-pass{file_ext}"
+                else:
+                    new_destination = f"{filename}.bldr-j2{file_ext}"
             self.ctx.log(f"Generating {new_destination}")
             dpath = Path(new_destination)
             dpath.write_text(text)
