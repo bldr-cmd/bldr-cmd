@@ -48,6 +48,11 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
         bldr.gen.cmd(ctx, generator_name)
         ctx.log(f"Import Complete.  Run `bldr gen.up` to update files")
 
+def key2ext(key):
+    if key[0] == '.':
+        return key
+    else:
+        return '.'+ key 
 
 class ImportTemplatesRender(CopyTemplatesRender):
     def filter_file(self, root: str, file: str):
@@ -71,13 +76,15 @@ class ImportTemplatesRender(CopyTemplatesRender):
         self.exts = []
         self.ext_repl = {}
         self.exclude_globs = []
-        if 'gen.import' in ctx.env['config']:
-            gen_import = ctx.env['config']['gen.import']
+        try:
+            gen_import = ctx.env['config']['gen']['import']
             template_exts = gen_import['template_exts']
-            self.exts = template_exts.keys()
-            self.ext_repl = template_exts
+            self.exts = [key2ext(key) for key in template_exts.keys()]
+            self.ext_repl = { key2ext(key): value for (key,value) in template_exts.items()}
             if 'exclude_globs' in gen_import:
                 self.exclude_globs = gen_import['exclude_globs']
+        except KeyError:
+            pass
 
             
     def replace_vars(self,match):
