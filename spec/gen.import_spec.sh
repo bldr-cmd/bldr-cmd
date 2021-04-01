@@ -74,5 +74,12 @@ Describe 'bldr gen.import'
     The path .bldr/module/import.some_proj/local/different/nested/name/somefile should be exist
 
     The output should match pattern '*different/nested/name*'
+  End
+
+  It 'Renames files'
+    When call bldr gen.import --top $TEST_FILES/some_proj
+    The path ./local/RightName.md should be exist
+    The output should match pattern '*local/RightName.md*'
+
   End                                                                                                                                                                                                  
 End    

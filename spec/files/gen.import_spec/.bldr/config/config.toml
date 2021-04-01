@@ -3,7 +3,7 @@
 exclude_globs = ["*.sln"]
 
 [gen.import.renames]
-
+    "WrongName.txt" = "RightName.md"
 
 # Add extensions here to have them turned into template_exts
 [gen.import.template_exts.cs]

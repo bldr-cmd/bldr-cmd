@@ -53,9 +53,12 @@ def key2ext(key):
         return key
     else:
         return '.'+ key
-        
+
 def ext_regex(ext_dict):
     return '|'.join(r'\b%s\b' % re.escape(s) for s in ext_dict)
+
+def rename_regex(rename_dict):
+    return '|'.join(r'\b%s\b' % re.escape(s) for s in rename_dict)
 
 class ImportTemplatesRender(CopyTemplatesRender):
     def filter_file(self, root: str, file: str):
@@ -80,8 +83,12 @@ class ImportTemplatesRender(CopyTemplatesRender):
         self.ext_repl = {}
         self.exclude_globs = []
         self.renames = {}
+        self.rename_regex = None
         try:
             gen_import = ctx.env['config']['gen']['import']
+            if 'renames' in gen_import:
+                self.renames = gen_import['renames']
+                self.rename_regex = rename_regex(self.renames)
             if 'template_exts' in gen_import:
                 template_exts = gen_import['template_exts']
                 self.exts = [key2ext(key) for key in template_exts.keys()]
@@ -95,8 +102,13 @@ class ImportTemplatesRender(CopyTemplatesRender):
             
     def replace_vars(self,match):
         return self.replacements[match.group(0)]
+
+    def rename_path(self,match):
+        return self.renames[match.group(0)]
+
     def render(self, source_path: str, destination_path: str):
-        dpath = Path(destination_path)
+        if self.rename_regex != None:
+            destination_path = re.sub(self.rename_regex, self.rename_path, destination_path)
 
         (filename, file_ext) = os.path.splitext(destination_path)
         if file_ext in self.exts:
