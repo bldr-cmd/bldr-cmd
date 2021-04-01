@@ -15,6 +15,10 @@ def render_for(ext: str):
         return function
     return decorator
 
+@render_for('bldr-pass')
+def render_pass(template_data: dict, source_path: str, destination_path: str):
+    shutil.copy(source_path, destination_path)
+    
 @render_for('bldr-j2')
 def render_j2(template_data: dict, source_path: str, destination_path: str):
     if os.path.exists(destination_path + ".keep"):

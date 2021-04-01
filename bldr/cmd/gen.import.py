@@ -10,7 +10,7 @@ import bldr.gen
 from pathlib import Path
 from bldr.gen.render import CopyTemplatesRender
 from bldr.environment import Environment
-from bldr.cli import pass_environment, cmd
+from bldr.cli import pass_environment, run_cmd
 import os
 import re
 
@@ -26,7 +26,7 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     generator_name = f"import.{Path(source).name}"
     source_path = Path(source)
     if top:
-        local_path = ctx.proj_path / "local"
+        local_path = ctx.local_path / "local"
     else:
         local_path = ctx.module_path / generator_name / "local"
     
@@ -36,12 +36,13 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     local_path.mkdir(parents=True, exist_ok=True)
     
     # Copy Files
-    copy_render = ImportTemplatesRender(ctx) 
+    copy_render = ImportTemplatesRender(ctx, top) 
     copy_render.walk(source_path, local_path)
 
     # Save to the generator file
     bldr.gen.add_generator([generator_name], ctx)
 
+    run_cmd(ctx, 'gen.up')
     if top:
         ctx.log(f"Import Complete.  Project can now be used as a bldr Module")
     else:
@@ -77,13 +78,14 @@ class ImportTemplatesRender(CopyTemplatesRender):
                 return False
         return True
 
-    def __init__(self, ctx: Environment):
+    def __init__(self, ctx: Environment, top: bool):
         super().__init__(ctx, True)
         self.exts = []
         self.ext_repl = {}
         self.exclude_globs = []
         self.renames = {}
         self.rename_regex = None
+        self.top = top
         try:
             gen_import = ctx.env['config']['gen']['import']
             if 'renames' in gen_import:
@@ -116,8 +118,11 @@ class ImportTemplatesRender(CopyTemplatesRender):
             text = spath.read_text()
             #text = text.replace(text_to_search, replacement_text)
             self.replacements = self.ext_repl[file_ext]
-            text = re.sub(self.ext_regex[file_ext], self.replace_vars, text) 
-            new_destination = f"{filename}.bldr-j2{file_ext}"
+            text = re.sub(self.ext_regex[file_ext], self.replace_vars, text)
+            if self.top:
+                new_destination = f"{filename}.bldr-j2.bldr-pass{file_ext}"
+            else:
+                new_destination = f"{filename}.bldr-j2{file_ext}"
             self.ctx.log(f"Generating {new_destination}")
             dpath = Path(new_destination)
             dpath.write_text(text)

@@ -11,6 +11,11 @@ VERSION = "0.1.0"
 pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))
 
+
+def run_cmd(ctx: Environment, cmd_name: str, *args, **kwargs):
+    click_ctx = click.get_current_context()
+    click_ctx.invoke(cmd(ctx,cmd_name), *args, **kwargs)
+    
 def cmd(ctx: Environment, cmd_name: str):
     cmd_mod_path = ctx.cmd_path(cmd_name)
 
