@@ -5,6 +5,9 @@ exclude_globs = ["*.sln"]
 [gen.import.renames]
     "WrongName.txt" = "RightName.md"
 
+[gen.import.replace_exts.md]
+    "Secret Vendor" = "DE Designworks"
+
 # Add extensions here to have them turned into template_exts
 [gen.import.template_exts.cs]
     SomeModule = "TheNewModule"

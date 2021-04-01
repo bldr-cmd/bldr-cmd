@@ -42,12 +42,11 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     # Save to the generator file
     bldr.gen.add_generator([generator_name], ctx)
 
-    run_cmd(ctx, 'gen.up')
-    if top:
-        ctx.log(f"Import Complete.  Project can now be used as a bldr Module")
-    else:
+    if not top:
         bldr.gen.cmd(ctx, generator_name)
-        ctx.log(f"Import Complete.")
+
+    run_cmd(ctx, 'gen.up')
+    ctx.log(f"Import Complete.")
 
 def key2ext(key):
     if key[0] == '.':

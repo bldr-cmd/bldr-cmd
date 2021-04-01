@@ -10,14 +10,11 @@ Describe 'bldr gen.import'
   AfterEach 'cleanup'
                                                                                        
   It 'Copies all files to Local Template'
-    bldr gen.import $TEST_FILES/some_proj > /dev/null
-
-    When call bldr gen.up
+    When call bldr gen.import $TEST_FILES/some_proj
     The output should match pattern '*Creating*somefile*'
     The output should match pattern '*Creating*some_deep_file*'
     The path ./somefile should be exist 
     The path ./somedir/some_deep_dir/some_deep_file should be exist                                                                          
-    
   End       
 
   It 'Imports to a module named `import.dirname`'
@@ -39,7 +36,6 @@ Describe 'bldr gen.import'
     #cat ./.bldr/module/import.some_proj/local/net_code.bldr-j2.cs
     #echo "gen.up\n"
     
-    bldr gen.up > /dev/null
     The path ./net_code.cs contents should include "MyNewPlugableModule.CoolFunction(1,2,3)"
     
     #cat ./net_code.cs
@@ -76,5 +72,13 @@ Describe 'bldr gen.import'
     The path ./local/RightName.md should be exist
     The output should match pattern '*local/RightName.md*'
 
-  End                                                                                                                                                                                                  
+  End
+
+  It 'Replaces text in files'
+    When call bldr gen.import $TEST_FILES/some_proj
+    The path ./README.md should be exist
+
+    The path ./README.md contents should include "DE Designworks"
+    The output should match pattern '*Generating *local/README.md*'
+  End     
 End    
