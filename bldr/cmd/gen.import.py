@@ -47,7 +47,7 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
         ctx.log(f"Import Complete.  Project can now be used as a bldr Module")
     else:
         bldr.gen.cmd(ctx, generator_name)
-        ctx.log(f"Import Complete.  Run `bldr gen.up` to update files")
+        ctx.log(f"Import Complete.")
 
 def key2ext(key):
     if key[0] == '.':
