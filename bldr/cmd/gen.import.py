@@ -52,7 +52,10 @@ def key2ext(key):
     if key[0] == '.':
         return key
     else:
-        return '.'+ key 
+        return '.'+ key
+        
+def ext_regex(ext_dict):
+    return '|'.join(r'\b%s\b' % re.escape(s) for s in ext_dict)
 
 class ImportTemplatesRender(CopyTemplatesRender):
     def filter_file(self, root: str, file: str):
@@ -76,11 +79,14 @@ class ImportTemplatesRender(CopyTemplatesRender):
         self.exts = []
         self.ext_repl = {}
         self.exclude_globs = []
+        self.renames = {}
         try:
             gen_import = ctx.env['config']['gen']['import']
-            template_exts = gen_import['template_exts']
-            self.exts = [key2ext(key) for key in template_exts.keys()]
-            self.ext_repl = { key2ext(key): value for (key,value) in template_exts.items()}
+            if 'template_exts' in gen_import:
+                template_exts = gen_import['template_exts']
+                self.exts = [key2ext(key) for key in template_exts.keys()]
+                self.ext_repl = { key2ext(key): value for (key,value) in template_exts.items()}
+                self.ext_regex = { key2ext(key): ext_regex(value) for (key,value) in template_exts.items()}
             if 'exclude_globs' in gen_import:
                 self.exclude_globs = gen_import['exclude_globs']
         except KeyError:
@@ -90,14 +96,15 @@ class ImportTemplatesRender(CopyTemplatesRender):
     def replace_vars(self,match):
         return self.replacements[match.group(0)]
     def render(self, source_path: str, destination_path: str):
+        dpath = Path(destination_path)
+
         (filename, file_ext) = os.path.splitext(destination_path)
         if file_ext in self.exts:
             spath = Path(source_path)
             text = spath.read_text()
             #text = text.replace(text_to_search, replacement_text)
             self.replacements = self.ext_repl[file_ext]
-            text = re.sub('|'.join(r'\b%s\b' % re.escape(s) for s in self.replacements), 
-                self.replace_vars, text) 
+            text = re.sub(self.ext_regex[file_ext], self.replace_vars, text) 
             new_destination = f"{filename}.bldr-j2{file_ext}"
             self.ctx.log(f"Generating {new_destination}")
             dpath = Path(new_destination)
