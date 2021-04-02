@@ -64,7 +64,8 @@ def regex_for(string: str):
     name = regex_name(string)
     if string.startswith('r/') and string.endswith('/'):
         return r'(?P<%s>%s)' % (name, string[2:-1])
-    return r'(?P<%s>\b%s\b)' % (name, re.escape(string))
+    else:
+        return r'(?P<%s>\b%s\b)' % (name, re.escape(string))
 
 def ext_regex(ext_dict):
     return '|'.join(regex_for(s) for s in ext_dict)
@@ -106,8 +107,8 @@ class ImportTemplatesRender(CopyTemplatesRender):
         try:
             gen_import = ctx.env['config']['gen']['import']
             if 'renames' in gen_import:
-                self.renames = gen_import['renames']
-                self.rename_regex = rename_regex(self.renames)
+                self.renames = named_regex_dicts(gen_import['renames'])
+                self.rename_regex = ext_regex(gen_import['renames'])
             if 'replace_exts' in gen_import:
                 replace_exts = gen_import['replace_exts']
                 self.exts = self.exts + [key2ext(key) for key in replace_exts.keys()]
@@ -130,7 +131,8 @@ class ImportTemplatesRender(CopyTemplatesRender):
         return self.replacements[groupname]
 
     def rename_path(self,match):
-        return self.renames[match.group(0)]
+        groupname = match.lastgroup
+        return self.renames[groupname]
 
     def render(self, source_path: str, destination_path: str):
         if self.rename_regex != None:
