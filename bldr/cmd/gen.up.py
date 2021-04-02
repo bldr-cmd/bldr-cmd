@@ -8,6 +8,7 @@ import os
 import shutil
 
 import bldr
+import bldr.util
 import bldr.gen
 import bldr.gen.render
 
@@ -34,7 +35,7 @@ def cli(ctx, regen):
 
     if regen:
         if ctx.prev_generated_path.exists():
-            shutil.rmtree(ctx.prev_generated_path)
+            bldr.util.rmtree(ctx.prev_generated_path)
 
         # Generate to next_generated_path
         
@@ -54,7 +55,7 @@ def cli(ctx, regen):
     diff_patch_render.walk()
 
     if ctx.prev_path.exists():
-        shutil.rmtree(ctx.prev_path)
+        bldr.util.rmtree(ctx.prev_path)
     ctx.current_path.rename(ctx.prev_path)
     ctx.next_path.rename(ctx.current_path)
     ctx.next_path.mkdir()

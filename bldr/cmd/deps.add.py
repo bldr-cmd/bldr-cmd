@@ -5,11 +5,11 @@
 from bldr.environment import Environment
 import os
 import sys
-import shutil
 from git.objects.submodule.root import RootUpdateProgress
 
 import bldr
 import bldr.gen.render
+import bldr.util
 import giturlparse
 
 from git import Repo
@@ -84,7 +84,7 @@ def git_add(ctx, config, branch, url, path, force):
     module_path = git_path / "modules" / path
     if module_path.exists():
         if force:
-            shutil.rmtree(module_path)
+            bldr.util.rmtree(module_path)
         else:
             ctx.log("Module already exists at that location.  Rerun with --force to remove it")
             exit(-1)   

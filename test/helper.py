@@ -7,10 +7,10 @@ import unittest
 from click.testing import CliRunner
 
 import bldr.cli
+import bldr.util
 from bldr.environment import Environment
 
 unittest.TestLoader.sortTestMethodsUsing = None
-
 
 original_cwd = os.path.abspath(os.path.curdir)
 test_folder_base = os.path.join(original_cwd, "test/")
@@ -35,7 +35,7 @@ class BldrTestCase():
         test_folder = cls.temp_folder()
         log.info("Creating " + test_folder)
         if os.path.exists(test_folder):
-            shutil.rmtree(test_folder)
+            bldr.util.rmtree(test_folder)
         os.makedirs(test_folder)
         os.chdir(test_folder)
 
@@ -44,4 +44,4 @@ class BldrTestCase():
         test_folder = cls.temp_folder()
         log.info("Removing " + test_folder)
         os.chdir(original_cwd)
-        shutil.rmtree(test_folder)
+        bldr.util.rmtree(test_folder)
