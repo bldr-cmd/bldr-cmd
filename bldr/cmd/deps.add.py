@@ -4,7 +4,8 @@
 """
 from bldr.environment import Environment
 import os
-
+import sys
+import shutil
 from git.objects.submodule.root import RootUpdateProgress
 
 import bldr
@@ -35,7 +36,6 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 def cli(ctx, url, path, git, branch, module, force):
     """Get Dependencies"""
     
-
     config = ctx.env['dep']['config']
 
     if module:
@@ -57,11 +57,10 @@ def cli(ctx, url, path, git, branch, module, force):
             exit -1
 
     cwd = Path('.').absolute()
-    # path must only have '/' to work with git!!
-    path = str(full_path.relative_to(cwd)).replace('\\', '/')
+    path = str(full_path.relative_to(cwd))
 
     if git:
-        git_add(ctx, config, branch, url, path)
+        git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
         ctx.vlog("Saving Config:" + json.dumps(config))      
@@ -70,14 +69,25 @@ def cli(ctx, url, path, git, branch, module, force):
     run_cmd(ctx, 'deps.get')
 
 
-def git_add(ctx, config, branch, url, path):
+def git_add(ctx, config, branch, url, path, force):
+    # path must only have '/' to work with git!!
+    path = path.replace('\\', '/')
+
     if branch == None:
         branch = 'master'
 
     git_path = ctx.proj_path / '.git'
     if not git_path.exists():
         ctx.log("No .git folder")
-        exit -1
+        exit(-1)
+
+    module_path = git_path / "modules" / path
+    if module_path.exists():
+        if force:
+            shutil.rmtree(module_path)
+        else:
+            ctx.log("Module already exists at that location.  Rerun with --force to remove it")
+            exit(-1)   
 
     repo = Repo(git_path) 
     ctx.log(f"submodule create {path} {path} {url}")
