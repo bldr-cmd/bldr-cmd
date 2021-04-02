@@ -43,6 +43,7 @@ def cli(ctx, regen, reimport):
             ctx.current_generated_path.rename(ctx.prev_generated_path)
 
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
+        ctx.gen_replay = True
         if 'generators' in ctx.env['gen']:
             generators = ctx.env['gen']['generators']
             for gen in generators:
@@ -52,9 +53,10 @@ def cli(ctx, regen, reimport):
                     bldr.gen.cmd(ctx, subcommand, args)
                 elif gen_type == 'gen.import':
                     [generator_name, source, path, top] = gen_args
+                    top = bool(top)
                     if reimport:
                         if Path(source).exists():
-                            run_cmd('gen.import', *[source, path, top])
+                            run_cmd(ctx, 'gen.import', source=source, path=path, top=top)
                         else:
                             ctx.log(f"Import source no longer exists: {source}")
                             bldr.gen.cmd(ctx, generator_name, None)
@@ -62,6 +64,7 @@ def cli(ctx, regen, reimport):
                         ctx.log(f"Skipping top-level import from: {source}.  Use --reimport to reimport from its source")
                     else:
                         bldr.gen.cmd(ctx, gen[1], None)
+        ctx.gen_replay = False
 
     else:
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)

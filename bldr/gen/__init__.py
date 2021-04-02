@@ -13,6 +13,10 @@ def cmd(ctx: Environment, subcommand: str, args = None):
         copy_render.walk(module_local_path, ctx.current_generated_path)
 
 def add_generator(generator: list, ctx: Environment = Environment()):
+    if ctx.gen_replay:
+        # Don't record generators if we are replaying them
+        return
+
     config = {}
     if 'gen' in ctx.env:
         config = ctx.env['gen']

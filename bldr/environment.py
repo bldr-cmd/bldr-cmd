@@ -53,6 +53,7 @@ class Environment:
         self.cwd = os.getcwd()
         self._env = None
         self._dotbldr_path = None
+        self._gen_replay = False
 
     @property
     def env(self) -> Dict:
@@ -67,6 +68,14 @@ class Environment:
     @env.setter
     def env(self, env):
         self._env = env
+
+    @property
+    def gen_replay(self):
+        return self._gen_replay
+
+    @gen_replay.setter
+    def gen_replay(self, replay):
+        self._gen_replay = replay
 
     @property
     def dotbldr_path(self) -> Path:
