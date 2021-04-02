@@ -57,7 +57,8 @@ def cli(ctx, url, path, git, branch, module, force):
             exit -1
 
     cwd = Path('.').absolute()
-    path = str(full_path.relative_to(cwd))
+    # path must only have '/' to work with git!!
+    path = str(full_path.relative_to(cwd)).replace('\\', '/')
 
     if git:
         git_add(ctx, config, branch, url, path)
