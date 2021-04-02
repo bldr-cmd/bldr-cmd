@@ -1,5 +1,4 @@
 import os
-import toml
 from typing import Callable
 
 import bldr.gen.env
@@ -20,6 +19,7 @@ def add_generator(generator: list, ctx: Environment = Environment()):
     if 'generators' not in config:
         config['generators'] = []
 
+    generator = [str(part) for part in generator]
     config['generators'].append(generator)
     bldr.gen.env.save(config, ctx.dotbldr_path)
 

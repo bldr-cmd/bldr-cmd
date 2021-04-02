@@ -21,7 +21,7 @@ import click
 
 @click.command("gen.up", short_help="Update Code Gen")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
-@click.argument("regen", required=False, type=click.BOOL)
+@click.option("--regen", flag_value=True, help="Regenerate module templates")
 @pass_environment
 def cli(ctx, regen):
     """Update Code Generation"""
