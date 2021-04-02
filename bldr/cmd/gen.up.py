@@ -43,8 +43,8 @@ def cli(ctx, regen, reimport):
             ctx.current_generated_path.rename(ctx.prev_generated_path)
 
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
-        if 'generators' in ctx['gen']:
-            generators = ctx['gen']['generators']
+        if 'generators' in ctx.env['gen']:
+            generators = ctx.env['gen']['generators']
             for gen in generators:
                 gen_type, *gen_args = gen
                 if gen_type == 'gen':

@@ -1,22 +1,22 @@
 
-Describe 'bldr gen.up'                                                                                           
+Describe 'bldr gen.up'
   Include venv/bin/activate
-  setup() {  
+  setup() {
     setup_w_bldr
   }
-  cleanup() {  
+  cleanup() {
     cleanup_dir
   }
   BeforeEach 'setup'
   AfterEach 'cleanup'
-                                                                                       
+
   It 'Supports inline templates'
-    echo "hello World\n" > hi.bldr-j2.txt                                                                                           
+    echo "hello World\n" > hi.bldr-j2.txt
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
 
-    The path hi.txt should be exist  
-    The path hi.txt contents should include "hello World"                                                          
+    The path hi.txt should be exist
+    The path hi.txt contents should include "hello World"
   End
 
   It 'Supports Jinja2 templates'
@@ -26,9 +26,9 @@ Describe 'bldr gen.up'
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
 
-    The path hi.txt should be exist  
-    The path hi.txt contents should include "hellow"                                                          
-  End  
+    The path hi.txt should be exist
+    The path hi.txt contents should include "hellow"
+  End
 
   It 'Templates Only Apply Changes'
     cp $TEST_FILES/hi.bldr-j2.txt ./
@@ -41,10 +41,10 @@ Describe 'bldr gen.up'
     When call bldr gen.up
     The output should match pattern '*Updating*hi.txt*'
 
-    The path hi.txt should be exist  
-    The path hi.txt contents should include "NO"   
-    The path hi.txt contents should include "Lets NOT"                                                         
-  End  
+    The path hi.txt should be exist
+    The path hi.txt contents should include "NO"
+    The path hi.txt contents should include "Lets NOT"
+  End
 
   It 'Has a Default Local Template In .bldr/local'
     mkdir -p ./.bldr/local/
@@ -54,7 +54,20 @@ Describe 'bldr gen.up'
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
 
-    The path hi.txt should be exist  
-    The path hi.txt contents should include "hellow"                                                          
+    The path hi.txt should be exist
+    The path hi.txt contents should include "hellow"
   End
-End   
+
+  It 'Reruns generators'
+    create_git
+    bldr deps.add --module --git $GIT_CACHE_DIR/brck-net-serial-sim.git > /dev/null
+    bldr gen brck-net-serial-sim > /dev/null
+    bldr gen.up > /dev/null
+
+    When call bldr gen.up --regen
+
+    The output should match pattern '*Copying*SerialSimulator.bldr-j2.cs*'
+
+    The path SerialSimulator/SerialSimulator.cs should be exist
+  End  
+End
