@@ -54,8 +54,24 @@ def key2ext(key):
     else:
         return '.'+ key
 
+def regex_name(regex_str : str):
+    val = hash(regex_str)
+    if val < 0:
+        val = -val
+    return "r" + str(val)
+
+def regex_for(string: str):
+    name = regex_name(string)
+    if string.startswith('r/') and string.endswith('/'):
+        return r'(?P<%s>%s)' % (name, string[2:-1])
+    return r'(?P<%s>\b%s\b)' % (name, re.escape(string))
+
 def ext_regex(ext_dict):
-    return '|'.join(r'\b%s\b' % re.escape(s) for s in ext_dict)
+    return '|'.join(regex_for(s) for s in ext_dict)
+
+def named_regex_dicts(regex_dic: dict):
+    return {regex_name(key): value for (key, value) in regex_dic.items()}
+
 
 def rename_regex(rename_dict):
     return '|'.join(r'\b%s\b' % re.escape(s) for s in rename_dict)
@@ -95,13 +111,13 @@ class ImportTemplatesRender(CopyTemplatesRender):
             if 'replace_exts' in gen_import:
                 replace_exts = gen_import['replace_exts']
                 self.exts = self.exts + [key2ext(key) for key in replace_exts.keys()]
-                self.ext_repl.update({ key2ext(key): value for (key,value) in replace_exts.items()})
+                self.ext_repl.update({ key2ext(key): named_regex_dicts(value) for (key,value) in replace_exts.items()})
                 self.ext_regex.update({ key2ext(key): ext_regex(value) for (key,value) in replace_exts.items()})
             if 'template_exts' in gen_import:
                 template_exts = gen_import['template_exts']
                 self.to_template_exts = [key2ext(key) for key in template_exts.keys()]
                 self.exts = self.exts + (self.to_template_exts)
-                self.ext_repl.update({ key2ext(key): value for (key,value) in template_exts.items()})
+                self.ext_repl.update({ key2ext(key): named_regex_dicts(value) for (key,value) in template_exts.items()})
                 self.ext_regex.update({ key2ext(key): ext_regex(value) for (key,value) in template_exts.items()})
             if 'exclude_globs' in gen_import:
                 self.exclude_globs = gen_import['exclude_globs']
@@ -110,7 +126,8 @@ class ImportTemplatesRender(CopyTemplatesRender):
 
             
     def replace_vars(self,match):
-        return self.replacements[match.group(0)]
+        groupname = match.lastgroup
+        return self.replacements[groupname]
 
     def rename_path(self,match):
         return self.renames[match.group(0)]
