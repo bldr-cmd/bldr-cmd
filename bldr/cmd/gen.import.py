@@ -82,7 +82,7 @@ def regex_orig(regex_str: str):
         return None
 
 def ext_regex(ext_dict):
-    return '|'.join(regex_for(s) for s in ext_dict)
+    return re.compile('|'.join( regex_for(s) for s in ext_dict))
 
 def named_regex_dicts(regex_dic: dict):
     return {regex_name(key): (regex_orig(key), value) for (key, value) in regex_dic.items()}
@@ -122,7 +122,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
             gen_import = ctx.env['config']['gen']['import']
             if 'renames' in gen_import:
                 self.renames = named_regex_dicts(gen_import['renames'])
-                self.rename_regex = ext_regex(gen_import['renames'])
+                self.rename_regex = re.compile(ext_regex(gen_import['renames']))
             if 'replace_exts' in gen_import:
                 replace_exts = gen_import['replace_exts']
                 self.exts = self.exts + [key2ext(key) for key in replace_exts.keys()]
@@ -160,7 +160,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
 
     def render(self, source_path: str, destination_path: str):
         if self.rename_regex != None:
-            destination_path = re.sub(self.rename_regex, self.rename_path, destination_path)
+            destination_path = self.rename_regex.sub(self.rename_path, destination_path)
 
         (filename, file_ext) = os.path.splitext(destination_path)
         if file_ext in self.exts:
@@ -168,7 +168,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
             text = spath.read_text()
             #text = text.replace(text_to_search, replacement_text)
             self.replacements = self.ext_repl[file_ext]
-            text = re.sub(self.ext_regex[file_ext], self.replace_vars, text)
+            text = self.ext_regex[file_ext].sub(self.replace_vars, text)
             new_destination = destination_path
             if file_ext in self.to_template_exts:
                 if self.as_template:
