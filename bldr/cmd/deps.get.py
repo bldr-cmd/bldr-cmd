@@ -4,6 +4,7 @@
 """
 from bldr.environment import Environment
 import os
+import json
 
 from git.objects.submodule.root import RootUpdateProgress
 
@@ -44,6 +45,11 @@ def cli(ctx):
     
     config = {name: dep for (name, dep) in ctx.env['dep']['config'].items()}
     lockfile = {name: dep for (name, dep) in ctx.env['dep']['lock'].items()}
+    
+    # if ctx.verbose:
+    #     ctx.vlog("Current Config:" + json.dumps(config))
+    #     ctx.vlog("Current Lock:" + json.dumps(lockfile))
+
 
     # Remove deps not in the config file
     lockfile = {name: dep for (name, dep) in lockfile.items() if name in config}
@@ -72,13 +78,15 @@ def cli(ctx):
         
         # Create a lock entry if the submodule was added another way
         if submodule.name not in lockfile:
-            lock_info = {
-                'type': 'git',
-                'path': submodule.name,
-                'branch': submodule.branch,
-                #'url': submodule.url
-            }
-            lockfile[submodule.name] = lock_info
+            ctx.vlog("{submodule.name} not in lockfile, skipping")
+            continue
+            # lock_info = {
+            #     'type': 'git',
+            #     'path': submodule.name,
+            #     'branch': submodule.branch,
+            #     #'url': submodule.url
+            # }
+            # lockfile[submodule.name] = lock_info
 
         lock_info = lockfile[submodule.name]
         lock_info['sha'] = sha
@@ -91,5 +99,8 @@ def cli(ctx):
             ctx.log(f"Setting {submodule.name} {submodule.branch} {submodule.hexsha}")
             subrepo.git.checkout(branch)
             subrepo.git.reset('--hard', sha)
+
+    if ctx.verbose:
+        ctx.vlog("Saving Lock:" + json.dumps(lockfile))
 
     bldr.dep.env.save_lock(ctx.dotbldr_path, lockfile)

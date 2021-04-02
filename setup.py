@@ -17,6 +17,7 @@ setup(name='bldr',
           'jinja2',
           'toml',
           'GitPython',
+          'git-url-parse',
       ],
       entry_points = {
         'console_scripts': ['bldr=bldr.cli:cli'],
