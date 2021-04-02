@@ -28,14 +28,23 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @click.option("-g", "--git", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-f", "--force", flag_value=True, help="Force the creation of the dependency")
+@click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
 @click.argument("url", required=False, type=str)
 @click.argument("path", required=False, type=click.Path())
 @pass_environment
-def cli(ctx, url, path, git, branch, force):
+def cli(ctx, url, path, git, branch, module, force):
     """Get Dependencies"""
-    ctx.log(f"Adding Dependency {url} {path}")
+    
 
     config = ctx.env['dep']['config']
+
+    if module:
+        if path == None:
+            path = ctx.module_path
+        else:
+            path = ctx.module_path / path
+
+    ctx.log(f"Adding Dependency {url} {path}")
 
     # Normalize the path name
     full_path = Path(path).absolute()

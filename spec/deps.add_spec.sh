@@ -23,5 +23,40 @@ Describe 'bldr deps.get'
     The path somedir/dep3/README.md should be exist
   End
 
+  It 'Appends the repo name if a folder is given'
+    cp $TEST_FILES/dependency.toml ./.bldr/
+    cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
+    mkdir somedir
+
+    When call bldr deps.add --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git somedir
+    The output should match pattern '*submodule create somedir/bldr-test-dep3*'
+    
+    The path .gitmodules should be exist  
+    The path somedir/bldr-test-dep3 should be exist
+    The path somedir/bldr-test-dep3/README.md should be exist
+  End
+
+  It 'Puts modules in the correct folder'
+    cp $TEST_FILES/dependency.toml ./.bldr/
+    cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
+    
+    When call bldr deps.add --module --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git
+    The output should match pattern '*submodule create .bldr/module/bldr-test-dep3*'
+    
+    The path .gitmodules should be exist  
+    The path .bldr/module/bldr-test-dep3 should be exist
+    The path .bldr/module/bldr-test-dep3/README.md should be exist
+  End
   
+  It 'Renames modules in the correct folder'
+    cp $TEST_FILES/dependency.toml ./.bldr/
+    cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
+    
+    When call bldr deps.add --module --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git test3
+    The output should match pattern '*submodule create .bldr/module/test3*'
+    
+    The path .gitmodules should be exist  
+    The path .bldr/module/test3 should be exist
+    The path .bldr/module/test3/README.md should be exist
+  End
 End   
