@@ -120,9 +120,10 @@ class DiffPatchRender(bldr.gen.render.CommonTripleRender):
             with open(destination_path, 'w') as destination_file:
                 destination_file.write(destination_text)
         except UnicodeDecodeError:
+            self.ctx.vlog(f"Updating Binary {destination_path}")
             # This is a binary file so just copy from source to destination
             shutil.copy(source_path, destination_path)
-            
+
         return True   
 
     def walk(self):
