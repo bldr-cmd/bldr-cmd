@@ -14,7 +14,9 @@ def cmd(ctx: Environment, subcommand: str, args = None):
         copy_render.walk(module_local_path, ctx.current_generated_path)
 
 def add_generator(generator: list, ctx: Environment = Environment()):
-    config = ctx.env['gen']
+    config = {}
+    if 'gen' in ctx.env:
+        config = ctx.env['gen']
     if 'generators' not in config:
         config['generators'] = []
 

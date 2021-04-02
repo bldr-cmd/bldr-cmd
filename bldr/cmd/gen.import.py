@@ -40,7 +40,7 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     copy_render.walk(source_path, local_path)
 
     # Save to the generator file
-    bldr.gen.add_generator([generator_name], ctx)
+    bldr.gen.add_generator(['gen.import', source, path, top], ctx)
 
     if not top:
         bldr.gen.cmd(ctx, generator_name)
