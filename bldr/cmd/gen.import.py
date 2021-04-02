@@ -60,18 +60,32 @@ def regex_name(regex_str : str):
         val = -val
     return "r" + str(val)
 
-def regex_for(string: str):
-    name = regex_name(string)
-    if string.startswith('r/') and string.endswith('/'):
-        return r'(?P<%s>%s)' % (name, string[2:-1])
+def is_regex_str(regex_str: str):
+    return regex_str.startswith('r/') and regex_str.endswith('/')
+
+def regex_strip_r(regex_str: str):
+    if is_regex_str(regex_str):
+        return regex_str[2:-1]
+    return regex_str
+
+def regex_for(regex_str: str):
+    name = regex_name(regex_str)
+    if is_regex_str(regex_str):
+        return r'(?P<%s>%s)' % (name, regex_strip_r(regex_str))
     else:
-        return r'(?P<%s>\b%s\b)' % (name, re.escape(string))
+        return r'(?P<%s>\b%s\b)' % (name, re.escape(regex_str))
+
+def regex_orig(regex_str: str):
+    if is_regex_str(regex_str):
+        return re.compile(r'%s' % regex_strip_r(regex_str))
+    else:
+        return None
 
 def ext_regex(ext_dict):
     return '|'.join(regex_for(s) for s in ext_dict)
 
 def named_regex_dicts(regex_dic: dict):
-    return {regex_name(key): value for (key, value) in regex_dic.items()}
+    return {regex_name(key): (regex_orig(key), value) for (key, value) in regex_dic.items()}
 
 
 def rename_regex(rename_dict):
@@ -128,13 +142,21 @@ class ImportTemplatesRender(CopyTemplatesRender):
             
     def replace_vars(self,match: re.Match):
         groupname = match.lastgroup
-        replacement = self.replacements[groupname]
-        return match.expand(replacement)
+        (orig_regex, replacement) = self.replacements[groupname]
+        if orig_regex == None:
+            return replacement
+        else:
+            found_str = match.groupdict()[groupname]
+            return orig_regex.sub(replacement, found_str)
 
     def rename_path(self,match):
         groupname = match.lastgroup
-        replacement = self.renames[groupname]
-        return match.expand(replacement)
+        (orig_regex, replacement) = self.renames[groupname]
+        if orig_regex == None:
+            return replacement
+        else:
+            found_str = match.groupdict()[groupname]
+            return orig_regex.sub(replacement, found_str)
 
     def render(self, source_path: str, destination_path: str):
         if self.rename_regex != None:
