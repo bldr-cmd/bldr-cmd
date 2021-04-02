@@ -41,8 +41,8 @@ Describe 'bldr gen.import'
     #cat ./net_code.cs
     #The output should match pattern '*Copying local *import.some_proj/local*'
   End   
-  It 'Creates a top-level module with --top'
-    When call bldr gen.import --top $TEST_FILES/some_proj
+  It 'Imports project as a template with --as-template'
+    When call bldr gen.import --as-template $TEST_FILES/some_proj
     
     The path ./local/net_code.bldr-j2.cs should be exist
 
@@ -51,7 +51,7 @@ Describe 'bldr gen.import'
   End
 
   It 'Ignores files marked in the exclude_globs'
-    When call bldr gen.import --top $TEST_FILES/some_proj
+    When call bldr gen.import --as-template $TEST_FILES/some_proj
     
     The path ./local/net_code.bldr-j2.cs should be exist
     The path ./local/project.sln should not be exist
@@ -68,7 +68,7 @@ Describe 'bldr gen.import'
   End
 
   It 'Renames files'
-    When call bldr gen.import --top $TEST_FILES/some_proj
+    When call bldr gen.import --as-template $TEST_FILES/some_proj
     The path ./local/RightName.md should be exist
     The output should match pattern '*local/RightName.md*'
 

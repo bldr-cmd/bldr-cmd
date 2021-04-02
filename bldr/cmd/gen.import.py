@@ -17,15 +17,15 @@ import re
 @click.command("gen.import", short_help="Import Non-bldr project as a template")
 @click.argument("source", required=True, type=click.Path(resolve_path=True))
 @click.option("-p", "--path", type=click.Path(), help="Relative Destination Path")
-@click.option("-t", "--top", is_flag=True, help="Create Top Level Module")
+@click.option("-t", "--as-template", is_flag=True, help="Import the project as template")
 @pass_environment
-def cli(ctx: Environment, source: str, path: str, top: bool):
+def cli(ctx: Environment, source: str, path: str, as_template: bool):
     """Copy project to Local"""
     ctx.log(f"Importing {source}")
 
     generator_name = f"import.{Path(source).name}"
     source_path = Path(source)
-    if top:
+    if as_template:
         local_path = ctx.local_path / "local"
     else:
         local_path = ctx.module_path / generator_name / "local"
@@ -36,13 +36,13 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     local_path.mkdir(parents=True, exist_ok=True)
     
     # Copy Files
-    copy_render = ImportTemplatesRender(ctx, top) 
+    copy_render = ImportTemplatesRender(ctx, as_template) 
     copy_render.walk(source_path, local_path)
 
     # Save to the generator file
-    bldr.gen.add_generator(['gen.import', generator_name, source, path, top], ctx)
+    bldr.gen.add_generator(['gen.import', generator_name, source, path, as_template], ctx)
     
-    if not top:
+    if not as_template:
         bldr.gen.cmd(ctx, generator_name)
 
     run_cmd(ctx, 'gen.up')
@@ -77,7 +77,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
                 return False
         return True
 
-    def __init__(self, ctx: Environment, top: bool):
+    def __init__(self, ctx: Environment, as_template: bool):
         super().__init__(ctx, True)
         self.exts = []
         self.to_template_exts = []
@@ -86,7 +86,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
         self.exclude_globs = []
         self.renames = {}
         self.rename_regex = None
-        self.top = top
+        self.as_template = as_template
         try:
             gen_import = ctx.env['config']['gen']['import']
             if 'renames' in gen_import:
@@ -128,7 +128,7 @@ class ImportTemplatesRender(CopyTemplatesRender):
             text = re.sub(self.ext_regex[file_ext], self.replace_vars, text)
             new_destination = destination_path
             if file_ext in self.to_template_exts:
-                if self.top:
+                if self.as_template:
                     new_destination = f"{filename}.bldr-j2.bldr-pass{file_ext}"
                 else:
                     new_destination = f"{filename}.bldr-j2{file_ext}"

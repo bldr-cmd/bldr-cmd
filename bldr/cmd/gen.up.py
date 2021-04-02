@@ -24,8 +24,9 @@ import click
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @click.option("--regen", flag_value=True, help="Regenerate module templates")
 @click.option("--reimport", flag_value=True, help="Re-import imported modules from their sources")
+@click.option("--purge-local", flag_value=True, help='Purge local/local template.  Useful when re-importing "--as-template" templates')
 @pass_environment
-def cli(ctx, regen, reimport):
+def cli(ctx, regen, reimport, purge_local):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
 
@@ -33,6 +34,10 @@ def cli(ctx, regen, reimport):
 
     ctx.next_path.mkdir(parents=True, exist_ok=True)
     ctx.current_path.mkdir(parents=True, exist_ok=True)
+    local_local_path = ctx.local_path / "local"
+    if local_local_path.exists() and purge_local:
+        bldr.util.rmtree(local_local_path)
+        
     ctx.local_path.mkdir(parents=True, exist_ok=True)
 
     if regen:
