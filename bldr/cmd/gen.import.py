@@ -126,13 +126,15 @@ class ImportTemplatesRender(CopyTemplatesRender):
             pass
 
             
-    def replace_vars(self,match):
+    def replace_vars(self,match: re.Match):
         groupname = match.lastgroup
-        return self.replacements[groupname]
+        replacement = self.replacements[groupname]
+        return match.expand(replacement)
 
     def rename_path(self,match):
         groupname = match.lastgroup
-        return self.renames[groupname]
+        replacement = self.renames[groupname]
+        return match.expand(replacement)
 
     def render(self, source_path: str, destination_path: str):
         if self.rename_regex != None:
