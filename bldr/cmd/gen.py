@@ -28,6 +28,6 @@ def cli(ctx: Environment, subcommand: str, args):
     ctx.log(f"Running Generator {subcommand}")
 
     bldr.gen.cmd(ctx, subcommand, args)
-    bldr.gen.add_generator([subcommand, args])
+    bldr.gen.add_generator(["gen", subcommand, args])
 
        

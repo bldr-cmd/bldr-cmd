@@ -12,9 +12,10 @@ import bldr.util
 import bldr.gen
 import bldr.gen.render
 
+from pathlib import Path
 from diff_match_patch import diff_match_patch
 
-from bldr.cli import pass_environment
+from bldr.cli import pass_environment, run_cmd
 
 import click
 
@@ -22,8 +23,9 @@ import click
 @click.command("gen.up", short_help="Update Code Gen")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @click.option("--regen", flag_value=True, help="Regenerate module templates")
+@click.option("--reimport", flag_value=True, help="Re-import imported modules from their sources")
 @pass_environment
-def cli(ctx, regen):
+def cli(ctx, regen, reimport):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
 
@@ -37,12 +39,30 @@ def cli(ctx, regen):
         if ctx.prev_generated_path.exists():
             bldr.util.rmtree(ctx.prev_generated_path)
 
-        # Generate to next_generated_path
-        
         if ctx.current_generated_path.exists():
             ctx.current_generated_path.rename(ctx.prev_generated_path)
 
-        ctx.next_generated_path.rename(ctx.current_generated_path)
+        ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
+        if 'generators' in ctx['gen']:
+            generators = ctx['gen']['generators']
+            for gen in generators:
+                gen_type, *gen_args = gen
+                if gen_type == 'gen':
+                    subcommand, args = gen_args
+                    bldr.gen.cmd(ctx, subcommand, args)
+                elif gen_type == 'gen.import':
+                    [generator_name, source, path, top] = gen_args
+                    if reimport:
+                        if Path(source).exists():
+                            run_cmd('gen.import', *[source, path, top])
+                        else:
+                            ctx.log(f"Import source no longer exists: {source}")
+                            bldr.gen.cmd(ctx, generator_name, None)
+                    elif top == True:
+                        ctx.log(f"Skipping top-level import from: {source}.  Use --reimport to reimport from its source")
+                    else:
+                        bldr.gen.cmd(ctx, gen[1], None)
+
     else:
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
 

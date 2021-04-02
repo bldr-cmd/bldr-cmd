@@ -39,9 +39,10 @@ def cli(ctx: Environment, source: str, path: str, top: bool):
     copy_render = ImportTemplatesRender(ctx, top) 
     copy_render.walk(source_path, local_path)
 
+    # Save to the generator file
+    bldr.gen.add_generator(['gen.import', generator_name, source, path, top], ctx)
+    
     if not top:
-        # Save to the generator file
-        bldr.gen.add_generator(['gen.import', source, path, top], ctx)
         bldr.gen.cmd(ctx, generator_name)
 
     run_cmd(ctx, 'gen.up')
