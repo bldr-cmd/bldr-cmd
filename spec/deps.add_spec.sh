@@ -15,7 +15,7 @@ Describe 'bldr deps.get'
     cp $TEST_FILES/dependency.toml ./.bldr/
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
 
-    When call bldr deps.add --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git somedir/dep3
+    When call bldr deps.add --git  $GIT_CACHE_DIR/bldr-test-dep3.git somedir/dep3
     The output should match pattern '*submodule create somedir/dep3*'
     
     The path .gitmodules should be exist  
@@ -28,7 +28,7 @@ Describe 'bldr deps.get'
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
     mkdir somedir
 
-    When call bldr deps.add --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git somedir
+    When call bldr deps.add --git  $GIT_CACHE_DIR/bldr-test-dep3.git somedir
     The output should match pattern '*submodule create somedir/bldr-test-dep3*'
     
     The path .gitmodules should be exist  
@@ -40,7 +40,7 @@ Describe 'bldr deps.get'
     cp $TEST_FILES/dependency.toml ./.bldr/
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
     
-    When call bldr deps.add --module --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git
+    When call bldr deps.add --module --git  $GIT_CACHE_DIR/bldr-test-dep3.git
     The output should match pattern '*submodule create .bldr/module/bldr-test-dep3*'
     
     The path .gitmodules should be exist  
@@ -52,7 +52,7 @@ Describe 'bldr deps.get'
     cp $TEST_FILES/dependency.toml ./.bldr/
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
     
-    When call bldr deps.add --module --git git@svn.daveengineering.com:bldr/bldr-test-dep3.git test3
+    When call bldr deps.add --module --git  $GIT_CACHE_DIR/bldr-test-dep3.git test3
     The output should match pattern '*submodule create .bldr/module/test3*'
     
     The path .gitmodules should be exist  

@@ -5,12 +5,18 @@
 # so it is better to set them here.
 # set -eu
 
+export GIT_CACHE_DIR=$SHELLSPEC_PROJECT_ROOT/spec/cache
 export TEST_FILES=$SHELLSPEC_PROJECT_ROOT/spec/files
 export BLDR_VERBOSE=1
 # This callback function will be invoked only once before loading specfiles.
 spec_helper_precheck() {
   # Available functions: info, warn, error, abort, setenv, unsetenv
   # Available variables: VERSION, SHELL_TYPE, SHELL_VERSION
+  
+  [ ! -d "$GIT_CACHE_DIR/brck-net-serial-sim.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/brck-net-serial-sim.git $GIT_CACHE_DIR/brck-net-serial-sim.git
+  [ ! -d "$GIT_CACHE_DIR/bldr-test-dep1.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep1.git $GIT_CACHE_DIR/bldr-test-dep1.git
+  [ ! -d "$GIT_CACHE_DIR/bldr-test-dep3.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep3.git $GIT_CACHE_DIR/bldr-test-dep3.git
+  echo GIT_CACHE_DIR $GIT_CACHE_DIR
   : minimum_version "0.28.1"
 }
 
