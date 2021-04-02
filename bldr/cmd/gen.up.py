@@ -93,31 +93,36 @@ class DiffPatchRender(bldr.gen.render.CommonTripleRender):
             shutil.copy(source_path, destination_path)
             return True
 
-        source_text = ''
-        if os.path.exists(source_path):
-            with open(source_path, 'r') as source_file:
-                source_text = source_file.read()
+        try:
+            source_text = ''
+            if os.path.exists(source_path):
+                with open(source_path, 'r') as source_file:
+                    source_text = source_file.read()
 
-        previous_text = ''
-        if os.path.exists(previous_path):
-            with open(previous_path, 'r') as previous_file:
-                previous_text = previous_file.read()
+            previous_text = ''
+            if os.path.exists(previous_path):
+                with open(previous_path, 'r') as previous_file:
+                    previous_text = previous_file.read()
 
-        patches = self.dmp.patch_make(previous_text, source_text)
+            patches = self.dmp.patch_make(previous_text, source_text)
 
-        if len(patches) == 0:
-            self.ctx.vlog(f"Current {destination_path}")
-            return False
+            if len(patches) == 0:
+                self.ctx.vlog(f"Current {destination_path}")
+                return False
 
-        self.ctx.log(f"Updating {destination_path}")
-        destination_text = ''
-        with open(destination_path, 'r') as destination_file:
-            destination_text = destination_file.read()
-        
-        (destination_text, _success_list) = self.dmp.patch_apply(patches, destination_text)
+            self.ctx.log(f"Updating {destination_path}")
+            destination_text = ''
+            with open(destination_path, 'r') as destination_file:
+                destination_text = destination_file.read()
+            
+            (destination_text, _success_list) = self.dmp.patch_apply(patches, destination_text)
 
-        with open(destination_path, 'w') as destination_file:
-            destination_file.write(destination_text)
+            with open(destination_path, 'w') as destination_file:
+                destination_file.write(destination_text)
+        except UnicodeDecodeError:
+            # This is a binary file so just copy from source to destination
+            shutil.copy(source_path, destination_path)
+            
         return True   
 
     def walk(self):
