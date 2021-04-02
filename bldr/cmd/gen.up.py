@@ -57,15 +57,15 @@ def cli(ctx, regen, reimport, purge_local):
                     subcommand, args = gen_args
                     bldr.gen.cmd(ctx, subcommand, args)
                 elif gen_type == 'gen.import':
-                    [generator_name, source, path, top] = gen_args
-                    top = bool(top)
+                    [generator_name, source, path, as_template] = gen_args
+                    as_template = bool(as_template)
                     if reimport:
                         if Path(source).exists():
-                            run_cmd(ctx, 'gen.import', source=source, path=path, top=top)
+                            run_cmd(ctx, 'gen.import', source=source, path=path, as_template=as_template)
                         else:
                             ctx.log(f"Import source no longer exists: {source}")
                             bldr.gen.cmd(ctx, generator_name, None)
-                    elif top == True:
+                    elif as_template == True:
                         ctx.log(f"Skipping top-level import from: {source}.  Use --reimport to reimport from its source")
                     else:
                         bldr.gen.cmd(ctx, gen[1], None)
