@@ -30,6 +30,16 @@ Describe 'bldr gen.up'
     The path hi.txt contents should include "hellow"
   End
 
+  It 'Supports Python templates'
+    cp $TEST_FILES/bare.bldr-py.txt ./
+
+    When call bldr gen.up
+    The output should match pattern '*Creating*bare.txt*'
+
+    The path bare.txt should be exist
+    The path bare.txt contents should include "This is a bare python template"
+  End
+
   It 'Templates Only Apply Changes'
     cp $TEST_FILES/hi.bldr-j2.txt ./
     cp $TEST_FILES/hi.bldr-py.txt ./
