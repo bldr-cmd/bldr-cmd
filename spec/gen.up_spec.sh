@@ -100,7 +100,7 @@ Describe 'bldr gen.up'
     The output should match pattern '*Deleting*bye.txt*'
 
     The path somedir/somedir2/bye.txt should not be exist
-    #The path somedir should not be exist
+    The path somedir should not be exist
   End
 
   It 'Reruns generators'

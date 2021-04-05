@@ -121,7 +121,12 @@ class CommonRender:
             self.filter_file,
             self.filter_dir)
 
-class TemplateRender(CommonRender): 
+class TemplateRender(CommonRender):
+    def filter_file(self, _root: str, source: str):
+        if lookup_fx_ext(source) != None:
+            return True
+        return self.default_copy
+
     def render(self, source: str, destination: str):
         return render(self.template_data, source, destination, self.default_copy)
 
