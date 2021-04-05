@@ -32,6 +32,8 @@ def cli(ctx, regen, reimport, purge_local):
 
     # Render any templates to next
 
+    if ctx.next_path.exists():
+        bldr.util.rmtree(ctx.next_path)
     ctx.next_path.mkdir(parents=True, exist_ok=True)
     ctx.current_path.mkdir(parents=True, exist_ok=True)
     local_local_path = ctx.local_path / "local"
