@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import runpy
 
@@ -47,6 +48,21 @@ def render_py(template_data: dict, source_path: str, destination_path: str):
     if os.path.exists(template_file):
         # We we already rendered this.  So skip
         return
+
+    # hijack stdout long enough to render the file
+    _prev_stdout = sys.stdout
+    
+    with open(destination_path, 'w') as dest_file:
+        sys.stdout = dest_file
+        try:
+            
+            context = {}
+            context.update(template_data)
+            runpy.run_path(source_path, globals())
+        finally:
+            sys.stdout = _prev_stdout
+
+
     return
 
 
