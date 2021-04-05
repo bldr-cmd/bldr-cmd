@@ -44,12 +44,15 @@ def walk_local(source_root_dir: str, destination_root_dir: str, render: Callable
     for root, dirs, files in os.walk(source_root_dir, topdown=True):
         dirs[:] = [d for d in dirs if common_filter_dir(root, d) and filter_dir(root, d)]
         destdir = root.replace(source_root_dir, destination_root_dir)
+        destdir_created = False
         #print(f"destdir {destdir}")
-        if not os.path.exists(destdir):
-            os.makedirs(destdir)
         for f in files:
             #print(f"f {f}")
             if common_filter_file(root, f) and filter_file(root, f):
+                if not destdir_created:
+                    if not os.path.exists(destdir):
+                        os.makedirs(destdir)
+                    destdir_created = True
                 source = os.path.join(root,f)
                 destination = source.replace(source_root_dir, destination_root_dir)
                 render(source, destination)
@@ -59,12 +62,17 @@ def walk_triple(source_root_dir: str, previous_root_dir: str, destination_root_d
     for root, dirs, files in os.walk(source_root_dir, topdown=True):
         dirs[:] = [d for d in dirs if common_filter_dir(root, d) and filter_dir(root, d)]
         destdir = root.replace(source_root_dir, destination_root_dir)
+        destdir_created = False
         #print(f"destdir {destdir}")
-        if not os.path.exists(destdir):
-            os.makedirs(destdir)
+
         for f in files:
             #print(f"f {f}")
             if common_filter_file(root, f) and filter_file(root, f):
+                if not destdir_created:
+                    if not os.path.exists(destdir):
+                        os.makedirs(destdir)
+                    destdir_created = True
+
                 source = os.path.join(root,f)
                 destination = source.replace(source_root_dir, destination_root_dir)
                 previous = source.replace(source_root_dir, previous_root_dir)
