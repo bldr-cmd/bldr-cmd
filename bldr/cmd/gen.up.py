@@ -95,6 +95,14 @@ class DiffPatchRender(bldr.gen.render.CommonTripleRender):
         self.dmp = diff_match_patch()
    
     def render(self, source_path: str, previous_path: str, destination_path: str):
+
+        if source_path == None:
+            if os.path.exists(destination_path):
+                self.ctx.vlog(f"Deleting {destination_path}")
+                os.unlink(destination_path)
+            # There is no source so we are done
+            return True
+                
         # if the destination does not exist, just copy the file
         if not os.path.exists(destination_path):
             self.ctx.vlog(f"Creating {destination_path}")

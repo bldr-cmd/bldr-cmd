@@ -18,7 +18,7 @@ def render_for(ext: str):
 @render_for('bldr-pass')
 def render_pass(template_data: dict, source_path: str, destination_path: str):
     shutil.copy(source_path, destination_path)
-    
+
 @render_for('bldr-j2')
 def render_j2(template_data: dict, source_path: str, destination_path: str):
     if os.path.exists(destination_path + ".keep"):
@@ -40,6 +40,15 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
 
     with open(destination_path, 'w') as dest_file:
         dest_file.write(outputText)
+
+@render_for('bldr-py')
+def render_py(template_data: dict, source_path: str, destination_path: str):
+    template_file = source_path.replace("bldr-py", "bldr-j2")
+    if os.path.exists(template_file):
+        # We we already rendered this.  So skip
+        return
+    return
+
 
 def lookup_fx_ext(path: str):
     filename = os.path.basename(path)

@@ -58,6 +58,40 @@ Describe 'bldr gen.up'
     The path hi.txt contents should include "hellow"
   End
 
+  It 'Removes deleted files'
+    mkdir -p ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/bye.bldr-j2.txt
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/bye.bldr-py.txt
+    bldr gen.up > /dev/null
+
+    rm ./.bldr/local/bye.bldr-j2.txt
+    rm ./.bldr/local/bye.bldr-py.txt
+
+    When call bldr gen.up
+    The output should match pattern '*Deleting*bye.txt*'
+
+    The path bye.txt should not be exist
+  End
+
+  # It 'Removes deleted files from removed directories'
+  #   mkdir -p ./.bldr/local/
+  #   cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
+  #   cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
+  #   cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/bye.bldr-j2.txt
+  #   cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/bye.bldr-py.txt
+  #   bldr gen.up > /dev/null
+
+  #   rm ./.bldr/local/bye.bldr-j2.txt
+  #   rm ./.bldr/local/bye.bldr-py.txt
+
+  #   When call bldr gen.up
+  #   The output should match pattern '*Deleting*bye.txt*'
+
+  #   The path bye.txt should not be exist
+  # End
+
   It 'Reruns generators'
     create_git
     bldr deps.add --module --git $GIT_CACHE_DIR/brck-net-serial-sim.git > /dev/null
