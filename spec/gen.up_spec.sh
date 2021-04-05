@@ -85,22 +85,23 @@ Describe 'bldr gen.up'
     The path bye.txt should not be exist
   End
 
-  # It 'Removes deleted files from removed directories'
-  #   mkdir -p ./.bldr/local/
-  #   cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
-  #   cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
-  #   cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/bye.bldr-j2.txt
-  #   cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/bye.bldr-py.txt
-  #   bldr gen.up > /dev/null
+  It 'Removes deleted files from removed directories'
+    mkdir -p ./.bldr/local/somedir/somedir2
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/somedir/somedir2/bye.bldr-j2.txt
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/somedir/somedir2/bye.bldr-py.txt
+    bldr gen.up > /dev/null
 
-  #   rm ./.bldr/local/bye.bldr-j2.txt
-  #   rm ./.bldr/local/bye.bldr-py.txt
+    rm -Rf ./.bldr/local/somedir
+    
 
-  #   When call bldr gen.up
-  #   The output should match pattern '*Deleting*bye.txt*'
+    When call bldr gen.up
+    The output should match pattern '*Deleting*bye.txt*'
 
-  #   The path bye.txt should not be exist
-  # End
+    The path somedir/somedir2/bye.txt should not be exist
+    #The path somedir should not be exist
+  End
 
   It 'Reruns generators'
     create_git

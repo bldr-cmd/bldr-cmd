@@ -1,5 +1,5 @@
 import os
-from typing import Callable
+from typing import Callable, List
 
 import bldr.gen.env
 from bldr.environment import Environment
@@ -70,7 +70,15 @@ def walk_triple(source_root_dir: str, previous_root_dir: str, destination_root_d
 
         # Remove Files
         for proot, pdirs, pfiles in os.walk(prevdir, topdown=True):
-            pdirs[:]= [] # Don't actuall walk any dirs
+            prev_dirs = [pd for pd in pdirs if common_filter_dir(proot, pd) and filter_dir(proot, pd)]
+            pdirs[:]= [] # Don't actuall walk any dirs in os.walk(), we do this in walk_render_removed_dirs()
+
+            # Remove folders
+            del_dirs = set(prev_dirs).difference(set(dirs))
+            for del_dir in del_dirs:
+                walk_render_removed_dirs(removed_root_dir=os.path.join(proot, del_dir), previous_root_dir=previous_root_dir, destination_root_dir=destination_root_dir, render=render, filter_file=filter_file, filter_dir=filter_dir)
+
+            # Remove Files
             for pfile in pfiles:
                 if pfile not in files_set:
                     psource = os.path.join(proot, pfile)
@@ -92,3 +100,24 @@ def walk_triple(source_root_dir: str, previous_root_dir: str, destination_root_d
                 destination = source.replace(source_root_dir, destination_root_dir)
                 previous = source.replace(source_root_dir, previous_root_dir)
                 render(source, previous, destination)
+
+def walk_render_removed_dirs(removed_root_dir: str, previous_root_dir: str, destination_root_dir: str, render: Callable[[str, str, str], bool], filter_file: Callable[[str, str], bool], filter_dir: Callable[[str, str], bool]):
+    for root, dirs, files in os.walk(removed_root_dir, topdown=True):
+        dirs[:] = [d for d in dirs if common_filter_dir(root, d) and filter_dir(root, d)]
+        destdir = root.replace(previous_root_dir, destination_root_dir)        
+        #print(f"destdir {destdir}")
+        
+        # Remove Files
+        for f in files:
+            previous = os.path.join(root,f)
+            destination = previous.replace(previous_root_dir, destination_root_dir)
+            render(None, previous, destination)
+
+    destination_root_dir = removed_root_dir.replace(previous_root_dir, destination_root_dir)
+    walk_remove_empty_dirs(destination_root_dir)
+
+def walk_remove_empty_dirs(destination_root_dir: str):
+    #print("Cleaning {destination_root_dir}")
+    for root, dirs, files in os.walk(destination_root_dir):
+        if len(dirs) == 0 and len(files) == 0:
+            os.removedirs(root)
