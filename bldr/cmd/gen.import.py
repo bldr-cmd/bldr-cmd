@@ -20,15 +20,15 @@ import re
 @click.option("-t", "--as-template", is_flag=True, help="Import the project as template")
 @pass_environment
 def cli(ctx: Environment, source: str, path: str, as_template: bool):
-    """Copy project to Local"""
+    """Copy project to Local Templates"""
     ctx.log(f"Importing {source}")
 
     generator_name = f"import.{Path(source).name}"
     source_path = Path(source)
     if as_template:
-        local_path = ctx.local_path / "local"
+        local_path = ctx.local_path / "template"
     else:
-        local_path = ctx.module_path / generator_name / "local"
+        local_path = ctx.module_path / generator_name / "template"
     
     if path != None:
         local_path = local_path / path

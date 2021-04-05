@@ -36,7 +36,7 @@ def cli(ctx, regen, reimport, purge_local):
         bldr.util.rmtree(ctx.next_path)
     ctx.next_path.mkdir(parents=True, exist_ok=True)
     ctx.current_path.mkdir(parents=True, exist_ok=True)
-    local_local_path = ctx.local_path / "local"
+    local_local_path = ctx.local_path / "template"
     if local_local_path.exists() and purge_local:
         bldr.util.rmtree(local_local_path)
         

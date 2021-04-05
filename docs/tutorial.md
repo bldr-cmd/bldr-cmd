@@ -43,15 +43,15 @@ cat hi.txt
 
 This is a test
 
-## bldr Has a Default Local Template In .bldr/local
+## bldr Has a Default Local Template In .bldr/template
 
 ```
-cat <<EOF > .bldr/local/bye.bldr-j2.txt
+cat <<EOF > .bldr/template/bye.bldr-j2.txt
 Lets say {{ say_bye() }}
 
 EOF
 
-cat <<EOF > .bldr/local/bye.bldr-py.txt
+cat <<EOF > .bldr/template/bye.bldr-py.txt
 def say_bye():
     return "good bye"
 EOF
@@ -68,7 +68,7 @@ ls hi.bldr-*
 bldr gen.movelocal
 
 ls hi.bldr-*
-ls .bldr/local/hi.bldr-*
+ls .bldr/template/hi.bldr-*
 ```
 
 ## bldr Generators Creates File Templates in Local

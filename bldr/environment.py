@@ -113,7 +113,7 @@ class Environment:
 
     @property
     def local_path(self) -> Path:
-        return self.dotbldr_path / "local"
+        return self.dotbldr_path / "template"
 
 
     @property

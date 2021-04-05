@@ -12,7 +12,7 @@ from bldr.environment import Environment
 from bldr.cli import pass_environment
 
 
-@click.command("gen.mvlocal", short_help="Move Inline Templates to Local")
+@click.command("gen.mvlocal", short_help="Move Inline Templates to Local Templates Folder")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @pass_environment
 def cli(ctx: Environment):
@@ -21,7 +21,7 @@ def cli(ctx: Environment):
 
     dotbldr_path = ctx.dotbldr_path
     proj_path = ctx.proj_path
-    local_path = dotbldr_path.joinpath("local")
+    local_path = ctx.local_path
 
     local_path.mkdir(parents=True, exist_ok=True)
     # Move Templates

@@ -13,7 +13,7 @@ spec_helper_precheck() {
   # Available functions: info, warn, error, abort, setenv, unsetenv
   # Available variables: VERSION, SHELL_TYPE, SHELL_VERSION
   
-  [ ! -d "$GIT_CACHE_DIR/brck-net-serial-sim.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/brck-net-serial-sim.git $GIT_CACHE_DIR/brck-net-serial-sim.git
+  [ ! -d "$GIT_CACHE_DIR/brk-dotnet-serial-sim.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/brk-dotnet-serial-sim.git $GIT_CACHE_DIR/brk-dotnet-serial-sim.git
   [ ! -d "$GIT_CACHE_DIR/bldr-test-dep1.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep1.git $GIT_CACHE_DIR/bldr-test-dep1.git
   [ ! -d "$GIT_CACHE_DIR/bldr-test-dep3.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep3.git $GIT_CACHE_DIR/bldr-test-dep3.git
   : minimum_version "0.28.1"

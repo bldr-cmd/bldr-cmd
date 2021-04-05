@@ -16,8 +16,8 @@ Describe 'bldr gen.movelocal'
     When call bldr gen.mvlocal
     The output should match pattern '*Moving*hi.bldr-j2.txt*'
     The output should match pattern '*Moving*hi.bldr-py.txt*'
-    The path ./.bldr/local/hi.bldr-j2.txt should be exist 
-    The path ./.bldr/local/hi.bldr-py.txt should be exist                                                                          
+    The path ./.bldr/template/hi.bldr-j2.txt should be exist 
+    The path ./.bldr/template/hi.bldr-py.txt should be exist                                                                          
     
   End                                                                                                                                                                                                             
 End    

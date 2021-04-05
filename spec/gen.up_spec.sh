@@ -56,10 +56,10 @@ Describe 'bldr gen.up'
     The path hi.txt contents should include "Lets NOT"
   End
 
-  It 'Has a Default Local Template In .bldr/local'
-    mkdir -p ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
+  It 'Has a Default Local Template In .bldr/template'
+    mkdir -p ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
 
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
@@ -69,15 +69,15 @@ Describe 'bldr gen.up'
   End
 
   It 'Removes deleted files'
-    mkdir -p ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/bye.bldr-j2.txt
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/bye.bldr-py.txt
+    mkdir -p ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/bye.bldr-j2.txt
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/bye.bldr-py.txt
     bldr gen.up > /dev/null
 
-    rm ./.bldr/local/bye.bldr-j2.txt
-    rm ./.bldr/local/bye.bldr-py.txt
+    rm ./.bldr/template/bye.bldr-j2.txt
+    rm ./.bldr/template/bye.bldr-py.txt
 
     When call bldr gen.up
     The output should match pattern '*Deleting*bye.txt*'
@@ -86,14 +86,14 @@ Describe 'bldr gen.up'
   End
 
   It 'Removes deleted files from removed directories'
-    mkdir -p ./.bldr/local/somedir/somedir2
-    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/
-    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/local/somedir/somedir2/bye.bldr-j2.txt
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/local/somedir/somedir2/bye.bldr-py.txt
+    mkdir -p ./.bldr/template/somedir/somedir2
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/somedir/somedir2/bye.bldr-j2.txt
+    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/somedir/somedir2/bye.bldr-py.txt
     bldr gen.up > /dev/null
 
-    rm -Rf ./.bldr/local/somedir
+    rm -Rf ./.bldr/template/somedir
     
 
     When call bldr gen.up
@@ -105,8 +105,8 @@ Describe 'bldr gen.up'
 
   It 'Reruns generators'
     create_git
-    bldr deps.add --module --git $GIT_CACHE_DIR/brck-net-serial-sim.git > /dev/null
-    bldr gen brck-net-serial-sim > /dev/null
+    bldr deps.add --module --git $GIT_CACHE_DIR/brk-dotnet-serial-sim.git > /dev/null
+    bldr gen brk-dotnet-serial-sim > /dev/null
     bldr gen.up > /dev/null
 
     When call bldr gen.up --regen
