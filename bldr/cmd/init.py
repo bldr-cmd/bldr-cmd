@@ -2,6 +2,7 @@
 `init` Command
 
 """
+from bldr.environment import Environment
 import os
 
 
@@ -19,7 +20,7 @@ import click
 @click.command("init", short_help="Initializes a project.")
 @click.argument("path", required=False, type=click.Path(resolve_path=True))
 @pass_environment
-def cli(ctx, path):
+def cli(ctx : Environment, path):
     """Initializes a project."""
     if path is None:
         path = ctx.cwd
@@ -29,4 +30,8 @@ def cli(ctx, path):
     
     copy_render = CopyTemplatesRender(ctx, True) 
     copy_render.walk(dotbldr_path, new_dir)
-  
+    
+    # NOTE:  ctx cannot be used prior to this point!!
+    git_path = ctx.proj_path / ".git"
+    if git_path.exists():
+        copy_render.walk(ctx.local_path / ".githooks", git_path / "hooks")

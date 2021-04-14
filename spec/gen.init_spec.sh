@@ -15,7 +15,14 @@ Describe 'bldr init'
     The path ./.bldr/template should be exist                                                       
   End
 
-  # It 'Copies Git Hooks'
-  #   The path ./.git/hooks/ should be exist   
-  # End                                                                                                                                                                                                             
+  It 'Copies Git Hooks'
+    create_git
+
+    When call bldr init 
+    The path ./.git/hooks/post-checkout should be exist
+    The path ./.git/hooks/post-rewrite should be exist
+
+    The output should include '.git/hooks/post-rewrite'
+    The output should include '.git/hooks/post-checkout'
+  End                                                                                                                                                                                                             
 End    
