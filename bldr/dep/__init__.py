@@ -11,4 +11,4 @@ def sync_githooks(ctx: Environment):
     git_path = ctx.proj_path / ".git"
     if git_path.exists():
         copy_render = CopyTemplatesRender(ctx, True) 
-        copy_render.walk(ctx.local_path / ".githooks", git_path / "hooks")
+        copy_render.walk(ctx.proj_path / ".githooks", git_path / "hooks")

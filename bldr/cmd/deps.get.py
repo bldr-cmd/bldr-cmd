@@ -41,6 +41,7 @@ def cli(ctx):
         ctx.log("No .git folder")
         return -1
     
+    bldr.dep.sync_githooks(ctx)
     repo = Repo(git_path)
     
     config = {name: dep for (name, dep) in ctx.env['dep']['config'].items()}

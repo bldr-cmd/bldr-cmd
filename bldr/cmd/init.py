@@ -13,7 +13,7 @@ import bldr.gen.render
 dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
 
 from bldr.gen.render import CopyTemplatesRender
-from bldr.cli import pass_environment
+from bldr.cli import pass_environment, run_cmd
 
 import click
 
@@ -33,4 +33,5 @@ def cli(ctx : Environment, path):
     copy_render.walk(dotbldr_path, new_dir)
     
     # NOTE:  ctx cannot be used prior to this point!!
+    run_cmd(ctx, 'gen.up')
     bldr.dep.sync_githooks(ctx)

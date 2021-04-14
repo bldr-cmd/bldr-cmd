@@ -19,6 +19,8 @@ Describe 'bldr init'
     create_git
 
     When call bldr init 
+    The path ./.githooks/post-checkout should be exist
+    The path ./.githooks/post-rewrite should be exist
     The path ./.git/hooks/post-checkout should be exist
     The path ./.git/hooks/post-rewrite should be exist
 
