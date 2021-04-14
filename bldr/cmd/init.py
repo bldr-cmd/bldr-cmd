@@ -7,6 +7,7 @@ import os
 
 
 import bldr
+import bldr.dep
 import bldr.gen.render
 
 dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
@@ -32,6 +33,4 @@ def cli(ctx : Environment, path):
     copy_render.walk(dotbldr_path, new_dir)
     
     # NOTE:  ctx cannot be used prior to this point!!
-    git_path = ctx.proj_path / ".git"
-    if git_path.exists():
-        copy_render.walk(ctx.local_path / ".githooks", git_path / "hooks")
+    bldr.dep.sync_githooks(ctx)
