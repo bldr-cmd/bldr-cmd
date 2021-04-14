@@ -11,6 +11,11 @@ Describe 'bldr init'
                                                                                        
   It 'Creates a skeleton .bldr'                                                                                           
     When call bldr init                                                                            
-    The output should include 'Initialized the project in'                                                              
-  End                                                                                                                                                                                                             
+    The output should include 'Initialized the project in'     
+    The path ./.bldr/template should be exist                                                       
+  End
+
+  # It 'Copies Git Hooks'
+  #   The path ./.git/hooks/ should be exist   
+  # End                                                                                                                                                                                                             
 End    
