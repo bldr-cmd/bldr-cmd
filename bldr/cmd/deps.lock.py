@@ -30,9 +30,10 @@ class DepsUpdateProgress(RootUpdateProgress):
         
 
 @click.command("deps.lock", short_help="Lock Dependencies.")
+@click.option("--staged", flag_value=True)
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @pass_environment
-def cli(ctx):
+def cli(ctx, staged):
     """
     Locks Dependencies
 
@@ -58,15 +59,16 @@ def cli(ctx):
 
     gitlock = {name: dep for (name, dep) in lockfile.items() if dep['type'] == 'git'}
 
-    # Update Locks from staging
-    try:
-        staged_files = repo.index.diff("HEAD")
-        for staged in staged_files:
-            if staged.a_path in gitlock:
-                lock_info = lockfile[staged.a_path]
-                lock_info['sha'] = staged.a_blob.hexsha
-    except:
-        pass
+    if staged:
+        # Update Locks from staging
+        try:
+            staged_files = repo.index.diff("HEAD")
+            for staged in staged_files:
+                if staged.a_path in gitlock:
+                    lock_info = lockfile[staged.a_path]
+                    lock_info['sha'] = staged.a_blob.hexsha
+        except:
+            pass
     
     if ctx.verbose:
         ctx.vlog("Saving Lock:" + json.dumps(lockfile))

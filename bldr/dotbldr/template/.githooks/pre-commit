@@ -23,4 +23,4 @@ echo "pre-commit $PWD"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 source $DIR/venv
-bldr deps.lock
+bldr deps.lock --staged
