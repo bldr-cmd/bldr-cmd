@@ -29,6 +29,8 @@ def cli(ctx: Environment, source: str, path: str, as_template: bool):
         local_path = ctx.local_path / "template"
     else:
         local_path = ctx.module_path / generator_name / "template"
+        if local_path.exists():
+            bldr.util.rmtree(local_path)
     
     if path != None:
         local_path = local_path / path
