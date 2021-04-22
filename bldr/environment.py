@@ -130,7 +130,7 @@ class Environment:
 
     @property
     def prev_generated_path(self) -> Path:
-        return self.generated_path / "current"
+        return self.generated_path / "previous"
     
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
         if self.dotbldr_path == None:
