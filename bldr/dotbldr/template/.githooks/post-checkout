@@ -1,13 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 echo "[post-checkout hook: $1 $2 $3]"
 # post-checkout hook that update submodules
+
+# Get the directory of this script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 prev_HEAD="$1"
 new_HEAD="$2"
 new_branch="$3"
 
 if [ "$new_branch" = 1 ]; then
-   bldr dep.sync
+   source $DIR/venv
+   bldr deps.get
 fi
 
 exit 0

@@ -59,6 +59,11 @@ def cli(ctx, url, path, git, branch, module, force):
     cwd = Path('.').absolute()
     path = str(full_path.relative_to(cwd))
 
+    # Default to using git.  
+    #  More important when others are added
+    if not git:
+        git = True
+
     if git:
         git_add(ctx, config, branch, url, path, force)
 
