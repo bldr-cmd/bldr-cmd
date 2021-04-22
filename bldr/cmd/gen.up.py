@@ -60,7 +60,14 @@ def cli(ctx, regen, reimport, purge_local):
                     bldr.gen.cmd(ctx, subcommand, args)
                 elif gen_type == 'gen.import':
                     [generator_name, source, path, as_template] = gen_args
-                    as_template = bool(as_template)
+                    
+                    if as_template == "False":
+                        as_template = False
+                    elif as_template == "True":
+                        as_template = True
+                        
+                    if path == "None":
+                        path = None
                     if reimport:
                         if Path(source).exists():
                             run_cmd(ctx, 'gen.import', source=source, path=path, as_template=as_template)
