@@ -120,12 +120,8 @@ class Environment:
         return self.dotbldr_path / "template"
 
     @property
-    def generated_path(self) -> Path:
-        return self.dotbldr_path / "generated"
-
-    @property
     def generated_history(self) -> Path:
-        return self.generated_path / "history"
+        return self.history_path / "generated"
 
     @property
     def next_generated_path(self) -> Path:
