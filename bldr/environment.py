@@ -100,37 +100,44 @@ class Environment:
             return [ self.dotbldr_path / "cmd", self.module_path / "*/cmd", builtin_cmd_folder ]
 
     @property
+    def history_path(self) -> Path:
+        return self.dotbldr_path / "history"
+
+    @property
     def next_path(self) -> Path:
-        return self.dotbldr_path / "next"
+        return self.history_path / "next"
 
     @property
     def current_path(self) -> Path:
-        return self.dotbldr_path / "current"
+        return self.history_path / "current"
 
     @property
     def prev_path(self) -> Path:
-        return self.dotbldr_path / "previous"
+        return self.history_path / "previous"
 
     @property
     def local_path(self) -> Path:
         return self.dotbldr_path / "template"
-
 
     @property
     def generated_path(self) -> Path:
         return self.dotbldr_path / "generated"
 
     @property
+    def generated_history(self) -> Path:
+        return self.generated_path / "history"
+
+    @property
     def next_generated_path(self) -> Path:
-        return self.generated_path / "next"
+        return self.generated_history / "next"
 
     @property
     def current_generated_path(self) -> Path:
-        return self.generated_path / "current"
+        return self.generated_history / "current"
 
     @property
     def prev_generated_path(self) -> Path:
-        return self.generated_path / "previous"
+        return self.generated_history / "previous"
     
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:
         if self.dotbldr_path == None:
