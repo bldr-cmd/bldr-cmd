@@ -6,6 +6,7 @@ import click
 from typing import Dict, List
 
 builtin_cmd_folder = Path(__file__).parents[0].joinpath('cmd').absolute()
+builtin_migration_folder = Path(__file__).parents[0].joinpath('migration').absolute()
 
 def find_dotbldr_dir(here: Path = None) -> Path:
     return find_parent_dir('.bldr', here)
@@ -178,6 +179,27 @@ class Environment:
                 return glob_file
 
         return None
+
+    @property
+    def migrated_toml_path(self) -> Path:
+        return self.dotbldr_path / "migrated.toml"
+
+    def migration_path_globs(self, fileglob: str) -> List[Path.glob]:
+        if self.dotbldr_path == None:
+            return [
+                builtin_cmd_folder.glob(fileglob)
+            ]
+        else:
+            return [
+                self.dotbldr_path.joinpath("migration").glob(fileglob),
+                self.module_path.glob( "*/migration/" + fileglob),
+                builtin_migration_folder.glob(fileglob)
+            ]
+
+    def migrations(self):
+        globs = self.migration_path_globs("*.py")
+        migration_files = [file for glob in globs for file in sorted(glob, key=Path.name) if file.exists()]
+        return migration_files
 
     def error(self, msg, *args):
         if args:
