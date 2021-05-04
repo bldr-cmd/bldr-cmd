@@ -26,7 +26,7 @@ import click
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
 @click.option("--regen", flag_value=True, help="Regenerate module templates")
 @click.option("--reimport", flag_value=True, help="Re-import imported modules from their sources")
-@click.option("--purge-local", flag_value=True, help='Purge local/local template.  Useful when re-importing "--as-template" templates')
+@click.option("--purge-local", flag_value=True, help='Purge local template.  Useful when re-importing "--as-template" templates')
 @pass_environment
 def cli(ctx, regen, reimport, purge_local):
     """Update Code Generation"""
@@ -130,7 +130,7 @@ def unpack_targz(tgz_path: Path, target_path: Path):
         bldr.util.rmtree(target_path)
 
     target_path.mkdir(parents=True)
-    
+
     with tarfile.open(tgz_path, "r:gz") as tar:
         tar.extractall(path=target_path.parent)
 
