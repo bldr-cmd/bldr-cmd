@@ -6,6 +6,8 @@ Regenerate Templates
 """
 import os
 import shutil
+import tarfile
+from hashlib import sha256
 
 import bldr
 import bldr.util
@@ -35,7 +37,16 @@ def cli(ctx, regen, reimport, purge_local):
     if ctx.next_path.exists():
         bldr.util.rmtree(ctx.next_path)
     ctx.next_path.mkdir(parents=True, exist_ok=True)
-    ctx.current_path.mkdir(parents=True, exist_ok=True)
+    
+    if ctx.current_targz_next.exists():
+        # Did not finish creating current.tar.gz
+        ctx.current_targz_next.unlink()
+        pack_targz(ctx.current_targz_next, ctx.current_path)
+        ctx.current_targz_next.rename(ctx.current_targz)
+
+    # Unpack current.tar.gz
+    unpack_targz(ctx.current_targz, ctx.current_path)
+
     local_template_path = ctx.local_path / "template"
     if local_template_path.exists() and purge_local:
         bldr.util.rmtree(local_template_path)
@@ -80,8 +91,13 @@ def cli(ctx, regen, reimport, purge_local):
                         bldr.gen.cmd(ctx, gen[1], None)
         ctx.gen_replay = False
 
+        # Pack current_generated.next.tar.gz
+        pack_targz(ctx.current_generated_targz_next, ctx.current_generated_path)
+        # Rename current_generated
+        ctx.current_generated_targz_next.rename(ctx.current_generated_targz)
     else:
-        ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
+        # Unpack current_generated.tar.gz
+        unpack_targz(ctx.current_generated_targz, ctx.current_generated_path)
 
     bldr.gen.render.walk(ctx, ctx.current_generated_path, ctx.next_path, True)
     bldr.gen.render.walk(ctx, ctx.local_path, ctx.next_path, True)
@@ -95,7 +111,31 @@ def cli(ctx, regen, reimport, purge_local):
         bldr.util.rmtree(ctx.prev_path)
     ctx.current_path.rename(ctx.prev_path)
     ctx.next_path.rename(ctx.current_path)
-    ctx.next_path.mkdir()
+
+    # Pack current.next.tar.gz
+    pack_targz(ctx.current_targz_next, ctx.current_path)
+    # Rename current.tar.gz
+    ctx.current_targz_next.rename(ctx.current_targz)
+
+def pack_targz(tgz_name: str, source_path: Path):
+    with tarfile.open(tgz_name, "w:gz") as tar:
+        tar.add(source_path, arcname=source_path.name)
+
+def unpack_targz(tgz_path: Path, target_path: Path):
+    if not tgz_path.exists():
+        target_path.mkdir(parents=True, exist_ok=True)
+        return
+
+    if target_path.exists():
+        bldr.util.rmtree(target_path)
+
+    target_path.mkdir(parents=True)
+    
+    with tarfile.open(tgz_path, "r:gz") as tar:
+        tar.extractall(path=target_path.parent)
+
+def targz_sha(tgz_path: Path):
+    return sha256(tgz_path.read_bytes()).hexdigest()
 
 
 class DiffPatchRender(bldr.gen.render.CommonTripleRender):

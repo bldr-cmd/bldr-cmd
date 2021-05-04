@@ -112,6 +112,14 @@ class Environment:
         return self.history_path / "current"
 
     @property
+    def current_targz(self) -> Path:
+        return Path(f"{self.current_path}.tar.gz")
+    
+    @property
+    def current_targz_next(self) -> Path:
+        return Path(f"{self.current_path}.next.tar.gz")
+
+    @property
     def prev_path(self) -> Path:
         return self.history_path / "previous"
 
@@ -130,6 +138,14 @@ class Environment:
     @property
     def current_generated_path(self) -> Path:
         return self.generated_history / "current"
+
+    @property
+    def current_generated_targz(self) -> Path:
+        return Path(f"{self.current_generated_path}.tar.gz")
+    
+    @property
+    def current_generated_targz_next(self) -> Path:
+        return Path(f"{self.current_generated_path}.next.tar.gz")
 
     @property
     def prev_generated_path(self) -> Path:
