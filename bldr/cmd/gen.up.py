@@ -13,6 +13,7 @@ import bldr
 import bldr.util
 import bldr.gen
 import bldr.gen.render
+import bldr.migration
 
 from pathlib import Path
 from diff_match_patch import diff_match_patch
@@ -31,6 +32,9 @@ import click
 def cli(ctx, regen, reimport, purge_local):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
+
+    # Make sure all bricks are up to date
+    bldr.migration.run(ctx)
 
     # Render any templates to next
 

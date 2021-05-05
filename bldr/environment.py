@@ -198,7 +198,7 @@ class Environment:
 
     def migrations(self):
         globs = self.migration_path_globs("*.py")
-        migration_files = [file for glob in globs for file in sorted(glob, key=Path.name) if file.exists()]
+        migration_files = [file for glob in globs for file in sorted(glob, key=lambda g: g.name) if file.exists()]
         return migration_files
 
     def error(self, msg, *args):

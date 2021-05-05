@@ -12,16 +12,18 @@ def run_migration(ctx: Environment, migration_path: Path):
     else:
         return None
 
-def ensure_migrations(ctx: Environment):
+def run(ctx: Environment):
+    ctx.vlog(f"Checking Migrations")
     migrated_toml = {}
     if ctx.migrated_toml_path.exists():
         migrated_toml = toml.load(ctx.migrated_toml_path)
 
     for migration in ctx.migrations():
         migration_name = migration.name
-
+       
         if migration_name not in migrated_toml:
-            try:
+            ctx.vlog(f"Running {migration_name}")
+            try:       
                 result = run_migration(ctx, migration)
                 
                 if result == False:
