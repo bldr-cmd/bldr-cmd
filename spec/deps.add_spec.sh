@@ -1,5 +1,5 @@
 
-Describe 'bldr deps.get'                                                                                           
+Describe 'bldr deps.add'                                                                                           
   Include venv/bin/activate
   setup() {  
     setup_w_bldr
