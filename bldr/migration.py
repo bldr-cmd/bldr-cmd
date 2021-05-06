@@ -37,8 +37,8 @@ def run(ctx: Environment):
                 break
 
             migrated_toml[migration_name] = True
-            
-    return success
 
     with open(ctx.migrated_toml_path, 'w') as toml_file:
         toml.dump(migrated_toml, toml_file)
+        
+    return success

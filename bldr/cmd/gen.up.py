@@ -6,8 +6,8 @@ Regenerate Templates
 """
 import os
 import shutil
-import tarfile
-from hashlib import sha256
+
+
 
 import bldr
 import bldr.util
@@ -19,6 +19,7 @@ from pathlib import Path
 from diff_match_patch import diff_match_patch
 
 from bldr.cli import pass_environment, run_cmd
+from bldr.gen.history import targz_pack_atomic, targz_unpack, targz_sha
 
 import click
 
@@ -28,15 +29,19 @@ import click
 @click.option("--regen", flag_value=True, help="Regenerate module templates")
 @click.option("--reimport", flag_value=True, help="Re-import imported modules from their sources")
 @click.option("--purge-local", flag_value=True, help='Purge local template.  Useful when re-importing "--as-template" templates')
+@click.option("--migrate-only", flag_value=True, help='Only Run Migrations')
 @pass_environment
-def cli(ctx, regen, reimport, purge_local):
+def cli(ctx, regen, reimport, purge_local, migrate_only):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
 
     # Make sure all bricks are up to date
     if bldr.migration.run(ctx) == False:
         ctx.log(f"Migrations Failed")
-        return -1
+        return
+
+    if migrate_only:
+        return
 
     # Render any templates to next
 
@@ -45,13 +50,12 @@ def cli(ctx, regen, reimport, purge_local):
     ctx.next_path.mkdir(parents=True, exist_ok=True)
     
     if ctx.current_targz_next.exists():
-        # Did not finish creating current.tar.gz
         ctx.current_targz_next.unlink()
-        pack_targz(ctx.current_targz_next, ctx.current_path)
-        ctx.current_targz_next.rename(ctx.current_targz)
+        targz_pack_atomic(ctx.current_targz_next, ctx.current_targz, ctx.current_path)
+        
 
     # Unpack current.tar.gz
-    unpack_targz(ctx.current_targz, ctx.current_path)
+    targz_unpack(ctx.current_targz, ctx.current_path)
 
     local_template_path = ctx.local_path / "template"
     if local_template_path.exists() and purge_local:
@@ -98,12 +102,11 @@ def cli(ctx, regen, reimport, purge_local):
         ctx.gen_replay = False
 
         # Pack current_generated.next.tar.gz
-        pack_targz(ctx.current_generated_targz_next, ctx.current_generated_path)
-        # Rename current_generated
-        ctx.current_generated_targz_next.rename(ctx.current_generated_targz)
+        targz_pack_atomic(ctx.current_generated_targz_next, ctx.current_generated_targz, ctx.current_generated_path)
+        
     else:
         # Unpack current_generated.tar.gz
-        unpack_targz(ctx.current_generated_targz, ctx.current_generated_path)
+        targz_unpack(ctx.current_generated_targz, ctx.current_generated_path)
 
     bldr.gen.render.walk(ctx, ctx.current_generated_path, ctx.next_path, True)
     bldr.gen.render.walk(ctx, ctx.local_path, ctx.next_path, True)
@@ -119,30 +122,7 @@ def cli(ctx, regen, reimport, purge_local):
     ctx.next_path.rename(ctx.current_path)
 
     # Pack current.next.tar.gz
-    pack_targz(ctx.current_targz_next, ctx.current_path)
-    # Rename current.tar.gz
-    ctx.current_targz_next.rename(ctx.current_targz)
-
-def pack_targz(tgz_name: str, source_path: Path):
-    with tarfile.open(tgz_name, "w:gz") as tar:
-        tar.add(source_path, arcname=source_path.name)
-
-def unpack_targz(tgz_path: Path, target_path: Path):
-    if not tgz_path.exists():
-        target_path.mkdir(parents=True, exist_ok=True)
-        return
-
-    if target_path.exists():
-        bldr.util.rmtree(target_path)
-
-    target_path.mkdir(parents=True)
-
-    with tarfile.open(tgz_path, "r:gz") as tar:
-        tar.extractall(path=target_path.parent)
-
-def targz_sha(tgz_path: Path):
-    return sha256(tgz_path.read_bytes()).hexdigest()
-
+    targz_pack_atomic(ctx.current_targz_next, ctx.current_targz, ctx.current_path)
 
 class DiffPatchRender(bldr.gen.render.CommonTripleRender):
     def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):

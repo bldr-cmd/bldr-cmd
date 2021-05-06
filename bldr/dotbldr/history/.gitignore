@@ -1,0 +1,9 @@
+previous/**
+current/**
+current.next.tar.gz
+next/**
+
+generated/previous/**
+generated/current/**
+generated/current.next.tar.gz
+generated/next/**

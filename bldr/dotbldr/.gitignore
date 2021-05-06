@@ -1,9 +1,0 @@
-history/previous/**
-history/current/**
-history/current.next.tar.gz
-history/next/**
-
-history/generated/previous/**
-history/generated/current/**
-history/generated/current.next.tar.gz
-history/generated/next/**
