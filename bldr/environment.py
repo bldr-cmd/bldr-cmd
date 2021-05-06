@@ -149,7 +149,7 @@ class Environment:
         return Path(f"{self.current_generated_path}.next.tar.gz")
 
     @property
-    def prev_generated_path(self) -> Path:
+    def previous_generated_path(self) -> Path:
         return self.generated_history / "previous"
     
     def cmd_path_globs(self, fileglob: str) -> List[Path.glob]:

@@ -34,7 +34,9 @@ def cli(ctx, regen, reimport, purge_local):
     ctx.log(f"Updating Code Generation")
 
     # Make sure all bricks are up to date
-    bldr.migration.run(ctx)
+    if bldr.migration.run(ctx) == False:
+        ctx.log(f"Migrations Failed")
+        return -1
 
     # Render any templates to next
 
@@ -58,11 +60,11 @@ def cli(ctx, regen, reimport, purge_local):
     ctx.local_path.mkdir(parents=True, exist_ok=True)
 
     if regen:
-        if ctx.prev_generated_path.exists():
-            bldr.util.rmtree(ctx.prev_generated_path)
+        if ctx.previous_generated_path.exists():
+            bldr.util.rmtree(ctx.previous_generated_path)
 
         if ctx.current_generated_path.exists():
-            ctx.current_generated_path.rename(ctx.prev_generated_path)
+            ctx.current_generated_path.rename(ctx.previous_generated_path)
 
         ctx.current_generated_path.mkdir(parents=True, exist_ok=True)
         ctx.gen_replay = True

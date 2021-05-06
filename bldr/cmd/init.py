@@ -2,21 +2,18 @@
 `init` Command
 
 """
-from bldr.environment import Environment
 import os
-
+import click
 
 import bldr
 import bldr.dep
 import bldr.gen.render
 
-dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
-
+from bldr.environment import Environment
 from bldr.gen.render import CopyTemplatesRender
 from bldr.cli import pass_environment, run_cmd
 
-import click
-
+dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
 
 @click.command("init", short_help="Initializes a project.")
 @click.argument("path", required=False, type=click.Path(resolve_path=True))
