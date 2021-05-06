@@ -6,7 +6,7 @@ import click
 from bldr.environment import Environment
 
 CONTEXT_SETTINGS = dict(auto_envvar_prefix="BLDR")
-VERSION = "0.12.0"
+VERSION = "0.13.0"
 
 pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))
