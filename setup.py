@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(name='bldr',
-      version='0.13',
+      version='0.14',
       description='bldr framework',
-      url='http://github.com/bldr/bldr_cmd',
+      url='http://github.com/bldr-cmd/bldr-cmd',
       author='Michael Schmidt',
       author_email='michael@dedesignworks.com',
       license='MIT',

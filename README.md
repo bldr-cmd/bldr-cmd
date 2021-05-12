@@ -4,13 +4,13 @@
 ## Installing
 
 ```
-pip install git+ssh://git@svn.daveengineering.com/bldr/bldr_cmd.git
+pip install git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
 ```
 
 ## Upgrading
 
 ```
-pip install --upgrade git+ssh://git@svn.daveengineering.com/bldr/bldr_cmd.git
+pip install --upgrade git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
 ```
 
 ## Building
