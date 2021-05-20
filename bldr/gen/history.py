@@ -1,5 +1,6 @@
 from pathlib import Path
 from hashlib import sha256
+import os
 import tarfile
 
 import bldr.util
@@ -10,6 +11,10 @@ def targz_pack_atomic(tgz_next_name: Path, tgz_name: Path, source_path: Path):
     and renaming when complete
     """
     targz_pack(tgz_next_name, source_path)
+
+
+    os.remove(tgz_name)
+
     tgz_next_name.rename(tgz_name)
 
 def targz_pack(tgz_name: Path, source_path: Path):
