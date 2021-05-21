@@ -1,6 +1,6 @@
 
 Describe 'bldr deps.add'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_w_bldr
     create_git

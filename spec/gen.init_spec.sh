@@ -1,5 +1,5 @@
 Describe 'bldr init'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_dir
   }
@@ -24,7 +24,31 @@ Describe 'bldr init'
     The path ./.git/hooks/post-checkout should be exist
     The path ./.git/hooks/post-rewrite should be exist
 
-    The output should include '.git/hooks/post-rewrite'
-    The output should include '.git/hooks/post-checkout'
+
+
+    checkpath1()
+    {
+      if [[ -e ".git/hooks/post-rewrite" || -e ".git\hooks\post-rewrite" ]];
+      then
+        return 0
+
+      else
+        return 1
+      fi
+
+    }
+
+    checkpath2()
+    {
+      if [[ -e ".git/hooks/post-checkout" || -e ".git\hooks\post-checkout" ]];
+      then
+        return 0
+      fi
+      return 1
+    }
+    The result of function checkpath1 should be successful
+    The result of function checkpath2 should be successful
+
+
   End                                                                                                                                                                                                             
 End    

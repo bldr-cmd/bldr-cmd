@@ -55,3 +55,99 @@ create_git() {
     git add README.md
     git commit -m "Initial Commit" > /dev/null
 }
+
+
+generate_test_dep_sys()
+{
+
+  #makes 3 git repos, par, child, child
+
+  #parent has two submodules, the childs
+
+  #parent has test ver of dependencies.lock.toml and dependencies.toml
+
+
+  mkdir parent
+  mkdir child1
+  mkdir child2
+
+
+  cd parent
+  git init
+  cd ..
+  cd child1
+  git init
+  cd ..
+  cd child2
+  git init
+  cd ..
+
+
+  cd parent
+  echo "empty" >> file.txt
+  git add .
+  git commit -m "start master"
+
+  bldr init
+
+  cp $TEST_FILES/git_hooks_spec/brancha/dependency.toml ./.bldr/
+  cp $TEST_FILES/git_hooks_spec/brancha/dependency.lock.toml ./.bldr/ 
+
+
+  git checkout -b A
+  echo "a" >> filea.txt
+  git add .
+  git commit -m "made A"
+
+  git checkout -b B
+
+  cp $TEST_FILES/git_hooks_spec/branchb/dependency.toml ./.bldr/
+  cp $TEST_FILES/git_hooks_spec/branchb/dependency.lock.toml ./.bldr/ 
+  echo "b" >> fileb.txt
+  rm filea.txt
+  git add .
+  git commit -m "made B"
+  cd ..
+
+
+
+
+
+  cd child1
+  git checkout -b A
+  echo "a" >> filea.txt
+  git add .
+  git commit -m "made A"
+
+  git checkout -b B
+  echo "b" >> fileb.txt
+  rm filea.txt
+  git add .
+  git commit -m "made B"
+  cd ..
+
+  cd child2
+  git checkout -b A
+  echo "a" >> filea.txt
+  git add .
+  git commit -m "made A"
+
+  git checkout -b B
+  echo "b" >> fileb.txt
+  rm filea.txt
+  git add .
+  git commit -m "made B"
+  cd ..
+
+
+
+  cd parent
+
+  bldr deps.get
+
+  # run bldr deps.get
+  #????
+
+  #please end on parent thanx
+
+}

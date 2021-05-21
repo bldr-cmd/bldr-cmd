@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "hereherhehrherherhehreh<<<<<<<<<<<<<<rar<<<<<<<<<<<"
 echo "[post-checkout hook: $1 $2 $3]"
 # post-checkout hook that update submodules
 
@@ -9,9 +10,12 @@ prev_HEAD="$1"
 new_HEAD="$2"
 new_branch="$3"
 
-if [ "$new_branch" = 1 ]; then
-   source $DIR/venv
-   bldr deps.get
-fi
+
+#if [ "$new_branch" = 1 ]; then
+#   source $DIR/venv
+#   bldr deps.get
+#fi
+
+bldr deps.get
 
 exit 0

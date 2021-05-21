@@ -1,6 +1,6 @@
 
 Describe 'bldr --help'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_w_bldr
   }

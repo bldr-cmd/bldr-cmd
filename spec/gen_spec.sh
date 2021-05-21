@@ -1,5 +1,5 @@
 Describe 'bldr gen'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_w_bldr
     cp -Rf $TEST_FILES/example_generator .bldr/module/

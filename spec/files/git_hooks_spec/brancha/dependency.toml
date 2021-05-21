@@ -1,0 +1,11 @@
+["child1"]
+    type = "git"
+    path = "child1"
+    url = "../child1"
+    branch = "A"
+
+["child2"]
+    type = "git"
+    path = "child2"
+    url = "../child2"
+    branch = "A"

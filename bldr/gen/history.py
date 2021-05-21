@@ -12,8 +12,8 @@ def targz_pack_atomic(tgz_next_name: Path, tgz_name: Path, source_path: Path):
     """
     targz_pack(tgz_next_name, source_path)
 
-
-    os.remove(tgz_name)
+    if tgz_name.exists():
+        tgz_name.unlink()
 
     tgz_next_name.rename(tgz_name)
 

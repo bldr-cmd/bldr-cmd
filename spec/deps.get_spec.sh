@@ -1,6 +1,6 @@
 
 Describe 'bldr deps.get'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_w_bldr
     create_git
@@ -16,7 +16,7 @@ Describe 'bldr deps.get'
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
 
     When call bldr deps.get
-    The output should match pattern '*submodule create somedir/dep1*'
+    The output should match pattern '*submodule create somedir*dep1*'
     
     The path .gitmodules should be exist  
     The path somedir/dep1 should be exist

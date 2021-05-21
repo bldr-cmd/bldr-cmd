@@ -1,5 +1,5 @@
 Describe 'bldr gen.import'                                                                                           
-  Include venv/bin/activate
+  Include spec/venv_inc
   setup() {  
     setup_w_bldr gen.import_spec
   }
@@ -20,7 +20,7 @@ Describe 'bldr gen.import'
   It 'Imports to a module named `import.dirname`'
     When call bldr gen.import $TEST_FILES/some_proj
     The path ./.bldr/module/import.some_proj should be exist
-    The output should match pattern '*Copying templates *import.some_proj/template*'
+    The output should match pattern '*Copying templates *import*some_proj*template*'
   End
 
   It 'Converts files to templates'
@@ -31,7 +31,7 @@ Describe 'bldr gen.import'
     The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "TheNewModule"
     The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANotSoSimilarModule"
     The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANew.Nested.OtherPlace.Function()"
-    The output should match pattern '*Generating *import.some_proj/template/net_code.bldr-j2.cs*'
+    The output should match pattern '*Generating *import.some_proj*template*net_code.bldr-j2.cs*'
     
     #cat ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs
     #echo "gen.up\n"
@@ -46,7 +46,9 @@ Describe 'bldr gen.import'
     
     The path ./template/net_code.bldr-j2.cs should be exist
 
-    The output should match pattern '*Generating *template/net_code.bldr-j2.cs*'
+
+    
+    The output should match pattern '*Generating *template*net_code.bldr-j2.cs*'
     
   End
 
@@ -64,13 +66,13 @@ Describe 'bldr gen.import'
     When call bldr gen.import --path different/nested/name $TEST_FILES/some_proj
     The path .bldr/module/import.some_proj/template/different/nested/name/somefile should be exist
 
-    The output should match pattern '*different/nested/name*'
+    The output should match pattern '*different*nested*name*'
   End
 
   It 'Renames files'
     When call bldr gen.import --as-template $TEST_FILES/some_proj
     The path ./template/RightName.md should be exist
-    The output should match pattern '*template/RightName.md*'
+    The output should match pattern '*template*RightName.md*'
 
   End
 
@@ -79,6 +81,6 @@ Describe 'bldr gen.import'
     The path ./README.md should be exist
 
     The path ./README.md contents should include "DE Designworks"
-    The output should match pattern '*Generating *template/README.md*'
+    The output should match pattern '*Generating *template*README.md*'
   End     
 End    
