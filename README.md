@@ -95,3 +95,15 @@ From Explorer, open a command prompt in the folder you want and run:
 c:\Python35\python -m venv .\venv
 ```
 Replease '35' with which ever python version you have installed
+
+
+## Adding Dependencies:
+```
+bldr deps.add <a> <b>
+```
+<a> relative address of dependent
+<b> relative address to save dependent
+-b <c> the name of the branch of the dependent to add (defaults to master)
+-m adds dependent to modules file
+-f forces addition into repo (error maybe?)
+

@@ -17,6 +17,11 @@ from bldr.cli import pass_environment
 from bldr.gen.render import render
 import bldr.dep.env
 
+
+from pathlib import Path
+
+
+
 dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
 
 class DepsUpdateProgress(RootUpdateProgress):
@@ -36,7 +41,9 @@ def cli(ctx):
     """Get Dependencies"""
     ctx.log(f"Getting Dependencies")
 
-    git_path = ctx.proj_path / '.git'
+    git_path = Path(ctx.proj_path) / '.git'
+
+    ctx.dotbldr_path / 'dependecy.toml'
     if not git_path.exists():
         ctx.log("No .git folder")
         return -1
@@ -62,7 +69,7 @@ def cli(ctx):
 
     ctx.log("Add missing git modules")
     for (subname, lock_info) in gitlock.items():
-        module_path = git_path / "modules" / lock_info['path']
+        module_path = Path(git_path) / "modules" / lock_info['path']
         if not module_path.exists():
             ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
             #repo.create_submodule(subname, lock_info['path'], url=lock_info['url'], no_checkout=True)
@@ -94,7 +101,7 @@ def cli(ctx):
 
         if 'branch' in lock_info:
             branch = lock_info['branch']
-            sub_path = ctx.proj_path / lock_info['path']
+            sub_path = Path(ctx.proj_path) / lock_info['path']
             subrepo = submodule.module()
 
             ctx.log(f"Setting {submodule.name} {submodule.branch} {submodule.hexsha}")

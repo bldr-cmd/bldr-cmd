@@ -11,11 +11,9 @@ new_HEAD="$2"
 new_branch="$3"
 
 
-#if [ "$new_branch" = 1 ]; then
-#   source $DIR/venv
-#   bldr deps.get
-#fi
+if [ $prev_HEAD != $new_HEAD ]; then
+   bldr deps.get
+fi
 
-bldr deps.get
 
 exit 0

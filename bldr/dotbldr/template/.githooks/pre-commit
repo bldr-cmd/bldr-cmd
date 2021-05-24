@@ -18,9 +18,9 @@
 
 # # If there are whitespace errors, print the offending file names and fail.
 # exec git diff-index --check --cached $against --
-echo "pre-commit $PWD"
+#echo "pre-commit $PWD"
 # Get the directory of this script
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-source $DIR/venv
-bldr deps.lock --staged
+#source $DIR/venv
+#bldr deps.lock --staged
