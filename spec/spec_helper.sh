@@ -82,39 +82,35 @@ generate_test_dep_sys()
   git init
   cd ..
 
-
+  #make master parent
   cd parent
   echo "empty" >> file.txt
+  bldr init
+  bldr deps.get
   git add .
   git commit -m "start master"
 
-  bldr init
-
-  cp $TEST_FILES/git_hooks_spec/brancha/dependency.toml ./.bldr/
-  cp $TEST_FILES/git_hooks_spec/brancha/dependency.lock.toml ./.bldr/ 
+  
 
 
+  #make a
   git checkout -b A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
 
+  #make b
   git checkout -b B
-
-  cp $TEST_FILES/git_hooks_spec/branchb/dependency.toml ./.bldr/
-  cp $TEST_FILES/git_hooks_spec/branchb/dependency.lock.toml ./.bldr/ 
   echo "b" >> fileb.txt
   rm filea.txt
   git add .
   git commit -m "made B"
+
+
+  #make child1
   cd ..
-
-
-
-
-
   cd child1
-  git checkout -b A
+  git branch -m A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
@@ -124,10 +120,12 @@ generate_test_dep_sys()
   rm filea.txt
   git add .
   git commit -m "made B"
-  cd ..
 
+
+  #make child2
+  cd ..
   cd child2
-  git checkout -b A
+  git branch -m A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
@@ -142,12 +140,28 @@ generate_test_dep_sys()
 
 
   cd parent
-
+  bldr init
   bldr deps.get
+  git add .
+  git commit -m "done with parent A"
 
-  # run bldr deps.get
-  #????
 
-  #please end on parent thanx
+  git checkout a
+  bldr deps.add ../child1 . -b A -f 
+
+  git add .
+  git commit -m "done with parent A"
+
+
+  
+  git checkout b
+  bldr init
+  bldr deps.get
+  bldr deps.add ../child2 . -b B -f 
+  bldr init
+  bldr deps.get
+  git add .
+  git commit -m "done with parent A"
+
 
 }

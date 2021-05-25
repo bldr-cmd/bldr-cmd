@@ -82,8 +82,6 @@ def cli(ctx):
     #progress = DepsUpdateProgress(ctx)
     #repo.submodule_update(init=True, recursive=True, progress=progress)
     for submodule in repo.submodules:
-        sha = submodule.hexsha
-        
         # Create a lock entry if the submodule was added another way
         if submodule.name not in lockfile:
             ctx.vlog("{submodule.name} not in lockfile, skipping")
@@ -97,7 +95,6 @@ def cli(ctx):
             # lockfile[submodule.name] = lock_info
 
         lock_info = lockfile[submodule.name]
-        lock_info['sha'] = sha
 
         if 'branch' in lock_info:
             branch = lock_info['branch']
@@ -106,7 +103,11 @@ def cli(ctx):
 
             ctx.log(f"Setting {submodule.name} {submodule.branch} {submodule.hexsha}")
             subrepo.git.checkout(branch)
-            subrepo.git.reset('--hard', sha)
+            if 'sha' in lock_info:
+                sha = lock_info['sha']
+                subrepo.git.reset('--hard', sha)
+            else:
+                lock_info['sha'] = submodule.hexsha
 
     if ctx.verbose:
         ctx.vlog("Saving Lock:" + json.dumps(lockfile))

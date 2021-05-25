@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "hereherhehrherherhehreh<<<<<<<<<<<<<<rar<<<<<<<<<<<"
+echo "bash - post checkout hook activated"
 echo "[post-checkout hook: $1 $2 $3]"
 # post-checkout hook that update submodules
 
@@ -13,7 +13,9 @@ new_branch="$3"
 
 if [ $prev_HEAD != $new_HEAD ]; then
    bldr deps.get
+   git clean -f -f -d
 fi
+
 
 
 exit 0

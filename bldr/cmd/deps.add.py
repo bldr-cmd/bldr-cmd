@@ -96,8 +96,13 @@ def git_add(ctx, config, branch, url, path, force):
 
     repo = Repo(git_path) 
     ctx.log(f"submodule create {path} {path} {url}")
+
     output = repo.git.submodule('add', url, path)
     ctx.log(output)
+
+
+
+
 
     config[path] = {
         'type': "git",

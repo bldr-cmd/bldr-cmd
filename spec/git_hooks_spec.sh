@@ -8,30 +8,36 @@ Describe 'git checkout'
   cleanup() {  
     cleanup_dir
   }
+  
+
   BeforeEach 'setup'
   AfterEach 'cleanup'
                                                                                        
-  It 'Creates git submodules and fetches them'
-    generate_test_dep_sys
+  It 'Creates git submodules and fetches them #1'
+    generate_test_dep_sys > /dev/null 2>&1
     
-    When call git checkout A
-    The path child1/filea.txt should be exist  
-    The path child1/fileb.txt should not be exist  
 
-    The path child2/filea.txt should be exist  
-    The path child2/fileb.txt should not be exist  
-
-
-    When call git checkout B
-
-    The path child1/fileb.txt should be exist  
-    The path child1/filea.txt should not be exist  
-
-    The path child2/fileb.txt should be exist  
-    The path child2/filea.txt should not be exist  
+    When call git checkout a > /dev/null 2>&1
+    The path child1/filea.txt should be exist
+    The path child1/fileb.txt should not be exist
+    The path child2 should not be exist
 
 
 
+  End
+
+
+  It 'Creates git submodules and fetches them #1'
+    generate_test_dep_sys > /dev/null 2>&1
+
+    git checkout a > /dev/null 2>&1
+    git add .
+    git commit -m "???"
+    When call git checkout B > /dev/null 2>&1
+    
+    The path child2/fileb.txt should be exist
+    The path child2/filea.txt should not be exist
+    The path child1 should not be exist
 
   End
 
