@@ -11,7 +11,7 @@ def sync_githooks(ctx: Environment) -> None:
     git_path = ctx.proj_path / ".git"
     if not git_path.exists():
         # Nothing to do
-        print("did nothing :(((")
+        
         return
     copy_render = CopyTemplatesRender(ctx, True)
     git_hooks_path = git_path / "hooks"
