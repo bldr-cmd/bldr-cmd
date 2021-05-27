@@ -25,7 +25,7 @@ import bldr.dep.env
 dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "dotbldr")
 
 
-@click.command("deps.add", short_help="Add Dependencies.")
+@click.command("new", short_help="Add new dependency via url")
 @click.option("-g", "--git", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
