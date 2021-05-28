@@ -65,7 +65,7 @@ cat bye.txt
 ```
 ls hi.bldr-*
 
-bldr gen.movelocal
+bldr gen.mvlocal
 
 ls hi.bldr-*
 ls .bldr/template/hi.bldr-*

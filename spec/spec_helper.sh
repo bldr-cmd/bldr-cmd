@@ -59,58 +59,45 @@ create_git() {
 
 generate_test_dep_sys()
 {
-
-  #makes 3 git repos, par, child, child
-
-  #parent has two submodules, the childs
-
-  #parent has test ver of dependencies.lock.toml and dependencies.toml
-
+  # makes 3 git repos, par, child, child
+  # parent has two submodules, the childs
+  # parent has test ver of dependencies.lock.toml and dependencies.toml
 
   mkdir parent
   mkdir child1
   mkdir child2
 
-
+  #
+  # make master parent
+  #
   cd parent
   git init
-  cd ..
-  cd child1
-  git init
-  cd ..
-  cd child2
-  git init
-  cd ..
-
-  #make master parent
-  cd parent
   echo "empty" >> file.txt
   bldr init
   bldr deps.get
   git add .
   git commit -m "start master"
 
-  
-
-
-  #make a
+  #make file a
   git checkout -b A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
 
-  #make b
+  #make file b
   git checkout -b B
   echo "b" >> fileb.txt
   rm filea.txt
   git add .
   git commit -m "made B"
 
-
-  #make child1
+  #
+  # make child1
+  # 
   cd ..
   cd child1
-  git branch -m A
+  git init
+  git checkout -b A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
@@ -121,11 +108,13 @@ generate_test_dep_sys()
   git add .
   git commit -m "made B"
 
-
-  #make child2
+  #
+  # make child2
+  #
   cd ..
   cd child2
-  git branch -m A
+  git init
+  git checkout -b A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
@@ -137,8 +126,7 @@ generate_test_dep_sys()
   git commit -m "made B"
   cd ..
 
-
-
+  echo "Running bldr"
   cd parent
   bldr init
   bldr deps.get
@@ -146,18 +134,16 @@ generate_test_dep_sys()
   git commit -m "done with parent A"
 
 
-  git checkout a
-  bldr deps.add ../child1 . -b A -f 
+  git checkout A
+  bldr deps.add ../child1 . -b A
 
   git add .
   git commit -m "done with parent A"
 
-
-  
-  git checkout b
+  git checkout B
   bldr init
   bldr deps.get
-  bldr deps.add ../child2 . -b B -f 
+  bldr deps.add ../child2 . -b B
   bldr init
   bldr deps.get
   git add .

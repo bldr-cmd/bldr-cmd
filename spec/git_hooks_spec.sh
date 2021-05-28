@@ -15,25 +15,21 @@ Describe 'git checkout'
                                                                                        
   It 'Creates git submodules and fetches them #1'
     generate_test_dep_sys > /dev/null 2>&1
-    
 
-    When call git checkout a > /dev/null 2>&1
+    When call git checkout A
     The path child1/filea.txt should be exist
     The path child1/fileb.txt should not be exist
     The path child2 should not be exist
-
-
-
   End
 
 
   It 'Creates git submodules and fetches them #1'
     generate_test_dep_sys > /dev/null 2>&1
 
-    git checkout a > /dev/null 2>&1
+    git checkout A > /dev/null 2>&1
     git add .
     git commit -m "???"
-    When call git checkout B > /dev/null 2>&1
+    When call git checkout B
     
     The path child2/fileb.txt should be exist
     The path child2/filea.txt should not be exist
