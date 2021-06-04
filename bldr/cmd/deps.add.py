@@ -11,6 +11,7 @@ import bldr
 import bldr.gen.render
 import bldr.util
 import giturlparse
+from bldr.cli import pass_environment, run_cmd
 
 from git import Repo
 from pathlib import Path
@@ -37,6 +38,12 @@ def cli(ctx, url, path, git, branch, module, force):
     """Get Dependencies"""
     
     config = ctx.env['dep']['config']
+
+    if path == None:
+        path = "."
+
+    finalPath = path
+    path = "."
 
     if module:
         if path == None:
@@ -65,16 +72,27 @@ def cli(ctx, url, path, git, branch, module, force):
         git = True
 
     if git:
-        git_add(ctx, config, branch, url, path, force)
+        git_add(ctx, config, branch, url, path, force, finalPath)
 
     if ctx.verbose:
-        ctx.vlog("Saving Config:" + json.dumps(config))      
+        ctx.vlog("Saving Config:" + json.dumps(config))   
+
+
+    ctx.log("hehe22222222")
+    daName = url[url.index("/")+1:url.index(".git")]
+    outy = "git mv " + daName + " " + finalPath
+    os.system(outy)
+    ctx.log("hehe3333333")
 
     bldr.dep.env.save_config(ctx.dotbldr_path, config)
     run_cmd(ctx, 'deps.get')
 
 
-def git_add(ctx, config, branch, url, path, force):
+
+
+
+
+def git_add(ctx, config, branch, url, path, force, finalPath):
     # path must only have '/' to work with git!!
     path = path.replace('\\', '/')
 
@@ -98,9 +116,16 @@ def git_add(ctx, config, branch, url, path, force):
     ctx.log(f"submodule create {path} {path} {url}")
 
     output = repo.git.submodule('add', url, path)
+
     ctx.log(output)
 
 
+
+
+    daName = url[url.index("/")+1:url.index(".git")]
+    path = finalPath+"/"+daName
+
+    path = str(Path(path))
 
 
 
@@ -110,3 +135,4 @@ def git_add(ctx, config, branch, url, path, force):
         'path': path,
         'url': url,
     }
+

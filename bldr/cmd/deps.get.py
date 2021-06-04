@@ -69,7 +69,20 @@ def cli(ctx):
 
     ctx.log("Add missing git modules")
     for (subname, lock_info) in gitlock.items():
-        module_path = Path(git_path) / "modules" / lock_info['path']
+        name = lock_info['path']
+        if "/" in name:
+            name =  name[''.join(list(name)).rindex('/'):]
+            mp = str(git_path)+"/modules/"+name
+        if "\\" in name:
+            name =  name[''.join(list(name)).rindex('\\'):]
+            mp = str(git_path)+"\\modules\\"+name
+
+        
+
+
+        module_path = Path(mp)
+
+        ctx.log(module_path)
         if not module_path.exists():
             ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
             #repo.create_submodule(subname, lock_info['path'], url=lock_info['url'], no_checkout=True)
