@@ -59,4 +59,14 @@ Describe 'bldr deps.add'
     The path .bldr/module/test3 should be exist
     The path .bldr/module/test3/README.md should be exist
   End
+
+  It 'Can add locally stored git repositories part 1'
+    deps_add_file_constructor > /dev/null 2>&1
+    When call cd foo
+    The path ./file.txt should be exist
+    The path ./stuff.txt should not be exist
+    cd ..
+    The path ./dep should not be exist
+  End
+
 End   

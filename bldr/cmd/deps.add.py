@@ -1,3 +1,4 @@
+
 """
 `deps.get` Command
 
@@ -27,16 +28,23 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 
 @click.command("deps.add", short_help="Add Dependencies.")
 @click.option("-g", "--git", flag_value=True)
+@click.option("-l", "--link", flag_value=False)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-f", "--force", flag_value=True, help="Force the creation of the dependency")
 @click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
 @click.argument("url", required=False, type=str)
 @click.argument("path", required=False, type=click.Path())
 @pass_environment
-def cli(ctx, url, path, git, branch, module, force):
+def cli(ctx, url, path, git, link, branch, module, force):
     """Get Dependencies"""
         
     config = ctx.env['dep']['config']
+
+    if git and link:
+        ctx.log("Selected git and link, will save as symbolick link, not module")
+        git = False
+
+
 
     if module:
         if path == None:
@@ -47,7 +55,7 @@ def cli(ctx, url, path, git, branch, module, force):
     ctx.log(f"Adding Dependency {url} {path}")
 
 
-    if url[7:] == "file://":
+    if url[7:] == "file://" or link:
         # Normalize the path name
         full_path = Path(path).absolute()
         if full_path.exists() and full_path.is_dir:
@@ -57,6 +65,7 @@ def cli(ctx, url, path, git, branch, module, force):
             else:
                 ctx.log("Path Already Exists")
                 exit -1
+
 
     else:
 
@@ -77,14 +86,15 @@ def cli(ctx, url, path, git, branch, module, force):
 
     # Default to using git.  
     #  More important when others are added
-    if not git:
-        git = True
 
-    if git:
-        if url[:7] == "file://":
-            git_add2(ctx, config, branch, url, path, force)
-        else:
-            git_add(ctx, config, branch, url, path, force)
+    if url[:7] == "file://":
+        git_add2(ctx, config, branch, url, path, force)
+
+    elif link:
+        add_link(ctx, config, branch, url, path, force)
+
+    else:
+        git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
         ctx.vlog("Saving Config:" + json.dumps(config))      
@@ -134,6 +144,7 @@ def git_add(ctx, config, branch, url, path, force):
 
 
 def git_add2(ctx, config, branch, url, path, force):
+
     # path must only have '/' to work with git!!
     path = path.replace('\\', '/')
 
@@ -154,9 +165,8 @@ def git_add2(ctx, config, branch, url, path, force):
             exit(-1)   
 
     repo = Repo(git_path) 
-    ctx.log(f"submodule create {path} {path} {url}")
-    ctx.log(url[7:])
-    os.system("git clone " + url[7:])
+    ctx.log(f"submodule create {path} {url}")
+    #os.system("git clone " + url[7:])
 
 
 
@@ -167,4 +177,16 @@ def git_add2(ctx, config, branch, url, path, force):
         'branch': branch,
         'path': path,
         'url': url[7:],
+    }
+
+def add_link(ctx, config, branch, url, path, force):
+    path = path.replace('\\', '/')
+
+    ctx.log(f"Symbolic link create {path} {url}")
+    os.system("ln -s " + url)
+
+    config[path] = {
+        'type': "link",
+        'path': path,
+        'link': url,
     }

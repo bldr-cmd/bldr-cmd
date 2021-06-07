@@ -151,3 +151,23 @@ generate_test_dep_sys()
 
 
 }
+
+deps_add_file_constructor()
+{
+  mkdir dep
+  mkdir main
+  cd dep
+  echo "hi" > file.txt
+  git init
+  git add .
+  git commit -m "file added"
+  cd ..
+  cd main
+  git init
+  echo "bye" > stuff.txt
+  git add .
+  git commit -m "yaya"
+  bldr init
+  bldr deps.add file://../dep foo 
+
+}
