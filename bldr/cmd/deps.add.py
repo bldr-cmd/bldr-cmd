@@ -35,7 +35,7 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @pass_environment
 def cli(ctx, url, path, git, branch, module, force):
     """Get Dependencies"""
-    
+        
     config = ctx.env['dep']['config']
 
     if module:
@@ -46,18 +46,34 @@ def cli(ctx, url, path, git, branch, module, force):
 
     ctx.log(f"Adding Dependency {url} {path}")
 
-    # Normalize the path name
-    full_path = Path(path).absolute()
-    if full_path.exists() and full_path.is_dir:
-        repo_name = giturlparse.parse(url).name
-        if full_path.name != repo_name:
-            full_path = full_path / repo_name
-        else:
-            ctx.log("Path Already Exists")
-            exit -1
+
+    if url[7:] == "file://":
+        # Normalize the path name
+        full_path = Path(path).absolute()
+        if full_path.exists() and full_path.is_dir:
+            repo_name = url[''.join(url).rindex('/')+1:]
+            if full_path.name != repo_name:
+                full_path = full_path / repo_name
+            else:
+                ctx.log("Path Already Exists")
+                exit -1
+
+    else:
+
+        # Normalize the path name
+        full_path = Path(path).absolute()
+        if full_path.exists() and full_path.is_dir:
+            repo_name = giturlparse.parse(url).name
+            if full_path.name != repo_name:
+                full_path = full_path / repo_name
+            else:
+                ctx.log("Path Already Exists")
+                exit -1
 
     cwd = Path('.').absolute()
     path = str(full_path.relative_to(cwd))
+
+    
 
     # Default to using git.  
     #  More important when others are added
@@ -65,7 +81,10 @@ def cli(ctx, url, path, git, branch, module, force):
         git = True
 
     if git:
-        git_add(ctx, config, branch, url, path, force)
+        if url[:7] == "file://":
+            git_add2(ctx, config, branch, url, path, force)
+        else:
+            git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
         ctx.vlog("Saving Config:" + json.dumps(config))      
@@ -95,7 +114,7 @@ def git_add(ctx, config, branch, url, path, force):
             exit(-1)   
 
     repo = Repo(git_path) 
-    ctx.log(f"submodule create {path} {path} {url}")
+    ctx.log(f"submodule create {path} {url}")
 
     output = repo.git.submodule('add', url, path)
     ctx.log(output)
@@ -109,4 +128,43 @@ def git_add(ctx, config, branch, url, path, force):
         'branch': branch,
         'path': path,
         'url': url,
+    }
+
+
+
+
+def git_add2(ctx, config, branch, url, path, force):
+    # path must only have '/' to work with git!!
+    path = path.replace('\\', '/')
+
+    if branch == None:
+        branch = 'master'
+
+    git_path = ctx.proj_path / '.git'
+    if not git_path.exists():
+        ctx.log("No .git folder")
+        exit(-1)
+
+    module_path = git_path / "modules" / path
+    if module_path.exists():
+        if force:
+            bldr.util.rmtree(module_path)
+        else:
+            ctx.log("Module already exists at that location.  Rerun with --force to remove it")
+            exit(-1)   
+
+    repo = Repo(git_path) 
+    ctx.log(f"submodule create {path} {path} {url}")
+    ctx.log(url[7:])
+    os.system("git clone " + url[7:])
+
+
+
+
+
+    config[path] = {
+        'type': "git",
+        'branch': branch,
+        'path': path,
+        'url': url[7:],
     }
