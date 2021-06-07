@@ -65,16 +65,53 @@ def cli(ctx):
     # Add an new deps from config file
     lockfile.update(config)
 
-    gitlock = {name: dep for (name, dep) in lockfile.items() if dep['type'] == 'git'}
+    lockstuff = {name: dep for (name, dep) in lockfile.items()}
 
     ctx.log("Add missing git modules")
-    for (subname, lock_info) in gitlock.items():
-        module_path = Path(git_path) / "modules" / lock_info['path']
-        if not module_path.exists():
-            ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
-            #repo.create_submodule(subname, lock_info['path'], url=lock_info['url'], no_checkout=True)
-            output = repo.git.submodule('add', lock_info['url'], lock_info['path'])
-            ctx.log(output)
+    for (subname, lock_info) in lockstuff.items():
+
+
+        if lock_info['type'] == 'link':
+            ctx.log("we got hre")
+
+            url = lock_info['link']
+            path = lock_info['path']
+
+            if(os.path.isfile(path) == False):
+
+                folderName = url[''.join(url).rindex('/')+1:]
+
+                path = path.split("/")
+                create = 0
+                cmd = []
+                cmd.append("ln -s " + url)
+                cmd.append("mv " + folderName + " " + path[::-1][0])
+                for i in range(len(path)-1):
+                    if(create == 0 and os.path.isfile(path[i])):
+                        cmd.append("cd " + path[i])
+                    elif(create == 0 and os.path.isfile(path[i]) == False):
+                        create = 1
+                        cmd.append("mkdir " + path[i])
+                        cmd.append("cd " + path[i])
+                    else:
+                        cmd.append("mkdir " + path[i])
+                        cmd.append("cd " + path[i])
+
+                cmd.append("mv " + "../"*(len(path)-1) + path[::-1][0] + " ./")
+
+                cmd = " & ".join(cmd)
+                os.system(cmd)
+
+
+        else:
+            module_path = Path(git_path) / "modules" / lock_info['path']
+            if not module_path.exists():
+                ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
+                #repo.create_submodule(subname, lock_info['path'], url=lock_info['url'], no_checkout=True)
+                output = repo.git.submodule('add', lock_info['url'], lock_info['path'])
+                ctx.log(output)
+
+
 
     ctx.log("Updating git modules")
     output = repo.git.submodule('update', '--init', '--recursive')

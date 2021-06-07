@@ -28,7 +28,7 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 
 @click.command("deps.add", short_help="Add Dependencies.")
 @click.option("-g", "--git", flag_value=True)
-@click.option("-l", "--link", flag_value=False)
+@click.option("-l", "--link", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-f", "--force", flag_value=True, help="Force the creation of the dependency")
 @click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
@@ -37,12 +37,16 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @pass_environment
 def cli(ctx, url, path, git, link, branch, module, force):
     """Get Dependencies"""
+    ctx.log(link)
         
     config = ctx.env['dep']['config']
 
     if git and link:
         ctx.log("Selected git and link, will save as symbolick link, not module")
         git = False
+
+    if git == False and link == False:
+        git = True
 
 
 
@@ -86,14 +90,16 @@ def cli(ctx, url, path, git, link, branch, module, force):
 
     # Default to using git.  
     #  More important when others are added
-
+    ctx.log("aospaopsoapsoapsopaospaospas")
     if url[:7] == "file://":
         git_add2(ctx, config, branch, url, path, force)
 
     elif link:
+        ctx.log("succcccseeeeessssss")
         add_link(ctx, config, branch, url, path, force)
 
     else:
+        ctx.log("dafaiiiiiiilllluuururrrreee")
         git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
@@ -169,9 +175,6 @@ def git_add2(ctx, config, branch, url, path, force):
     #os.system("git clone " + url[7:])
 
 
-
-
-
     config[path] = {
         'type': "git",
         'branch': branch,
@@ -180,10 +183,12 @@ def git_add2(ctx, config, branch, url, path, force):
     }
 
 def add_link(ctx, config, branch, url, path, force):
+    ctx.log("hahahahahahahahahahahhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     path = path.replace('\\', '/')
 
     ctx.log(f"Symbolic link create {path} {url}")
-    os.system("ln -s " + url)
+
+
 
     config[path] = {
         'type': "link",
