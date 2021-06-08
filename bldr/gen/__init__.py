@@ -6,7 +6,7 @@ from bldr.environment import Environment
 from bldr.gen.render import CopyTemplatesRender
 
 def cmd(ctx: Environment, subcommand: str, args = None):
-    module_local_path = ctx.module_path / subcommand / "template"
+    module_local_path = ctx.brick_path / subcommand / "template"
     if module_local_path.exists():
         ctx.log(f"Copying templates {module_local_path}")
         copy_render = CopyTemplatesRender(ctx, False)

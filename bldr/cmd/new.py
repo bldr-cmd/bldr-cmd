@@ -28,11 +28,11 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @click.command("new", short_help="Add new dependency via url")
 @click.option("-g", "--git", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
-@click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
+@click.option("-k", "--brick", flag_value=True, help="Add the dependency to the bldr modules folder")
 @click.argument("url", required=False, type=str)
 @pass_environment
-def cli(ctx, url, git, branch, module):
+def cli(ctx, url, git, branch, brick):
     run_cmd(ctx, 'init')
-    run_cmd(ctx, 'deps.add', branch=branch, module=module, force=True, path=".", url=url)
+    run_cmd(ctx, 'deps.add', branch=branch, brick=brick, force=True, path=".", url=url)
     run_cmd(ctx, 'gen.up')
 

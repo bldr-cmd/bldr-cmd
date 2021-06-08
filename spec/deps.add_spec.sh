@@ -35,28 +35,28 @@ Describe 'bldr deps.add'
     The path somedir/bldr-test-dep3/README.md should be exist
   End
 
-  It 'Puts modules in the correct folder'
+  It 'Puts bricks in the correct folder'
     cp $TEST_FILES/dependency.toml ./.bldr/
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
     
-    When call bldr deps.add --module --git  $GIT_CACHE_DIR/bldr-test-dep3.git
-    The output should match pattern '*submodule create .bldr/module/bldr-test-dep3*'
+    When call bldr deps.add --brick --git  $GIT_CACHE_DIR/bldr-test-dep3.git
+    The output should match pattern '*submodule create .bldr/brick/bldr-test-dep3*'
     
     The path .gitmodules should be exist  
-    The path .bldr/module/bldr-test-dep3 should be exist
-    The path .bldr/module/bldr-test-dep3/README.md should be exist
+    The path .bldr/brick/bldr-test-dep3 should be exist
+    The path .bldr/brick/bldr-test-dep3/README.md should be exist
   End
   
-  It 'Renames modules in the correct folder'
+  It 'Renames bricks in the correct folder'
     cp $TEST_FILES/dependency.toml ./.bldr/
     cp $TEST_FILES/dependency.lock.toml ./.bldr/ 
     
-    When call bldr deps.add --module --git  $GIT_CACHE_DIR/bldr-test-dep3.git test3
-    The output should match pattern '*submodule create .bldr/module/test3*'
+    When call bldr deps.add --brick --git  $GIT_CACHE_DIR/bldr-test-dep3.git test3
+    The output should match pattern '*submodule create .bldr/brick/test3*'
     
     The path .gitmodules should be exist  
-    The path .bldr/module/test3 should be exist
-    The path .bldr/module/test3/README.md should be exist
+    The path .bldr/brick/test3 should be exist
+    The path .bldr/brick/test3/README.md should be exist
   End
 
   It 'Can add locally stored git repositories'

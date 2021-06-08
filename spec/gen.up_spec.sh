@@ -105,7 +105,7 @@ Describe 'bldr gen.up'
 
   It 'Reruns generators'
     create_git
-    bldr deps.add --module --git $GIT_CACHE_DIR/brk-dotnet-serial-sim.git > /dev/null
+    bldr deps.add --brick --git $GIT_CACHE_DIR/brk-dotnet-serial-sim.git > /dev/null
     bldr gen brk-dotnet-serial-sim > /dev/null
     bldr gen.up > /dev/null
 

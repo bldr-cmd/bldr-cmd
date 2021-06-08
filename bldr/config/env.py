@@ -10,15 +10,15 @@ def default(dotbldr_path: str) -> dict:
     Load the config by merging the local config on top of included deps config
 
     The load order - Last in wins
-    * .bldr/module/*/config/config.toml
+    * .bldr/brick/*/config/config.toml
     * .bldr/config/config.toml
-    * .bldr/module/*/config/{BLDR_ENV}.toml
+    * .bldr/brick/*/config/{BLDR_ENV}.toml
     * .bldr/config/{BLDR_ENV}.toml
     """
     bldr_env = os.getenv('BLDR_ENV')
     full_config = {}
 
-    deps_config_files = Path(dotbldr_path).glob( "./module/*/config/config.toml")
+    deps_config_files = Path(dotbldr_path).glob( "./brick/*/config/config.toml")
     for dep_config_file in deps_config_files:
         dep_env = load_if_exists(dep_config_file)
         full_config.update(dep_env)
@@ -27,7 +27,7 @@ def default(dotbldr_path: str) -> dict:
     full_config.update(local_config)
 
     if bldr_env != None:
-        e_deps_config_files = Path(dotbldr_path).glob(f"./module/*/config/{bldr_env}.toml")
+        e_deps_config_files = Path(dotbldr_path).glob(f"./brick/*/config/{bldr_env}.toml")
         for e_dep_config_file in e_deps_config_files:
             e_dep_env = load_if_exists(e_dep_config_file)
             full_config.update(e_dep_env)

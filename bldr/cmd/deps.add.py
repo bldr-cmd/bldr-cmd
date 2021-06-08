@@ -31,11 +31,11 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @click.option("-l", "--link", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-f", "--force", flag_value=True, help="Force the creation of the dependency")
-@click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
+@click.option("-k", "--brick", flag_value=True, help="Add the dependency to the bldr brick folder")
 @click.argument("url", required=False, type=str)
 @click.argument("path", required=False, type=click.Path())
 @pass_environment
-def cli(ctx, url, path, git, link, branch, module, force):
+def cli(ctx, url, path, git, link, branch, brick, force):
     """Get Dependencies"""
     ctx.log(link)
         
@@ -50,11 +50,11 @@ def cli(ctx, url, path, git, link, branch, module, force):
 
 
 
-    if module:
+    if brick:
         if path == None:
-            path = ctx.module_path
+            path = ctx.brick_path
         else:
-            path = ctx.module_path / path
+            path = ctx.brick_path / path
 
     ctx.log(f"Adding Dependency {url} {path}")
 

@@ -90,15 +90,15 @@ class Environment:
         return self.dotbldr_path.parents[0]
 
     @property
-    def module_path(self) -> Path:
-        return self.dotbldr_path / "module"
+    def brick_path(self) -> Path:
+        return self.dotbldr_path / "brick"
 
     @property
     def cmd_paths(self) -> List[Path]:
         if self.dotbldr_path == None:
             return [ builtin_cmd_folder ]    
         else:
-            return [ self.dotbldr_path / "cmd", self.module_path / "*/cmd", builtin_cmd_folder ]
+            return [ self.dotbldr_path / "cmd", self.brick_path / "*/cmd", builtin_cmd_folder ]
 
     @property
     def history_path(self) -> Path:
@@ -160,7 +160,7 @@ class Environment:
         else:
             return [
                 self.dotbldr_path.joinpath("cmd").glob(fileglob),
-                self.module_path.glob( "*/cmd/" + fileglob),
+                self.brick_path.glob( "*/cmd/" + fileglob),
                 builtin_cmd_folder.glob(fileglob)
             ]
 
@@ -192,7 +192,7 @@ class Environment:
         else:
             return [
                 self.dotbldr_path.joinpath("migration").glob(fileglob),
-                self.module_path.glob( "*/migration/" + fileglob),
+                self.brick_path.glob( "*/migration/" + fileglob),
                 builtin_migration_folder.glob(fileglob)
             ]
 

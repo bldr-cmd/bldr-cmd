@@ -2,7 +2,7 @@ Describe 'bldr gen'
   Include spec/venv_inc
   setup() {  
     setup_w_bldr
-    cp -Rf $TEST_FILES/example_generator .bldr/module/
+    cp -Rf $TEST_FILES/example_generator .bldr/brick/
   }
   cleanup() {  
     cleanup_dir

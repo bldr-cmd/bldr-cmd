@@ -19,18 +19,18 @@ Describe 'bldr gen.import'
 
   It 'Imports to a module named `import.dirname`'
     When call bldr gen.import $TEST_FILES/some_proj
-    The path ./.bldr/module/import.some_proj should be exist
+    The path ./.bldr/brick/import.some_proj should be exist
     The output should match pattern '*Copying templates *import*some_proj*template*'
   End
 
   It 'Converts files to templates'
     When call bldr gen.import $TEST_FILES/some_proj
     The path ./.bldr/config/config.toml should be exist
-    The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs should be exist
+    The path ./.bldr/brick/import.some_proj/template/net_code.bldr-j2.cs should be exist
 
-    The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "TheNewModule"
-    The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANotSoSimilarModule"
-    The path ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANew.Nested.OtherPlace.Function()"
+    The path ./.bldr/brick/import.some_proj/template/net_code.bldr-j2.cs contents should include "TheNewModule"
+    The path ./.bldr/brick/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANotSoSimilarModule"
+    The path ./.bldr/brick/import.some_proj/template/net_code.bldr-j2.cs contents should include "ANew.Nested.OtherPlace.Function()"
     The output should match pattern '*Generating *import.some_proj*template*net_code.bldr-j2.cs*'
     
     #cat ./.bldr/module/import.some_proj/template/net_code.bldr-j2.cs
@@ -64,7 +64,7 @@ Describe 'bldr gen.import'
 
   It 'Places the import at the destination path'
     When call bldr gen.import --path different/nested/name $TEST_FILES/some_proj
-    The path .bldr/module/import.some_proj/template/different/nested/name/somefile should be exist
+    The path .bldr/brick/import.some_proj/template/different/nested/name/somefile should be exist
 
     The output should match pattern '*different*nested*name*'
   End
