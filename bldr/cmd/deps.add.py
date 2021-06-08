@@ -90,16 +90,13 @@ def cli(ctx, url, path, git, link, branch, module, force):
 
     # Default to using git.  
     #  More important when others are added
-    ctx.log("aospaopsoapsoapsopaospaospas")
     if url[:7] == "file://":
         git_add2(ctx, config, branch, url, path, force)
 
     elif link:
-        ctx.log("succcccseeeeessssss")
         add_link(ctx, config, branch, url, path, force)
 
     else:
-        ctx.log("dafaiiiiiiilllluuururrrreee")
         git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
@@ -183,7 +180,6 @@ def git_add2(ctx, config, branch, url, path, force):
     }
 
 def add_link(ctx, config, branch, url, path, force):
-    ctx.log("hahahahahahahahahahahhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     path = path.replace('\\', '/')
 
     ctx.log(f"Symbolic link create {path} {url}")

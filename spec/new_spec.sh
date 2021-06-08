@@ -16,6 +16,8 @@ Describe 'bldr new'
   It 'Calls bldr new, should add dependency'
     git init > /dev/null 2>&1
     When call bldr new https://github.com/microsoft/playwright-test > /dev/null 2>&1
+    The output should match pattern '*Checking Migrations*'
+
     The path ./playwright-test/ should be exist
   End
 End   
