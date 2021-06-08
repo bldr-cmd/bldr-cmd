@@ -78,12 +78,12 @@ def cli(ctx):
             if(os.path.isfile(path) == False):
                 d = path
                 folderName = url[''.join(url).rindex('/')+1:]
+
                 path = path.split("/")
                 create = 0
                 cmd = []
                 cmd.append("ln -s " + url)
                 cmd.append("mv " + folderName + " " + path[::-1][0])
-                
                 for i in range(len(path)-1):
                     if(create == 0 and os.path.isfile(os.path.isdir("/".join(path[0:(i+1)])))):
                         cmd.append("cd " + path[i])
