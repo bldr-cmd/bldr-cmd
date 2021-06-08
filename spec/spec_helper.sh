@@ -32,9 +32,11 @@ spec_helper_configure() {
 
 # Create/delete the scratch directory
 setup_dir() {  
+    cd $SHELLSPEC_PROJECT_ROOT
     rm -Rf _test_temp
     mkdir -p _test_temp
     cd _test_temp
+    
 }
 setup_w_bldr() {
   setup_dir
@@ -45,8 +47,9 @@ setup_w_bldr() {
   fi
 }
 cleanup_dir() {  
-    cd ..
+    cd $SHELLSPEC_PROJECT_ROOT
     rm -Rf _test_temp
+    
 }
 
 create_git() {
@@ -169,5 +172,30 @@ deps_add_file_constructor()
   git commit -m "yaya"
   bldr init
   bldr deps.add file://../dep foo 
+
+}
+
+add_link_setup()
+{
+  mkdir test1
+  mkdir test2
+  cd test2
+  echo "alsdjkas" > newFile.txt
+  mkdir subFolder
+  cd subFolder
+  echo "askdhad" > newnewFile.txt
+  cd ../../test1
+  echo "alsdjkas" > oldFile.txt
+  mkdir f1
+  cd f1
+  echo "alsdjkas" > oldoldFile.txt
+  mkdir f2
+  cd f2
+  echo "alsdjkas" > oldoldoldFile.txt
+  cd ../..
+  git init
+  git add .
+  git commit -m "sndkas"
+
 
 }

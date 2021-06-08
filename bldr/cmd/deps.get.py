@@ -69,8 +69,6 @@ def cli(ctx):
 
     ctx.log("Add missing git modules")
     for (subname, lock_info) in lockstuff.items():
-
-
         if lock_info['type'] == 'link':
             ctx.log("we got hre")
 
@@ -78,7 +76,7 @@ def cli(ctx):
             path = lock_info['path']
 
             if(os.path.isfile(path) == False):
-
+                d = path
                 folderName = url[''.join(url).rindex('/')+1:]
 
                 path = path.split("/")
@@ -87,9 +85,9 @@ def cli(ctx):
                 cmd.append("ln -s " + url)
                 cmd.append("mv " + folderName + " " + path[::-1][0])
                 for i in range(len(path)-1):
-                    if(create == 0 and os.path.isfile(path[i])):
+                    if(create == 0 and os.path.isfile(os.path.isdir("/".join(path[0:(i+1)])))):
                         cmd.append("cd " + path[i])
-                    elif(create == 0 and os.path.isfile(path[i]) == False):
+                    elif(create == 0):
                         create = 1
                         cmd.append("mkdir " + path[i])
                         cmd.append("cd " + path[i])
@@ -97,10 +95,10 @@ def cli(ctx):
                         cmd.append("mkdir " + path[i])
                         cmd.append("cd " + path[i])
 
-                cmd.append("mv " + "../"*(len(path)-1) + path[::-1][0] + " ./")
-
                 cmd = " & ".join(cmd)
                 os.system(cmd)
+                os.system("mv " + path[::-1][0] + " " + d )
+
 
 
         else:

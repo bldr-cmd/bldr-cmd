@@ -1,4 +1,3 @@
-
 Describe 'bldr deps.add'                                                                                           
   Include spec/venv_inc
   setup() {  
@@ -60,7 +59,7 @@ Describe 'bldr deps.add'
     The path .bldr/module/test3/README.md should be exist
   End
 
-  It 'Can add locally stored git repositories part 1'
+  It 'Can add locally stored git repositories'
     deps_add_file_constructor > /dev/null 2>&1
     When call cd foo
     The path ./file.txt should be exist
@@ -68,5 +67,23 @@ Describe 'bldr deps.add'
     cd ..
     The path ./dep should not be exist
   End
+
+  It 'Can add symbolic links of directories'
+    add_link_setup > /dev/null 2>&1
+    When call bldr deps.add .././test2 ./f1/././f2/haha -l > /dev/null 2>&1
+    The path ./f1/f2/haha should be exist
+    The path ./f1/f2/haha/newFile.txt should be exist
+    The path ./f1/f2/haha/subFolder should be exist
+    The path ./f1/f2/haha/subFolder/newnewFile.txt should be exist
+    The path ./f1/oldoldFile.txt should be exist
+    The path ./f1/f2/oldoldoldFile.txt should be exist
+    The path ./f1/f2/test2 should not be exist
+    The path ./f1/test2 should not be exist
+    The path ./test2 should not be exist
+
+
+  End
+
+  
 
 End   
