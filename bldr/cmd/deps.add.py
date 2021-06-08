@@ -95,11 +95,9 @@ def cli(ctx, url, path, git, link, branch, module, force):
         git_add2(ctx, config, branch, url, path, force)
 
     elif link:
-        ctx.log("succcccseeeeessssss")
         add_link(ctx, config, branch, url, path, force)
 
     else:
-        ctx.log("dafaiiiiiiilllluuururrrreee")
         git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
