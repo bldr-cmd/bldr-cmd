@@ -71,6 +71,7 @@ Describe 'bldr deps.add'
   It 'Can add symbolic links of directories'
     add_link_setup > /dev/null 2>&1
     When call bldr deps.add .././test2 ./f1/././f2/haha -l > /dev/null 2>&1
+    The output should match pattern '*Getting Dependencies*'
     The path ./f1/f2/haha should be exist
     The path ./f1/f2/haha/newFile.txt should be exist
     The path ./f1/f2/haha/subFolder should be exist
