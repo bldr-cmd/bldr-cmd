@@ -28,7 +28,7 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 
 @click.command("deps.add", short_help="Add Dependencies.")
 @click.option("-g", "--git", flag_value=True)
-@click.option("-l", "--link", flag_value=False)
+@click.option("-l", "--link", flag_value=True)
 @click.option("-b", "--branch", required=False, type=str)
 @click.option("-f", "--force", flag_value=True, help="Force the creation of the dependency")
 @click.option("-m", "--module", flag_value=True, help="Add the dependency to the bldr modules folder")
@@ -91,9 +91,11 @@ def cli(ctx, url, path, git, link, branch, module, force):
         git_add2(ctx, config, branch, url, path, force)
 
     elif link:
+        ctx.log("yeppu")
         add_link(ctx, config, branch, url, path, force)
 
     else:
+        ctx.log(link)
         git_add(ctx, config, branch, url, path, force)
 
     if ctx.verbose:
