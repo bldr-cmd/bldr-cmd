@@ -37,7 +37,6 @@ dotbldr_path = os.path.join(os.path.abspath(os.path.dirname(bldr.__file__)), "do
 @pass_environment
 def cli(ctx, url, path, git, link, branch, brick, force):
     """Get Dependencies"""
-    ctx.log(link)
         
     config = ctx.env['dep']['config']
 

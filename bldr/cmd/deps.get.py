@@ -70,7 +70,6 @@ def cli(ctx):
     ctx.log("Add missing git modules")
     for (subname, lock_info) in lockstuff.items():
         if lock_info['type'] == 'link':
-            ctx.log("we got hre")
 
             url = lock_info['link']
             path = lock_info['path']
