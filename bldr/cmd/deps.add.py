@@ -12,6 +12,9 @@ import bldr
 import bldr.gen.render
 import bldr.util
 import giturlparse
+import platform
+
+
 
 from git import Repo
 from pathlib import Path
@@ -107,7 +110,8 @@ def cli(ctx, url, path, git, link, branch, brick, force):
 
 def git_add(ctx, config, branch, url, path, force):
     # path must only have '/' to work with git!!
-    path = path.replace('\\', '/')
+    if(platform.system() != "Windows"):
+        path = path.replace('\\', '/')
 
     if branch == None:
         branch = 'master'
