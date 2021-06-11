@@ -29,7 +29,7 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
         source_str = source_file.read()
     template = jinja2.Template(source_str)
 
-    template_module = source_path.replace("bldr-j2", "bldr-py") 
+    template_module = source_path + ".py"
     context = {}
     context.update(template_data)
 
@@ -44,10 +44,6 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
 
 @render_for('bldr-py')
 def render_py(template_data: dict, source_path: str, destination_path: str):
-    template_file = source_path.replace("bldr-py", "bldr-j2")
-    if os.path.exists(template_file):
-        # We we already rendered this.  So skip
-        return
 
     # hijack stdout long enough to render the file
     _prev_stdout = sys.stdout

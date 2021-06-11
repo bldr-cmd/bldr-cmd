@@ -14,9 +14,9 @@ Describe 'bldr gen'
 
     When call bldr gen example_generator
     The output should match pattern '*Copying*ex_hi.bldr-j2.txt*'
-    The output should match pattern '*Copying*ex_hi.bldr-py.txt*'
+    The output should match pattern '*Copying*ex_hi.bldr-j2.txt.py*'
     The path ./.bldr/history/generated/current/ex_hi.bldr-j2.txt should be exist 
-    The path ./.bldr/history/generated/current/ex_hi.bldr-py.txt should be exist                                                                          
+    The path ./.bldr/history/generated/current/ex_hi.bldr-j2.txt.py should be exist                                                                          
     
   End                                                                                                                                                                                                             
 End    

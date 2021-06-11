@@ -152,7 +152,8 @@ def git_add(ctx, config, branch, url, path, force):
 def git_add2(ctx, config, branch, url, path, force):
 
     # path must only have '/' to work with git!!
-    path = path.replace('\\', '/')
+    if(platform.system() != "Windows"):
+        path = path.replace('\\', '/')
 
     if branch == None:
         branch = 'master'
