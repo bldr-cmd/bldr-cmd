@@ -9,3 +9,5 @@ node_modules/**
 
 t/**
 *.swp
+
+_test_temp

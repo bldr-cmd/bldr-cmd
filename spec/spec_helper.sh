@@ -1,9 +1,17 @@
-# shellcheck shell=sh
+# shellcheck shell=bash
 
 # Defining variables and functions here will affect all specfiles.
 # Change shell options inside a function may cause different behavior,
 # so it is better to set them here.
 # set -eu
+
+if [ -e venv/bin/activate ]; then
+    source venv/bin/activate
+fi
+
+if [ -e venv/Scripts/activate ]; then
+    source venv/Scripts/activate
+fi
 
 export GIT_CACHE_DIR=$SHELLSPEC_PROJECT_ROOT/spec/cache
 export TEST_FILES=$SHELLSPEC_PROJECT_ROOT/spec/files
@@ -16,6 +24,10 @@ spec_helper_precheck() {
   [ ! -d "$GIT_CACHE_DIR/brk-dotnet-serial-sim.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/brk-dotnet-serial-sim.git $GIT_CACHE_DIR/brk-dotnet-serial-sim.git
   [ ! -d "$GIT_CACHE_DIR/bldr-test-dep1.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep1.git $GIT_CACHE_DIR/bldr-test-dep1.git
   [ ! -d "$GIT_CACHE_DIR/bldr-test-dep3.git" ] && git clone --mirror git@svn.daveengineering.com:bldr/bldr-test-dep3.git $GIT_CACHE_DIR/bldr-test-dep3.git
+  [ ! -d "$GIT_CACHE_DIR/child1" ] && create_child1
+  [ ! -d "$GIT_CACHE_DIR/child2" ] && create_child2
+  [ ! -d "$GIT_CACHE_DIR/parent" ] && create_parent
+
   : minimum_version "0.28.1"
 }
 
@@ -59,21 +71,44 @@ create_git() {
     git commit -m "Initial Commit" > /dev/null
 }
 
-
-generate_test_dep_sys()
+create_child1()
 {
-  # makes 3 git repos, par, child, child
-  # parent has two submodules, the childs
-  # parent has test ver of dependencies.lock.toml and dependencies.toml
+  mkdir -p $GIT_CACHE_DIR/child1
+  cd $GIT_CACHE_DIR/child1
 
-  mkdir parent
-  mkdir child1
-  mkdir child2
+  create_child
+  return 0
+}
 
-  #
-  # make master parent
-  #
-  cd parent
+create_child2()
+{
+  mkdir -p $GIT_CACHE_DIR/child2
+  cd $GIT_CACHE_DIR/child2
+
+  create_child
+  return 0
+}
+
+create_child()
+{
+  git init
+  git checkout -b A
+  echo "a" >> filea.txt
+  git add .
+  git commit -m "made A"
+
+  git checkout -b B
+  echo "b" >> fileb.txt
+  rm filea.txt
+  git add .
+  git commit -m "made B"
+}
+
+create_parent()
+{
+  mkdir -p $GIT_CACHE_DIR/parent
+  cd $GIT_CACHE_DIR/parent
+
   git init
   echo "empty" >> file.txt
   bldr init
@@ -81,78 +116,46 @@ generate_test_dep_sys()
   git add .
   git commit -m "start master"
 
-  #make file a
+  # Make branch A
   git checkout -b A
   echo "a" >> filea.txt
   git add .
   git commit -m "made A"
-
-  #make file b
-  git checkout -b B
-  echo "b" >> fileb.txt
-  rm filea.txt
-  git add .
-  git commit -m "made B"
-
-  #
-  # make child1
-  # 
-  cd ..
-  cd child1
-  git init
-  git checkout -b A
-  echo "a" >> filea.txt
-  git add .
-  git commit -m "made A"
-
-  git checkout -b B
-  echo "b" >> fileb.txt
-  rm filea.txt
-  git add .
-  git commit -m "made B"
-
-  #
-  # make child2
-  #
-  cd ..
-  cd child2
-  git init
-  git checkout -b A
-  echo "a" >> filea.txt
-  git add .
-  git commit -m "made A"
-
-  git checkout -b B
-  echo "b" >> fileb.txt
-  rm filea.txt
-  git add .
-  git commit -m "made B"
-  cd ..
-
-  echo "Running bldr"
-  cd parent
-  bldr init
-  bldr deps.get
-  git add .
-  git commit -m "done with parent A"
-
-
-  git checkout A
   bldr deps.add ../child1 . -b A
-
-  git add .
+  git add . 
   git commit -m "done with parent A"
 
-  git checkout B
-  bldr init
   bldr deps.get
+  git add .
+  git commit -m "Save Lockfile"
+
+  # Make file B
+  git checkout -b B
+  echo "b" >> fileb.txt
+  rm filea.txt
+  git add .
+  git commit -m "made B"
   bldr deps.add ../child2 . -b B
-  bldr init
+  cd child1
+  git checkout B
+  cd ..
+
+  git add .
+  git commit -m "done with parent B"
+
   bldr deps.get
   git add .
-  git commit -m "done with parent A"
+  git commit -m "Save Lockfile"
+  return 0
+}
 
-
+generate_test_dep_sys()
+{
+  git clone file://$GIT_CACHE_DIR/parent
+  cd parent
+  git checkout A
+  
+  bldr deps.get
 }
 
 deps_add_file_constructor()
@@ -196,6 +199,4 @@ add_link_setup()
   git init
   git add .
   git commit -m "sndkas"
-
-
 }
