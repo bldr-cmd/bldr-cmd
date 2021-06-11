@@ -8,20 +8,16 @@ Describe 'git checkout'
   cleanup() {  
     cleanup_dir
   }
-  
 
   BeforeEach 'setup'
   AfterEach 'cleanup'
                                                                                        
   It 'Creates git submodules and fetches them #1'
     generate_test_dep_sys > /dev/null 2>&1
+    git checkout B > /dev/null 2>&1
     
-
-
-
-    When call git checkout A > /dev/null 2>&1
-    The output should match pattern '*'
-
+    When call git checkout A
+    The output should match pattern "*"
 
     The path child1/filea.txt should be exist
     The path child1/fileb.txt should not be exist
@@ -33,14 +29,13 @@ Describe 'git checkout'
     generate_test_dep_sys > /dev/null 2>&1
 
     git checkout A > /dev/null 2>&1
-    git add .
-    git commit -m "???"
-    When call git checkout B > /dev/null 2>&1
-    The output should match pattern '*'
+    When call git checkout B
+    The output should match pattern "*"
     
     The path child2/fileb.txt should be exist
     The path child2/filea.txt should not be exist
-    The path child1 should not be exist
+    The path child1/fileb.txt should be exist
+    The path child1/filea.txt should not be exist
 
   End
 

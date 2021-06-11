@@ -55,7 +55,9 @@ def cli(ctx, staged):
     lockfile = {name: dep for (name, dep) in lockfile.items() if name in config}
 
     # Add an new deps from config file
-    lockfile.update(config)
+    for name in config:
+        if name not in lockfile:
+            lockfile[name] = config[name]
 
     gitlock = {name: dep for (name, dep) in lockfile.items() if dep['type'] == 'git'}
 

@@ -10,12 +10,10 @@ prev_HEAD="$1"
 new_HEAD="$2"
 new_branch="$3"
 
-
 if [ $prev_HEAD != $new_HEAD ]; then
+   source $DIR/venv
    bldr deps.get
    git clean -f -f -d
 fi
-
-
 
 exit 0
