@@ -21,7 +21,7 @@ Describe 'bldr gen.up'
 
   It 'Supports Jinja2 templates'
     cp $TEST_FILES/hi.bldr-j2.txt ./
-    cp $TEST_FILES/hi.bldr-py.txt ./
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./
 
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
@@ -31,7 +31,7 @@ Describe 'bldr gen.up'
   End
 
   It 'Supports Python templates'
-    cp $TEST_FILES/bare.bldr-py.txt ./
+    cp $TEST_FILES/bare.bldr-j2.txt.py ./
 
     When call bldr gen.up
     The output should match pattern '*Creating*bare.txt*'
@@ -42,7 +42,7 @@ Describe 'bldr gen.up'
 
   It 'Templates Only Apply Changes'
     cp $TEST_FILES/hi.bldr-j2.txt ./
-    cp $TEST_FILES/hi.bldr-py.txt ./
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./
 
     bldr gen.up > /dev/null
     echo -e "NO" >> hi.txt
@@ -59,7 +59,7 @@ Describe 'bldr gen.up'
   It 'Has a Default Local Template In .bldr/template'
     mkdir -p ./.bldr/template/
     cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./.bldr/template/
 
     When call bldr gen.up
     The output should match pattern '*Creating*hi.txt*'
@@ -71,13 +71,13 @@ Describe 'bldr gen.up'
   It 'Removes deleted files'
     mkdir -p ./.bldr/template/
     cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./.bldr/template/
     cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/bye.bldr-j2.txt
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/bye.bldr-py.txt
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./.bldr/template/bye.bldr-j2.txt.py
     bldr gen.up > /dev/null
 
     rm ./.bldr/template/bye.bldr-j2.txt
-    rm ./.bldr/template/bye.bldr-py.txt
+    rm ./.bldr/template/bye.bldr-j2.txt.py
 
     When call bldr gen.up
     The output should match pattern '*Deleting*bye.txt*'
@@ -88,9 +88,9 @@ Describe 'bldr gen.up'
   It 'Removes deleted files from removed directories'
     mkdir -p ./.bldr/template/somedir/somedir2
     cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./.bldr/template/
     cp $TEST_FILES/hi.bldr-j2.txt ./.bldr/template/somedir/somedir2/bye.bldr-j2.txt
-    cp $TEST_FILES/hi.bldr-py.txt ./.bldr/template/somedir/somedir2/bye.bldr-py.txt
+    cp $TEST_FILES/hi.bldr-j2.txt.py ./.bldr/template/somedir/somedir2/bye.bldr-j2.txt.py
     bldr gen.up > /dev/null
 
     rm -Rf ./.bldr/template/somedir

@@ -18,7 +18,7 @@ Lets say {{ say_hello() }}
 
 EOF
 
-cat <<EOF > hi.bldr-py.txt
+cat <<EOF > hi.bldr-j2.txt.py
 def say_hello():
     return "hellow"
 EOF
@@ -51,7 +51,7 @@ Lets say {{ say_bye() }}
 
 EOF
 
-cat <<EOF > .bldr/template/bye.bldr-py.txt
+cat <<EOF > .bldr/template/bye.bldr-j2.txt.py
 def say_bye():
     return "good bye"
 EOF
