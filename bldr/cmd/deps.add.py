@@ -86,9 +86,7 @@ def cli(ctx, url, path, git, link, branch, brick, force):
                 exit -1
 
     cwd = Path('.').absolute()
-    path = str(full_path.relative_to(cwd))
-
-    
+    path = str(full_path.relative_to(cwd))   
 
     # Default to using git.  
     #  More important when others are added
@@ -110,8 +108,8 @@ def cli(ctx, url, path, git, link, branch, brick, force):
 
 def git_add(ctx, config, branch, url, path, force):
     # path must only have '/' to work with git!!
-    if(platform.system() != "Windows"):
-        path = path.replace('\\', '/')
+
+    path = path.replace('\\', '/')
 
     if branch == None:
         branch = 'master'
@@ -134,10 +132,6 @@ def git_add(ctx, config, branch, url, path, force):
 
     output = repo.git.submodule('add', url, path)
     ctx.log(output)
-
-
-
-
 
     config[path] = {
         'type': "git",
@@ -186,8 +180,6 @@ def add_link(ctx, config, branch, url, path, force):
     path = path.replace('\\', '/')
 
     ctx.log(f"Symbolic link create {path} {url}")
-
-
 
     config[path] = {
         'type': "link",
