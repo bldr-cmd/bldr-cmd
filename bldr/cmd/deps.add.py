@@ -110,7 +110,7 @@ def cli(ctx, url, path, git, link, branch, brick, force):
 
 def git_add(ctx, config, branch, url, path, force):
     # path must only have '/' to work with git!!
-    if(platform.system() != "Windows"):
+    if(platform.system() == "Windows"):
         path = path.replace('\\', '/')
 
     if branch == None:
@@ -152,7 +152,7 @@ def git_add(ctx, config, branch, url, path, force):
 def git_add2(ctx, config, branch, url, path, force):
 
     # path must only have '/' to work with git!!
-    if(platform.system() != "Windows"):
+    if(platform.system() == "Windows"):
         path = path.replace('\\', '/')
 
     if branch == None:

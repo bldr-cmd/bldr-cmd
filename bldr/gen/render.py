@@ -42,7 +42,7 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
     with open(destination_path, 'w') as dest_file:
         dest_file.write(outputText)
 
-@render_for('bldr-py')
+@render_for('bldr-j2\..*\.py')
 def render_py(template_data: dict, source_path: str, destination_path: str):
 
     # hijack stdout long enough to render the file
