@@ -25,6 +25,10 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
     if os.path.exists(destination_path + ".keep"):
         return
 
+    # Do not render the .bldr-j2.ext.py file.  Its just a helper for the real template
+    if source_path.endswith('.py') and os.path.exists(source_path[:-2]):
+        return
+
     with open(source_path, 'r') as source_file:
         source_str = source_file.read()
     template = jinja2.Template(source_str)
@@ -42,7 +46,7 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
     with open(destination_path, 'w') as dest_file:
         dest_file.write(outputText)
 
-@render_for('bldr-j2\..*\.py')
+@render_for('bldr-py')
 def render_py(template_data: dict, source_path: str, destination_path: str):
 
     # hijack stdout long enough to render the file
