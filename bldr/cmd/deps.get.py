@@ -42,6 +42,7 @@ def cli(ctx):
     ctx.log(f"Getting Dependencies")
 
     git_path = Path(ctx.proj_path) / '.git'
+    git_module_path = git_path / "modules"
 
     ctx.dotbldr_path / 'dependecy.toml'
     if not git_path.exists():
@@ -63,9 +64,15 @@ def cli(ctx):
     lockfile = {name: dep for (name, dep) in lockfile.items() if name in config}
 
     # Add an new deps from config file
-    lockfile.update(config)
+    for name in config:
+        if name not in lockfile:
+            lockfile[name] = config[name]
 
     lockstuff = {name: dep for (name, dep) in lockfile.items()}
+
+    ctx.log("Initialize git modules")
+    output = repo.git.submodule('update', '--init', '--recursive')
+    ctx.log(output)
 
     ctx.log("Add missing git modules")
     for (subname, lock_info) in lockstuff.items():
@@ -101,7 +108,7 @@ def cli(ctx):
 
 
         else:
-            module_path = Path(git_path) / "modules" / lock_info['path']
+            module_path = git_module_path / lock_info['path']
             if not module_path.exists():
                 ctx.log(f"submodule create {subname} {lock_info['path']} {lock_info['url']}")
                 #repo.create_submodule(subname, lock_info['path'], url=lock_info['url'], no_checkout=True)
@@ -135,7 +142,7 @@ def cli(ctx):
             sub_path = Path(ctx.proj_path) / lock_info['path']
             subrepo = submodule.module()
 
-            ctx.log(f"Setting {submodule.name} {submodule.branch} {submodule.hexsha}")
+            ctx.log(f"Setting {submodule.name} {branch} {submodule.hexsha}")
             subrepo.git.checkout(branch)
             if 'sha' in lock_info:
                 sha = lock_info['sha']
