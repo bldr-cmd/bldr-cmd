@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(name='bldr',
-      version='0.14',
-      description='bldr framework',
+      version='0.15',
+      description='bldr',
       url='http://github.com/bldr-cmd/bldr-cmd',
       author='Michael Schmidt',
       author_email='michael@dedesignworks.com',
-      license='MIT',
+      license='Apache 2.0',
 
       packages=find_packages(),
       include_package_data=True,
