@@ -1,35 +1,90 @@
-# bldr-cmd
+
+![](images/DE_bldr_logo.png?raw=true)
+
+# Overview
+
+`bldr` is a utility for generating Files from Templates.  
+
+Only changes are applied to the output file.  This allows both the Template and its resulting file to be 
+iterated on.
 
 
-## Installing
+## `bldr` Renders Templates
 
+```
+> bldr init
+> echo "hello World\n" > hi.bldr-j2.txt
+> bldr gen.up
+
+> cat hi.txt
+hello world
+```
+
+## `bldr` Templates Are Jinja2 Powered
+
+```
+> cat <<EOF > hi.bldr-j2.txt
+Lets say {{ say_hello() }}
+
+EOF
+
+> cat <<EOF > hi.bldr-j2.txt.py
+def say_hello():
+    return "hellow"
+EOF
+
+> bldr gen.up
+> cat hi.txt
+Lets say hellow
+```
+
+## `bldr` Templates Only Apply Changes
+
+```
+> echo -e "NO" >> hi.txt
+> bldr gen.up
+> cat hi.txt
+Lets say hellow
+NO
+
+> sed -i 's/Lets/Lets NOT/g' hi.bldr-j2.txt
+> bldr gen.up
+> cat hi.txt
+Lets NOT say hellow
+NO
+
+```
+
+See the [Tutorial](docs/tutorial.md) for more details.
+
+
+# Documentation
+
+`bldr` documentation mimics Python's Enhancment Proposals to document how various parts of the 
+system works. See [README.md](docs/README.md)
+
+
+# Installing
+
+`bldr` is a python package.  If you need help setting up Python see [Python Env](docs/)
+
+Install from Github
 ```
 pip install git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
 ```
 
-## Upgrading
+Upgrading
 
 ```
 pip install --upgrade git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
 ```
 
+# Development
+
 ## Building
 
 ```
 python3 setup.py build
-```
-
-## Documentation
-
-The `docs` directory contains the documentation for `bldr`. See [README.md](docs/README.md)
-
-### Testing The Script
-To test the script, you can make a new virtualenv and then install your package:
-
-```
-python3 -m venv ./venv
-. venv/bin/activate
-pip install --editable .
 ```
 
 ## Bash Integration
@@ -48,13 +103,10 @@ https://click.palletsprojects.com/en/7.x/setuptools/
 # Testing 
 
 ## Unit Tests
-## Pester - Windows
 
-https://github.com/pester/Pester
-
-Install - This upgrades the current version on Windows 10
+To run the Python Unit Tests
 ```
- Install-Module -Name Pester -Force -SkipPublisherCheck
+make test
 ```
 
 ## ShellSpec - Linux
@@ -70,40 +122,23 @@ Run Tests
 shellspec
 ```
 
-# Python Virtual Environment
+# License
 
-## Linux 
-
-```
-python3 -m venv ./venv
-```
-
-## Windows
-General form:
-```
-c:\Python35\python -m venv c:\path\to\myenv
-```
-
-See what python you have installed:
-```
-dir c:\Python3*
-```
-
-Easy way:
-From Explorer, open a command prompt in the folder you want and run:
-```
-c:\Python35\python -m venv .\venv
-```
-Replease '35' with which ever python version you have installed
+`bldr` is created by [DE Designworks](https://dedesignworks.com/)
 
 
-## Adding Dependencies:
 ```
-bldr deps.add <a> <b>
-```
-<a> relative address of dependent
-<b> relative address to save dependent
--b <c> the name of the branch of the dependent to add (defaults to master)
--m adds dependent to modules file
--f forces addition into repo (error maybe?)
+Copyright 2021 Dave Engineering LLC d.b.a. DE Design Works. All Rights Reserved.
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
