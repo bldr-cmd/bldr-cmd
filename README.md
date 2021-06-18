@@ -70,13 +70,13 @@ system works. See [README.md](docs/README.md)
 
 Install from Github
 ```
-pip install git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
+pip install git+https://github.com/bldr-cmd/bldr-cmd.git
 ```
 
 Upgrading
 
 ```
-pip install --upgrade git+ssh://git@github.com:bldr-cmd/bldr-cmd.git
+pip install --upgrade git+https://github.com/bldr-cmd/bldr-cmd.git
 ```
 
 # Development
