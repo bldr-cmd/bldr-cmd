@@ -1,8 +1,7 @@
 """
-`gen` Command
+`rm` Command
 
-Run a generator to create templates
-
+Remove a directory recursively
 
 """
 import click
