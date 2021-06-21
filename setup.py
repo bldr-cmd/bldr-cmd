@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='bldr',
-      version='0.15',
+      version='0.15.1',
       description='bldr',
       url='http://github.com/bldr-cmd/bldr-cmd',
       author='Michael Schmidt',

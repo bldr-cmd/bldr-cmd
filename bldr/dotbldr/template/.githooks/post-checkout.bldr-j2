@@ -1,0 +1,13 @@
+#!/bin/sh
+
+prev_HEAD="$1"
+new_HEAD="$2"
+new_branch="$3"
+
+if [ $prev_HEAD != $new_HEAD ]; then
+   {% if 'cmd' in config.bldr %}
+   {{ config.bldr.cmd }} deps.get
+   {% endif %}
+fi
+
+exit 0

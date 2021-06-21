@@ -1,0 +1,5 @@
+#!/bin/sh
+
+{% if 'cmd' in config.bldr %}
+{{ config.bldr.cmd }} deps.lock --staged
+{% endif %}
