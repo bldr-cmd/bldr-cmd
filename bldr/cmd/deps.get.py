@@ -5,6 +5,7 @@
 from bldr.environment import Environment
 import os
 import json
+import platform
 
 from git.objects.submodule.root import RootUpdateProgress
 
@@ -87,9 +88,11 @@ def cli(ctx):
                 full_url = Path(url).resolve()
                 
                 full_link = os.path.relpath(full_url, start=full_path.parent)
-                ctx.log(f"link {full_url} {full_path} -> {full_link}")
-
-                os.symlink(full_link,path)
+                if platform.system() == 'Windows':
+                    os.system(f"ln -s {full_link} {path}")
+                else:
+                    ctx.log(f"link {full_url} {full_path} -> {full_link}")
+                    os.symlink(full_link,path)
 
         else:
             module_path = git_module_path / lock_info['path']
