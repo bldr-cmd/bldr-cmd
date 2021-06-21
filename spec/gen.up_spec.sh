@@ -28,7 +28,6 @@ Describe 'bldr gen.up'
 
     The path hi.txt should be exist
     The path hi.txt contents should include "hellow"
-    The path hi.txt.py should not be exist
   End
 
   It 'Supports Python templates'
@@ -67,6 +66,7 @@ Describe 'bldr gen.up'
 
     The path hi.txt should be exist
     The path hi.txt contents should include "hellow"
+    The path hi.txt.py should not be exist
   End
 
   It 'Removes deleted files'

@@ -26,7 +26,7 @@ def render_j2(template_data: dict, source_path: str, destination_path: str):
         return
 
     # Do not render the .bldr-j2.ext.py file.  Its just a helper for the real template
-    if source_path.endswith('.py') and os.path.exists(source_path[:-2]):
+    if source_path.endswith('.py') and os.path.exists(source_path[:-3]):
         return
 
     with open(source_path, 'r') as source_file:
