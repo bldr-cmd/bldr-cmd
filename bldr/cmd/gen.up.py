@@ -123,6 +123,7 @@ def cli(ctx, regen, reimport, purge_local, migrate_only):
 
     # Pack current.next.tar.gz
     targz_pack_atomic(ctx.current_targz_next, ctx.current_targz, ctx.current_path)
+    bldr.dep.sync_githooks(ctx)
 
 class DiffPatchRender(bldr.gen.render.CommonTripleRender):
     def __init__(self, ctx: dict, source_root_dir: str, previous_root_dir: str, destination_root_dir: str):

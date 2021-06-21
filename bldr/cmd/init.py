@@ -31,4 +31,3 @@ def cli(ctx : Environment, path):
     
     # NOTE:  ctx cannot be used prior to this point!!
     run_cmd(ctx, 'gen.up')
-    bldr.dep.sync_githooks(ctx)
