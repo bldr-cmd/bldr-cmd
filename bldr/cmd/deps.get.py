@@ -82,30 +82,14 @@ def cli(ctx):
             path = lock_info['path']
 
             if(os.path.isfile(path) == False):
-                d = path
-                folderName = url[''.join(url).rindex('/')+1:]
+                Path(path).parent.mkdir(parents=True, exist_ok=True)
+                full_path = Path(path).resolve()
+                full_url = Path(url).resolve()
+                
+                full_link = os.path.relpath(full_url, start=full_path.parent)
+                ctx.log(f"link {full_url} {full_path} -> {full_link}")
 
-                path = path.split("/")
-                create = 0
-                cmd = []
-                cmd.append("ln -s " + url)
-                cmd.append("mv " + folderName + " " + path[::-1][0])
-                for i in range(len(path)-1):
-                    if(create == 0 and os.path.isfile(os.path.isdir("/".join(path[0:(i+1)])))):
-                        cmd.append("cd " + path[i])
-                    elif(create == 0):
-                        create = 1
-                        cmd.append("mkdir " + path[i])
-                        cmd.append("cd " + path[i])
-                    else:
-                        cmd.append("mkdir " + path[i])
-                        cmd.append("cd " + path[i])
-
-                cmd = " & ".join(cmd)
-                os.system(cmd)
-                os.system("mv " + path[::-1][0] + " " + d )
-
-
+                os.symlink(full_link,path)
 
         else:
             module_path = git_module_path / lock_info['path']

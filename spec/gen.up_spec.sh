@@ -96,7 +96,6 @@ Describe 'bldr gen.up'
 
     rm -Rf ./.bldr/template/somedir
     
-
     When call bldr gen.up
     The output should match pattern '*Deleting*bye.txt*'
 
