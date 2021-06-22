@@ -109,7 +109,7 @@ Describe 'bldr gen.up'
     bldr gen brk-dotnet-serial-sim > /dev/null
     bldr gen.up > /dev/null
 
-    When call bldr gen.up --regen
+    When call bldr gen.up
 
     The output should match pattern '*Copying*SerialSimulator.bldr-j2.cs*'
 

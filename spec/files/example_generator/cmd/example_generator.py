@@ -21,9 +21,9 @@ import click
 join = os.path.join
 
 @click.command("example_generator", short_help="Create Template files")
-@click.argument("destdir", required=False, type=click.Path(resolve_path=True))
+@click.argument("destination", required=False, type=click.Path(resolve_path=True))
 @pass_environment
-def cli(ctx, destdir):
+def cli(ctx, destination):
     """Generate Template Files in parent project"""
 
-    bldr.ensure_dir(destdir)
+    # Todo:  Something clever

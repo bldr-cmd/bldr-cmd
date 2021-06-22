@@ -26,12 +26,12 @@ import click
 
 @click.command("gen.up", short_help="Update Code Gen")
 #@click.argument("path", required=False, type=click.Path(resolve_path=True))
-@click.option("--regen", flag_value=True, help="Regenerate module templates")
+@click.option("--update-only", flag_value=False, help="Do not regenerate module templates")
 @click.option("--reimport", flag_value=True, help="Re-import imported modules from their sources")
 @click.option("--purge-local", flag_value=True, help='Purge local template.  Useful when re-importing "--as-template" templates')
 @click.option("--migrate-only", flag_value=True, help='Only Run Migrations')
 @pass_environment
-def cli(ctx, regen, reimport, purge_local, migrate_only):
+def cli(ctx, update_only, reimport, purge_local, migrate_only):
     """Update Code Generation"""
     ctx.log(f"Updating Code Generation")
 
@@ -63,7 +63,7 @@ def cli(ctx, regen, reimport, purge_local, migrate_only):
         
     ctx.local_path.mkdir(parents=True, exist_ok=True)
 
-    if regen:
+    if not update_only:
         if ctx.previous_generated_path.exists():
             bldr.util.rmtree(ctx.previous_generated_path)
 
