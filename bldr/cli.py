@@ -1,5 +1,6 @@
 import os
 import runpy
+from typing import Callable, Union
 
 import click
 
@@ -12,9 +13,12 @@ pass_environment = click.make_pass_decorator(Environment, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "cmd"))
 
 
-def run_cmd(ctx: Environment, cmd_name: str, *args, **kwargs):
+def run_cmd(ctx: Environment, command: Union[str, Callable], *args, **kwargs):
     click_ctx = click.get_current_context()
-    click_ctx.invoke(cmd(ctx,cmd_name), *args, **kwargs)
+    if isinstance(command, str):
+        # We were given a string instead of a callable
+        command = cmd(ctx,command)
+    click_ctx.invoke(command, *args, **kwargs)
     
 def cmd(ctx: Environment, cmd_name: str):
     cmd_mod_path = ctx.cmd_path(cmd_name)

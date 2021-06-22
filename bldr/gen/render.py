@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import runpy
+import traceback
 
 import jinja2
 
@@ -82,21 +83,24 @@ def lookup_fx_ext(path: str):
 
     return None
 
-def render(template_data: dict, source: str, destination: str, default_copy: bool):
+def render(template_data: dict, source: str, destination: str, default_copy: bool = True):
     # Make sure we have resolved paths to strings at this point
     source = str(source)
     destination = str(destination)
-    
-    # print(f"render {source} -> {destination}")
-    fx_ext = lookup_fx_ext(source)
-    if fx_ext != None:
-        (render_fx, renderext) = fx_ext
-        destination = destination.replace(f".{renderext}", '')
-        render_fx(template_data, source, destination)
-    else:
-        # Default to copy the file over
-        if default_copy:
-            shutil.copy(source, destination)
+    try:    
+        # print(f"render {source} -> {destination}")
+        fx_ext = lookup_fx_ext(source)
+        if fx_ext != None:
+            (render_fx, renderext) = fx_ext
+            destination = destination.replace(f".{renderext}", '')
+            render_fx(template_data, source, destination)
+        else:
+            # Default to copy the file over
+            if default_copy:
+                shutil.copy(source, destination)
+    except:
+        print(f"Error Rendering {source} -> {destination}")
+        traceback.print_exc()
 
 class CommonRender:
     def __init__(self, ctx: Environment, default_copy: bool):

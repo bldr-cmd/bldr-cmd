@@ -2,8 +2,10 @@ import os
 from typing import Callable, List
 
 import bldr.gen.env
+import bldr.cli
 from bldr.environment import Environment
 from bldr.gen.render import CopyTemplatesRender
+ 
 
 def cmd(ctx: Environment, subcommand: str, args = None):
     module_local_path = ctx.brick_path / subcommand / "template"
@@ -11,6 +13,10 @@ def cmd(ctx: Environment, subcommand: str, args = None):
         ctx.log(f"Copying templates {module_local_path}")
         copy_render = CopyTemplatesRender(ctx, False)
         copy_render.walk(module_local_path, ctx.current_generated_path)
+
+    cmd =  bldr.cli.cmd(ctx, subcommand)
+    if cmd != None:
+         bldr.cli.run_cmd(ctx, cmd, destination=ctx.current_generated_path)
 
 def add_generator(generator: list, ctx: Environment = Environment()):
     if ctx.gen_replay:
