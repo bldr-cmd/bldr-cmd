@@ -14,6 +14,7 @@ import bldr.util
 import bldr.gen
 import bldr.gen.render
 import bldr.migration
+import bldr.cache.env
 
 from pathlib import Path
 from diff_match_patch import diff_match_patch
@@ -55,7 +56,10 @@ def cli(ctx, update_only, reimport, purge_local, migrate_only):
         
 
     # Unpack current.tar.gz
-    targz_unpack(ctx.current_targz, ctx.current_path)
+    if 'current_unpacked' not in ctx.env['cache']:
+        targz_unpack(ctx.current_targz, ctx.current_path)
+        ctx.env['cache']['current_unpacked'] = True
+        bldr.cache.env.save_config(ctx.dotbldr_path, ctx.env['cache'])
 
     local_template_path = ctx.local_path / "template"
     if local_template_path.exists() and purge_local:

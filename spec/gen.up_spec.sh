@@ -118,6 +118,7 @@ Describe 'bldr gen.up'
 
   It 'Verifies cache is created'
     When call bldr gen.up
+    The output should match pattern '*Updating*'
     The path ./.bldr/cache.toml should be exist
   End
 End
