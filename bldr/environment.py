@@ -41,11 +41,13 @@ def default_env(dotbldr_path: str) -> Dict:
     import bldr.config.env
     import bldr.dep.env
     import bldr.gen.env
+    import bldr.cache.env
     
     return {
         'config': bldr.config.env.default(dotbldr_path),
         'dep': bldr.dep.env.default(dotbldr_path),
         'gen': bldr.gen.env.default(dotbldr_path),
+        'cache': bldr.gen.env.default(dotbldr_path),
     }
 
 class Environment:
