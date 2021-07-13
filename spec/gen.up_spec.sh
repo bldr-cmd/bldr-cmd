@@ -115,4 +115,9 @@ Describe 'bldr gen.up'
 
     The path SerialSimulator/SerialSimulator.cs should be exist
   End  
+
+  It 'Verifies cache is created'
+    When call bldr gen.up
+    The path ./.bldr/cache.toml should be exist
+  End
 End
