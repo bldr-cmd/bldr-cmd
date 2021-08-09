@@ -181,7 +181,7 @@ class Environment:
                 return glob_file
 
 
-        return Path(os.getcwd()) / "bldr-cmd" / "bldr" / "cmd" / (str(cmd_name) + ".py")
+        return None
 
 
     @property
