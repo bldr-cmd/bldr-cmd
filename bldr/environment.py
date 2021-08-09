@@ -180,7 +180,9 @@ class Environment:
             for glob_file in glob_files:
                 return glob_file
 
-        return None
+
+        return Path(os.getcwd()) / "bldr-cmd" / "bldr" / "cmd" / (str(cmd_name) + ".py")
+
 
     @property
     def migrated_toml_path(self) -> Path:
