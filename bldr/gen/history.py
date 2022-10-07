@@ -46,7 +46,26 @@ def targz_unpack(tgz_path: Path, target_path: Path):
     target_path.mkdir(parents=True)
 
     with tarfile.open(tgz_path, "r:gz") as tar:
-        tar.extractall(path=target_path.parent)
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar, path=target_path.parent)
 
 def targz_sha(tgz_path: Path):
     return sha256(tgz_path.read_bytes()).hexdigest()
